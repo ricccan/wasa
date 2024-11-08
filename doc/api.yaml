@@ -45,6 +45,27 @@ components:
           description: the text content of the message
           type: string
           example: ciao come stai
+        preview: 
+          description: the snippet of the text
+          type: string
+          example: ciao com-
+        sender:
+          description: the username of the user who has sent the message
+          type: string
+          example: ricc
+        date:
+          description: the date of the sent message 
+          type: number
+          example: 11052024
+        checkmark:
+          description: the graphic rappresentation of the state of the message, seen or just delivered
+          type: integer
+          enum: [1, 2]
+          example: 1
+        response:
+          description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
+          type: integer
+          example: 0
     photoMessage:
       title: photo message
       description: a photo shared between users
@@ -58,8 +79,21 @@ components:
           description: the url of the photo
           type: string
           example: https://immagine.png
-
-
-        
+        icon:
+          description: the preview of the photo in icon version
+          type: string
+          example: https://icon.png
+        sender:
+          description: the username of the user who has sent the message
+          type: string
+          example: ricc
+        date:
+          description: the date of the sent message 
+          type: number
+          example: 11052024
+        checkmark:
+          description: the graphic rappresentation of the state of the message, seen or just delivered
+          type: integer
+          enum: [1, 2]
 
 paths:
