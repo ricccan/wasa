@@ -116,9 +116,16 @@ components:
           description: the id of the second user of the chat
           type: integer
           example: 2
-        messageList:
+        textMessageList:
           description: the ids of the messages sent in this conversation
           type: array
+          items:
+            $ref: '#/components/schemas/textMessage'
           example: [1,5,78,35]
-
+        photoMessageList:
+          description: the ids of the messages sent in this conversation
+          type: array
+          items:
+            $ref: '#/components/schemas/photoMessage'
+          example: [1,5,78,35]
 paths:
