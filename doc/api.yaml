@@ -99,8 +99,8 @@ components:
           description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
           type: integer
           example: 0
-    conversation:
-      title: conversation
+    chat:
+      title: chat
       description: the chat between two users
       type: object
       properties:
@@ -121,11 +121,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/textMessage'
-          example: [1,5,78,35]
         photoMessageList:
-          description: the ids of the messages sent in this conversation
+          description: the ids of the photo messages sent in this conversation
           type: array
           items:
             $ref: '#/components/schemas/photoMessage'
-          example: [1,5,78,35]
+        receiver:
+          description: the id of the user who has received the message (it has to be one of the two user of the chat)
+          type: integer
+          example: 2
+    group:
+      title: group
+      description: group between users
+      type: object
+      properties:
+        id:
+          description: unique identifier
+          type: integer
+          example: 72
+        partecipant:
+          description: id of the users in the group
+          type: array
+          items:
+            $ref: '#/components/schemas/user'
+        textMessageList:
+          description: the ids of the messages sent in this conversation
+          type: array
+          items:
+            $ref: '#/components/schemas/textMessage'
+        photoMessageList:
+          description: the ids of the photo messages sent in this conversation
+          type: array
+          items:
+            $ref: '#/components/schemas/photoMessage'
+          
 paths:
