@@ -62,7 +62,7 @@ components:
           type: integer
           enum: [1, 2]
           example: 1
-        response:
+        responseTo:
           description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
           type: integer
           example: 0
@@ -95,5 +95,30 @@ components:
           description: the graphic rappresentation of the state of the message, seen or just delivered
           type: integer
           enum: [1, 2]
+        responseTo:
+          description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
+          type: integer
+          example: 0
+    conversation:
+      title: conversation
+      description: the chat between two users
+      type: object
+      properties:
+        id:
+          description: unique identifier
+          type: integer
+          example: 89
+        user1:
+          description: the id of the fist user of the chat
+          type: integer
+          example: 1
+        user2:
+          description: the id of the second user of the chat
+          type: integer
+          example: 2
+        messageList:
+          description: the ids of the messages sent in this conversation
+          type: array
+          example: [1,5,78,35]
 
 paths:
