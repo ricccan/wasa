@@ -32,4 +32,34 @@ components:
           description: the real surname of the user
           type: string
           example: rossi
+    textMessage:
+      title: text message
+      description: a simple text between users
+      type: object
+      properties:
+        id: 
+          description: unique identifier
+          type: integer
+          example: 1
+        content:
+          description: the text content of the message
+          type: string
+          example: ciao come stai
+    photoMessage:
+      title: photo message
+      description: a photo shared between users
+      type: object
+      properties:
+        id: 
+          description: unique identifier
+          type: integer
+          example: 1
+        content:
+          description: the url of the photo
+          type: string
+          example: https://immagine.png
+
+
+        
+
 paths:
