@@ -1,1 +1,8 @@
-asasdad
+openapi: 3.0.0
+info: 
+  description: prova1
+  title: esercizio di prova
+  version: 1.0.0
+servers:
+- url: http://localhost:3000
+paths:
