@@ -11,10 +11,25 @@ components:
       title: user
       description: "This object represent the unique name of the user (\"user\")."
       type: object
-      proprieties:
+      properties:
         username:
           description: Unique name of the user
           type: string
           example: ricc
-          
+        profileImage:
+          description: profile picture of the user
+          type: string
+          example: https://media.istockphoto.com/id/1602458519/it/foto/esplosione-di-polvere-colorata-su-sfondo-bianco.jpg?s=612x612&w=0&k=20&c=p8zsmnvNd6Nj2I0cTE8esB79X_CnjkwH4FUTp3U9_eA=
+        bio:
+          description: biography of the user
+          type: string
+          example: 18y/o italian
+        firstName:
+          description: the real name of the user 
+          type: string
+          example: roberto
+        lastName:
+          description: the real surname of the user
+          type: string
+          example: rossi
 paths:
