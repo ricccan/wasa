@@ -66,39 +66,15 @@ components:
           description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
           type: integer
           example: 0
-    photoMessage:
-      title: photo message
-      description: a photo shared between users
-      type: object
-      properties:
-        id: 
-          description: unique identifier
-          type: integer
-          example: 1
-        content:
-          description: the url of the photo
+        photoContent:
+          description: the url of the photo, if its empty then this is a simple text message
           type: string
           example: https://immagine.png
         icon:
-          description: the preview of the photo in icon version
+          description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
           example: https://icon.png
-        sender:
-          description: the username of the user who has sent the message
-          type: string
-          example: ricc
-        date:
-          description: the date of the sent message 
-          type: number
-          example: 11052024
-        checkmark:
-          description: the graphic rappresentation of the state of the message, seen or just delivered
-          type: integer
-          enum: [1, 2]
-        responseTo:
-          description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
-          type: integer
-          example: 0
+
     chat:
       title: chat
       description: the chat between two users
@@ -121,11 +97,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/textMessage'
-        photoMessageList:
-          description: the ids of the photo messages sent in this conversation
-          type: array
-          items:
-            $ref: '#/components/schemas/photoMessage'
         receiver:
           description: the id of the user who has received the message (it has to be one of the two user of the chat)
           type: integer
@@ -149,10 +120,5 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/textMessage'
-        photoMessageList:
-          description: the ids of the photo messages sent in this conversation
-          type: array
-          items:
-            $ref: '#/components/schemas/photoMessage'
           
 paths:
