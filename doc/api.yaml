@@ -16,6 +16,8 @@ components:
           description: Unique name of the user
           type: string
           example: ricc
+          minLength: 1
+          maxLength: 32
         profileImage:
           description: profile picture of the user
           type: string
@@ -41,10 +43,12 @@ components:
           description: unique identifier
           type: integer
           example: 1
-        content:
+        textContent:
           description: the text content of the message
           type: string
           example: ciao come stai
+          minLength: 0
+          maxLength: 256
         preview: 
           description: the snippet of the text
           type: string
@@ -74,7 +78,6 @@ components:
           description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
           example: https://icon.png
-
     chat:
       title: chat
       description: the chat between two users or more users
@@ -102,3 +105,77 @@ components:
             $ref: '#/components/schemas/user'
           
 paths:
+  /session:
+    post:
+      tags: ["login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+      operationId: doLogin
+      requestBody:
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Maria
+                  pattern: 'ˆ.*?$'
+                  minLength: 3
+                  maxLength: 16
+        required: true
+      responses:
+        '201':
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    # change here if you decide to use an integer
+                    # or any other type of identifier
+                    type: string
+                    example: "abcdef012345"
+  /changeUsername:
+    post:
+      tags: ["change username"]
+      summary: change the username of the user
+      description: |
+        the user can change the username if the application. if the username is valid the new name is returned.
+      operationId: changeUser  
+      requestBody:
+        description: new username
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: frabev
+                  minLength: 0
+                  maxLength: 32
+        required: true
+      responses:
+        '201':
+          description: username successfully changed 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: frabev
+        '401':
+          description: not logged in
+        '403':
+          description: username already exist
+        '406': 
+          description: invalid username
+        
