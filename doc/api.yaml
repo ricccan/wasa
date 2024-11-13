@@ -204,7 +204,7 @@ paths:
 
   /getConversation/{conversationId}:
     get:
-      tags: [get conversation]
+      tags: [get one conversation]
       summary: gets a conversation of the user
       description: |
          gets a the conversation of the user 
@@ -232,3 +232,30 @@ paths:
           description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid id
+  /sendMessage:
+    post:
+      tags: ["send message"]
+      summary: deliver a message in a chat. If delivered, return the message
+      description: |
+        send a message to a chato or a group
+      operationId: sendMessage
+      requestBody:
+        description: new message
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/textMessage'
+        required: true
+      responses:
+        '201': #output
+          description: message successfully sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/textMessage'
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
+
+        
