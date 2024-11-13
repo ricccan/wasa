@@ -141,14 +141,14 @@ paths:
                     # or any other type of identifier
                     type: string
                     example: "abcdef012345"
-  /changeUsername:
+  /setMyUserName:
     post:
-      tags: ["change username"]
-      summary: change the username of the user
+      tags: ["set username"]
+      summary: set the username of the user
       description: |
-        the user can change the username if the application. if the username is valid the new name is returned.
-      operationId: changeUser  
-      requestBody:
+         sets the username
+      operationId: setMyUserName  
+      requestBody: #input
         description: new username
         content:
           application/json:
@@ -162,8 +162,8 @@ paths:
                   maxLength: 32
         required: true
       responses:
-        '201':
-          description: username successfully changed 
+        '201': #output
+          description: username successfully set 
           content:
             application/json:
               schema:
@@ -176,6 +176,59 @@ paths:
           description: not logged in
         '403':
           description: username already exist
+        '404': 
+          description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid username
-        
+  
+  /getMyConversations:
+    get:
+      tags: [get conversation]
+      summary: gets all the conversationof the user
+      description: |
+         gets all the conversation of the user 
+      operationId: getMyConversations
+      responses:
+        '200':
+          description: list of the users chat
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/chat'
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
+
+  /getConversation/{conversationId}:
+    get:
+      tags: [get conversation]
+      summary: gets a conversation of the user
+      description: |
+         gets a the conversation of the user 
+      operationId: getConversation
+      parameters:
+        - name: conversationId 
+          in: path
+          description: id of the conversation we are searching for
+          schema:
+            type: integer
+            example: 12
+          required: true
+      responses:
+        '200':
+          description: list of the message in the chat
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/textMessage'
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
+        '406': 
+          description: invalid id
