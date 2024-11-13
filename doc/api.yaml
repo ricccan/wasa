@@ -282,3 +282,82 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
+  /commentMessage:
+    post:
+      tags: ["comment message"]
+      summary: comment another message
+      description: comment another message, if successfull returns the new message
+      operationId: commentMessage
+      requestBody: 
+        description: message to comment
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageToComment:
+                  $ref: '#/components/schemas/textMessage'
+                comment: 
+                  $ref: '#/components/schemas/textMessage'
+        required: true
+      responses:
+        '201': #output
+          description: message commented
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/textMessage'
+        '401':
+          description: not logged in
+        '406': 
+          description: invalid text
+  /uncommentMessage:
+    delete:
+      tags: ["uncomment"]
+      summary: uncomment another message
+      description: uncomment another message
+      operationId: uncommentMessage
+      requestBody: 
+        description: message to uncomment
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageToDelete:
+                  $ref: '#/components/schemas/textMessage'
+        required: true
+      responses:
+        '201': #output
+          description: comment successfully deleted
+        '401':
+          description: not logged in
+        '403':
+          description: unauthorized to delete this message
+        '404':
+          description: The requested resource could not be found 
+  /deleteMessage:
+    delete:
+      tags: ["delete message"]
+      summary: deletes a message
+      description: delete a message previusly sent
+      operationId: deleteMessage
+      requestBody: 
+        description: message to delete
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageToDelete:
+                  $ref: '#/components/schemas/textMessage'
+        required: true
+      responses:
+        '201': #output
+          description: message successfully deleted
+        '401':
+          description: not logged in
+        '403':
+          description: unauthorized to delete this message
+        '404':
+          description: The requested resource could not be found 
