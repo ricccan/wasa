@@ -77,48 +77,28 @@ components:
 
     chat:
       title: chat
-      description: the chat between two users
+      description: the chat between two users or more users
       type: object
       properties:
         id:
           description: unique identifier
           type: integer
           example: 89
-        user1:
-          description: the id of the fist user of the chat
-          type: integer
+        userIds:
+          description: the id of the user of the chat
+          type: array
+          items: 
+            $ref: '#/components/schemas/user'
           example: 1
-        user2:
-          description: the id of the second user of the chat
-          type: integer
-          example: 2
         textMessageList:
           description: the ids of the messages sent in this conversation
           type: array
           items:
             $ref: '#/components/schemas/textMessage'
         receiver:
-          description: the id of the user who has received the message (it has to be one of the two user of the chat)
-          type: integer
-          example: 2
-    group:
-      title: group
-      description: group between users
-      type: object
-      properties:
-        id:
-          description: unique identifier
-          type: integer
-          example: 72
-        partecipant:
-          description: id of the users in the group
+          description: the id of the users who has received the message (it has to be one of the two user of the chat)
           type: array
           items:
             $ref: '#/components/schemas/user'
-        textMessageList:
-          description: the ids of the messages sent in this conversation
-          type: array
-          items:
-            $ref: '#/components/schemas/textMessage'
           
 paths:
