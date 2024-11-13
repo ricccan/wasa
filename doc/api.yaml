@@ -21,7 +21,7 @@ components:
         profileImage:
           description: profile picture of the user
           type: string
-          example: https://media.istockphoto.com/id/1602458519/it/foto/esplosione-di-polvere-colorata-su-sfondo-bianco.jpg?s=612x612&w=0&k=20&c=p8zsmnvNd6Nj2I0cTE8esB79X_CnjkwH4FUTp3U9_eA=
+          format: binary
         bio:
           description: biography of the user
           type: string
@@ -73,11 +73,11 @@ components:
         photoContent:
           description: the url of the photo, if its empty then this is a simple text message
           type: string
-          example: https://immagine.png
+          format: binary
         icon:
           description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
-          example: https://icon.png
+          format: binary
     chat:
       title: chat
       description: the chat between two users or more users
@@ -176,8 +176,6 @@ paths:
           description: not logged in
         '403':
           description: username already exist
-        '404': 
-          description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid username
   
@@ -255,7 +253,32 @@ paths:
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
-        '404': 
-          description: The requested resource could not be found but may be available in the future
-
-        
+  /forwardMessage:
+    post:
+      tags: ["forward message"]
+      summary: send a text from a chat to another
+      description: send a text from a chat to another, if successful returns the message sent
+      operationId: forwardMessage
+      requestBody: 
+        description: message to forward
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  $ref: '#/components/schemas/textMessage'
+                forwardChat:
+                  $ref: '#/components/schemas/chat'
+        required: true
+      responses:
+        '201': #output
+          description: message forwarded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/textMessage'
+        '401':
+          description: not logged in
+        '406': 
+          description: invalid text
