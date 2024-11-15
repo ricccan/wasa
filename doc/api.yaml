@@ -152,18 +152,16 @@ paths:
                 type: object
                 properties:
                   identifier:
-                    # change here if you decide to use an integer
-                    # or any other type of identifier
                     type: string
                     example: "abcdef012345"
-  /setMyUserName:
+  /user/{id}/setMyUserName:
     post:
       tags: ["user profile"]
       summary: set the username of the user
       description: |
          sets the username
       operationId: setMyUserName  
-      requestBody: #input
+      requestBody: 
         description: new username
         content:
           application/json:
@@ -178,7 +176,7 @@ paths:
                   maxLength: 32
         required: true
       responses:
-        '201': #output
+        '201': 
           description: username successfully set 
           content:
             application/json:
@@ -196,7 +194,7 @@ paths:
         '406': 
           description: invalid username
   
-  /getMyConversations:
+  /user/{id}/getMyConversations:
     get:
       tags: [chat management]
       summary: gets all the conversationof the user
@@ -218,7 +216,7 @@ paths:
         '404': 
           description: The requested resource could not be found but may be available in the future
 
-  /getConversation/{conversationId}:
+  /user/{id}/getConversation/{conversationId}:
     get:
       tags: [chat management]
       summary: gets a conversation of the user
@@ -249,7 +247,7 @@ paths:
           description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid id
-  /sendMessage:
+  /user/{id}/getConversation/{conversationId}/sendMessage:
     post:
       tags: ["message management"]
       summary: deliver a message in a chat. If delivered, return the message
@@ -265,7 +263,7 @@ paths:
               $ref: '#/components/schemas/textMessage'
         required: true
       responses:
-        '201': #output
+        '201': 
           description: message successfully sent
           content:
             application/json:
@@ -274,7 +272,7 @@ paths:
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
-  /forwardMessage:
+  /user/{id}/getConversation/forwardMessage:
     post:
       tags: ["message management"]
       summary: send a text from a chat to another
@@ -295,7 +293,7 @@ paths:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': #output
+        '201':
           description: message forwarded
           content:
             application/json:
@@ -306,7 +304,7 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /commentMessage:
+  /user/{id}/getConversation/{conversationId}/commentMessage:
     post:
       tags: ["message management"]
       summary: comment another message
@@ -327,7 +325,7 @@ paths:
                   $ref: '#/components/schemas/textMessage'
         required: true
       responses:
-        '201': #output
+        '201': 
           description: message commented
           content:
             application/json:
@@ -338,25 +336,25 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /uncommentMessage:
+  /user/{id}/getConversation/{conversationId}/uncommentMessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: uncomment another message
       description: uncomment another message
       operationId: uncommentMessage
-      requestBody: 
-        description: message to uncomment
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                messageToUncomment:
-                  description: the message to delete
-                  $ref: '#/components/schemas/textMessage'
-        required: true
+      #requestBody: 
+      #  description: message to uncomment
+      #  content:
+      #    application/json:
+      #      schema:
+      #        type: object
+      #        properties:
+      #          messageToUncomment:
+      #            description: the message to delete
+      #            $ref: '#/components/schemas/textMessage'
+      #  required: true
       responses:
-        '201': #output
+        '201': 
           description: comment successfully deleted
         '401':
           description: not logged in
@@ -364,25 +362,25 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /deleteMessage:
+  /user/{id}/getConversation/{conversationId}/deleteMessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: deletes a message
       description: delete a message previusly sent
       operationId: deleteMessage
-      requestBody: 
-        description: message to delete
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                messageToDelete:
-                  description: the message to delete
-                  $ref: '#/components/schemas/textMessage'
-        required: true
+      #requestBody: 
+      #  description: message to delete
+      #  content:
+      #    application/json:
+      #      schema:
+      #        type: object
+      #        properties:
+      #          messageToDelete:
+      #            description: the message to delete
+      #            $ref: '#/components/schemas/textMessage'
+      #  required: true
       responses:
-        '201': #output
+        '201': 
           description: message successfully deleted
         '401':
           description: not logged in
@@ -411,7 +409,7 @@ paths:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': #output
+        '201':
           description: user added successfully
           content:
             application/json:
@@ -442,7 +440,7 @@ paths:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': #output
+        '201': 
           description: user left the group
         '401':
           description: not logged in
@@ -472,7 +470,7 @@ paths:
                   maxLength: 32
         required: true
       responses:
-        '201': #output
+        '201':
           description: group name changed
         '401':
           description: not logged in
@@ -496,7 +494,7 @@ paths:
                   format: binary
         required: true
       responses:
-        '201': #output
+        '201': 
           description: photo changed
         '401':
           description: not logged in
@@ -521,7 +519,7 @@ paths:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': #output
+        '201': 
           description: photo changed
         '401':
           description: not logged in
