@@ -361,3 +361,88 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
+  /addToGroup:
+    post:
+      tags: ["add to group"]
+      summary: add a user to a group
+      description: add a user to a group. If successful returns the group
+      operationId: addToGroup
+      requestBody:
+        description: the user to add and the group where he is going to be added
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user: 
+                  $ref: '#/components/schemas/user'
+                group: 
+                  $ref: '#/components/schemas/chat'
+        required: true
+      responses:
+        '201': #output
+          description: user added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chat'
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
+        '406': 
+          description: invalid user
+  /leaveGroup:
+    post:
+      tags: ["leave a group"]
+      summary: the user leaves the group
+      description: the user leaves the group
+      operationId: leaveGroup
+      requestBody:
+        description:  the group that the user want to leave
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group: 
+                  $ref: '#/components/schemas/chat'
+        required: true
+      responses:
+        '201': #output
+          description: user left the group
+        '401':
+          description: not logged in
+        '406': 
+          description: invalid group
+  /setGroupName:
+    post:
+      tags: ["set the groups name"]
+      summary: change the name of a group
+      description: change the name of a group . If successful returns the group
+      operationId: setGroupName
+      requestBody:
+        description: the group where he is going to change the name
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group: 
+                  $ref: '#/components/schemas/chat'
+                name:
+                  type: string
+                  example: i fratelli
+                  pattern: 'ˆ.*?$'
+                  minLength: 1
+                  maxLength: 32
+        required: true
+      responses:
+        '201': #output
+          description: group name changed
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
+        '406': 
+          description: invalid user
