@@ -12,6 +12,9 @@ components:
       description: "This object represent the unique name of the user (\"user\")."
       type: object
       properties:
+        id:
+          description: unique identifier
+          type: integer
         username:
           description: Unique name of the user
           type: string
@@ -160,7 +163,17 @@ paths:
       summary: set the username of the user
       description: |
          sets the username
-      operationId: setMyUserName  
+      operationId: setMyUserName 
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody: 
         description: new username
         content:
@@ -201,6 +214,16 @@ paths:
       description: |
          gets all the conversation of the user 
       operationId: getMyConversations
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       responses:
         '200':
           description: list of the users chat
@@ -231,6 +254,15 @@ paths:
             type: integer
             example: 12
           required: true
+        - name: id
+          in: path
+          description: id utente
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: integer
       responses:
         '200':
           description: list of the message in the chat
@@ -254,6 +286,25 @@ paths:
       description: |
         send a message to a chat or a group
       operationId: sendMessage
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversazione
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description: new message
         content:
@@ -278,6 +329,16 @@ paths:
       summary: send a text from a chat to another
       description: send a text from a chat to another, if successful returns the message sent
       operationId: forwardMessage
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody: 
         description: message to forward
         content:
@@ -310,6 +371,25 @@ paths:
       summary: comment another message
       description: comment another message, if successfull returns the new message
       operationId: commentMessage
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody: 
         description: message to comment
         content:
@@ -342,6 +422,34 @@ paths:
       summary: uncomment another message
       description: uncomment another message
       operationId: uncommentMessage
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: messageId
+        in: path
+        description: id message
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       #requestBody: 
       #  description: message to uncomment
       #  content:
@@ -368,6 +476,34 @@ paths:
       summary: deletes a message
       description: delete a message previusly sent
       operationId: deleteMessage
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: messageId
+        in: path
+        description: id message
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       #requestBody: 
       #  description: message to delete
       #  content:
@@ -388,12 +524,22 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /addToGroup:
+  /user/{id}/addToGroup:
     post:
       tags: ["chat management"]
       summary: add a user to a group
       description: add a user to a group. If successful returns the group
       operationId: addToGroup
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description: the user to add and the group where he is going to be added
         content:
@@ -422,12 +568,22 @@ paths:
           description: not authorized
         '406': 
           description: invalid user
-  /leaveGroup:
+  /user/{id}/leaveGroup:
     post:
       tags: ["chat management"]
       summary: the user leaves the group
       description: the user leaves the group
       operationId: leaveGroup
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description:  the group that the user want to leave
         content:
@@ -446,12 +602,31 @@ paths:
           description: not logged in
         '406': 
           description: invalid group
-  /setGroupName:
+  /user/{id}/getConversation/{conversationId}/setGroupName:
     post:
       tags: ["chat management"]
       summary: change the name of a group
       description: change the name of a group . If successful returns the group
       operationId: setGroupName
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description: the group where he is going to change the name and the new name
         content:
@@ -476,12 +651,22 @@ paths:
           description: not logged in
         '403':
           description: not authorized
-  /setMyPhoto:
+  /user/{id}/setMyPhoto:
     post:
       tags: ["user profile"]
       summary: set the photo of the user
       description: change the photo of the user
       operationId: setMyPhoto
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description: the new photo
         content:
@@ -498,12 +683,31 @@ paths:
           description: photo changed
         '401':
           description: not logged in
-  /setGroupPhoto:
+  /user/{id}/getConversation/{conversationId}/setGroupPhoto:
     post:
       tags: ["chat management"]
       summary: change the photo of the group
       description: change the photo of the group
       operationId: setGroupPhoto
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: integer
       requestBody:
         description: the new photo and the group
         content:
