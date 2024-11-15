@@ -422,7 +422,7 @@ paths:
       description: change the name of a group . If successful returns the group
       operationId: setGroupName
       requestBody:
-        description: the group where he is going to change the name
+        description: the group where he is going to change the name and the new name
         content:
           application/json:
             schema:
@@ -444,5 +444,51 @@ paths:
           description: not logged in
         '403':
           description: not authorized
-        '406': 
-          description: invalid user
+  /setMyPhoto:
+    post:
+      tags: ["set the users photo"]
+      summary: change the photo of the user
+      description: change the photo of the user
+      operationId: setMyPhoto
+      requestBody:
+        description: the new photo
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '201': #output
+          description: photo changed
+        '401':
+          description: not logged in
+  /setGroupPhoto:
+    post:
+      tags: ["set the group photo"]
+      summary: change the photo of the group
+      description: change the photo of the group
+      operationId: setGroupPhoto
+      requestBody:
+        description: the new photo and the group
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                group: 
+                  $ref: '#/components/schemas/chat'
+        required: true
+      responses:
+        '201': #output
+          description: photo changed
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
