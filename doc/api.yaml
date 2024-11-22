@@ -95,20 +95,16 @@ components:
           description: the id of the user of the chat
           type: array
           items:
-            description: all the user in the chat
             $ref: '#/components/schemas/user'
           example: 1
         textMessageList:
           description: the ids of the messages sent in this conversation
           type: array
           items:
-            description: all the message in the chat
             $ref: '#/components/schemas/textMessage'
         receiver:
-          description: the id of the users who has received the message (it has to be one of the two user of the chat)
           type: array
           items:
-            description: the users that have received the message 
             $ref: '#/components/schemas/user'
   securitySchemes:
     BearerAuth: 
@@ -232,7 +228,6 @@ paths:
               schema:
                 type: array
                 items:
-                  description: all the chats of the user
                   $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
@@ -271,7 +266,6 @@ paths:
               schema:
                 type: array
                 items:
-                  description: all the message in the chat
                   $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
@@ -310,7 +304,6 @@ paths:
         content:
           application/json:
             schema: 
-              description: the message to send
               $ref: '#/components/schemas/textMessage'
         required: true
       responses:
@@ -319,7 +312,6 @@ paths:
           content:
             application/json:
               schema:
-                description: the message
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
@@ -347,10 +339,8 @@ paths:
               type: object
               properties:
                 message:
-                  description: the message to forward
                   $ref: '#/components/schemas/textMessage'
                 forwardChat:
-                  description: the chat where the user is going to forward the message
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
@@ -359,7 +349,6 @@ paths:
           content:
             application/json:
               schema:
-                description: the message 
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
@@ -398,10 +387,8 @@ paths:
               type: object
               properties:
                 messageToComment:
-                  description: the message to comment
                   $ref: '#/components/schemas/textMessage'
                 comment:
-                  description: the comment
                   $ref: '#/components/schemas/textMessage'
         required: true
       responses:
@@ -410,7 +397,6 @@ paths:
           content:
             application/json:
               schema:
-                description: the comment
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
@@ -458,7 +444,6 @@ paths:
       #        type: object
       #        properties:
       #          messageToUncomment:
-      #            description: the message to delete
       #            $ref: '#/components/schemas/textMessage'
       #  required: true
       responses:
@@ -512,7 +497,6 @@ paths:
       #        type: object
       #        properties:
       #          messageToDelete:
-      #            description: the message to delete
       #            $ref: '#/components/schemas/textMessage'
       #  required: true
       responses:
@@ -548,10 +532,8 @@ paths:
               type: object
               properties:
                 user:
-                  description: the user to add 
                   $ref: '#/components/schemas/user'
                 group:
-                  description: the chat  
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
@@ -560,7 +542,6 @@ paths:
           content:
             application/json:
               schema:
-                description: the chat
                 $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
@@ -592,7 +573,6 @@ paths:
               type: object
               properties:
                 group: 
-                  description: the chat to leave
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
@@ -635,7 +615,6 @@ paths:
               type: object
               properties:
                 group:
-                  description: the chat to set the name 
                   $ref: '#/components/schemas/chat'
                 name:
                   type: string
@@ -719,7 +698,6 @@ paths:
                   type: string
                   format: binary
                 group: 
-                  description: the chat to set the photo
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
