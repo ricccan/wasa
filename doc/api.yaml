@@ -774,6 +774,7 @@ paths:
           type: object
           properties:
             sgp_con_id:
+              description: temp
               type: integer
       requestBody:
         description: the new photo and the group
