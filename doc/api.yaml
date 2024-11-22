@@ -148,6 +148,7 @@ paths:
               type: object
               properties:
                 l_name:
+                  description: temp
                   type: string
                   pattern: 'ˆ.*?$'
                   minLength: 3
@@ -163,6 +164,7 @@ paths:
                 type: object
                 properties:
                   l_identifier:
+                    description: temp
                     type: string
                     pattern: '^.*?$'
                     minLength: 1
@@ -186,6 +188,7 @@ paths:
           type: object
           properties:
             un_id:
+              description: temp
               type: integer
       requestBody: 
         description: new username
@@ -196,6 +199,7 @@ paths:
               type: object
               properties:
                 un_name:
+                  description: temp
                   type: string
                   pattern: '^.*?$'
                   minLength: 1
@@ -207,9 +211,11 @@ paths:
           content:
             application/json:
               schema:
+                description: temp
                 type: object
                 properties:
                   un_username:
+                    description: temp
                     type: string
                     pattern: '^.*?$'
                     minLength: 1
@@ -236,9 +242,11 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             mc_name:
+              description: temp
               type: integer
       responses:
         '200':
@@ -246,6 +254,7 @@ paths:
           content:
             application/json:
               schema:
+                description: temp
                 type: array
                 minItems: 0
                 maxItems: 32
@@ -270,6 +279,7 @@ paths:
           in: path
           description: id of the conversation we are searching for
           schema:
+            description: temp
             type: integer
           required: true
         - name: id
@@ -277,9 +287,11 @@ paths:
           description: id utente
           required: true
           schema:
+            description: temp
             type: object
             properties:
               c_id:
+                description: temp
                 type: integer
       responses:
         '200':
@@ -287,6 +299,7 @@ paths:
           content:
             application/json:
               schema:
+                description: temp
                 type: array
                 minItems: 0
                 maxItems: 1028
@@ -313,18 +326,22 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sm_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversazione
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sm_name:
+              description: temp
               type: integer
       requestBody:
         description: new message
@@ -356,15 +373,18 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             fm_id:
+              description: temp
               type: integer
       requestBody: 
         description: message to forward
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 fm_message:
@@ -397,24 +417,29 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             cm_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
+          description: temp
           type: object
           properties:
             cm_con_id:
+              description: temp
               type: integer
       requestBody: 
         description: message to comment
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 cm_messageToComment:
@@ -447,27 +472,33 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             um_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
+          description: temp
           type: object
           properties:
             um_con_id:
+              description: temp
               type: integer
       - name: messageId
         in: path
         description: id message
         required: true
         schema:
+          description: temp
           type: object
           properties:
-            um_mes:id:
+            um_mes_id:
+              description: temp
               type: integer
       responses:
         '204': 
@@ -492,27 +523,33 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             dm_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
+          description: temp
           type: object
           properties:
             dm_con_id:
+              description: temp
               type: integer
       - name: messageId
         in: path
         description: id message
         required: true
         schema:
+          description: temp
           type: object
           properties:
             dm_mes_id:
+              description: temp
               type: integer
       responses:
         '204': 
@@ -537,15 +574,18 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             adg_id:
+              description: temp
               type: integer
       requestBody:
         description: the user to add and the group where he is going to be added
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 adg_user:
@@ -580,15 +620,18 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             lg_id:
+              description: temp
               type: integer
       requestBody:
         description:  the group that the user want to leave
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 lg_group: 
@@ -615,29 +658,35 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sgn_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sgn_con_id:
+              description: temp
               type: integer
       requestBody:
         description: the group where he is going to change the name and the new name
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 sgn_group:
                   $ref: '#/components/schemas/chat'
                 sgn_name:
+                  description: temp
                   type: string
                   pattern: '^.*?$'
                   minLength: 1
@@ -668,18 +717,22 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             smp_id:
+              description: temp
               type: integer
       requestBody:
         description: the new photo
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 smp_photo:
+                  description: temp
                   type: string
                   format: binary
         required: true
@@ -706,15 +759,18 @@ paths:
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sgp_id:
+              description: temp
               type: integer
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
+          description: temp
           type: object
           properties:
             sgp_con_id:
@@ -724,9 +780,11 @@ paths:
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
                 sgp_photo:
+                  description: temp
                   type: string
                   format: binary
                 sgp_group: 
