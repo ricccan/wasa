@@ -107,7 +107,7 @@ components:
           description: the ids of the messages sent in this conversation
           type: array
           minItems: 0
-          maxItems: 1028
+          maxItems: 1024
           items:
             $ref: '#/components/schemas/textMessage'
         c_receiver:
@@ -302,7 +302,7 @@ paths:
                 description: temp
                 type: array
                 minItems: 0
-                maxItems: 1028
+                maxItems: 1024
                 items:
                   $ref: '#/components/schemas/textMessage'
         '401':
