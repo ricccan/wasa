@@ -12,73 +12,79 @@ components:
       description: "This object represent the unique name of the user (\"user\")."
       type: object
       properties:
-        id:
+        u_id:
           description: unique identifier
           type: integer
-        username:
+        u_username:
           description: Unique name of the user
           type: string
           pattern: '^.*?$'
-          example: ricc
           minLength: 1
           maxLength: 32
-        profileImage:
+        u_profileImage:
           description: profile picture of the user
           type: string
+          pattern: '^.*?$'
           format: binary
-        bio:
+        u_bio:
           description: biography of the user
           type: string
-          example: 18y/o italian
-        firstName:
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 256
+        u_firstName:
           description: the real name of the user 
           type: string
-          example: roberto
-        lastName:
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 32
+        u_lastName:
           description: the real surname of the user
           type: string
-          example: rossi
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 32
     textMessage:
       title: text message
       description: a simple text between users
       type: object
       properties:
-        id: 
+        t_id: 
           description: unique identifier
           type: integer
-          example: 1
-        textContent:
+        t_textContent:
           description: the text content of the message
           type: string
-          example: ciao come stai
+          pattern: '^.*?$'
           minLength: 0
           maxLength: 256
-        preview: 
+        t_preview: 
           description: the snippet of the text
           type: string
-          example: ciao com-
-        sender:
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 32
+        t_sender:
           description: the username of the user who has sent the message
           type: string
-          example: ricc
-        date:
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 32
+        t_date:
           description: the date of the sent message 
           type: number
-          example: 11052024
-        checkmark:
+        t_checkmark:
           description: the graphic rappresentation of the state of the message, seen or just delivered
           type: integer
           enum: [1, 2]
-          example: 1
-        responseTo:
+        t_responseTo:
           description: if the text is a reaction to another message, here is the id of that message. zero means that it isn t a response to another message
           type: integer
-          example: 0
-        photoContent:
+        t_photoContent:
           description: the url of the photo, if its empty then this is a simple text message
           type: string
           format: binary
-        icon:
+        t_icon:
           description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
           format: binary
@@ -87,23 +93,28 @@ components:
       description: the chat between two users or more users
       type: object
       properties:
-        id:
+        c_id:
           description: unique identifier
           type: integer
-          example: 89
-        userIds:
+        c_userIds:
           description: the id of the user of the chat
           type: array
+          minItems: 1
+          maxItems: 32
           items:
             $ref: '#/components/schemas/user'
-          example: 1
-        textMessageList:
+        c_textMessageList:
           description: the ids of the messages sent in this conversation
           type: array
+          minItems: 0
+          maxItems: 1028
           items:
             $ref: '#/components/schemas/textMessage'
-        receiver:
+        c_receiver:
+          description: the ids of the receiver of the message
           type: array
+          minItems: 0
+          maxItems: 32
           items:
             $ref: '#/components/schemas/user'
   securitySchemes:
@@ -133,11 +144,11 @@ paths:
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
-                name:
+                l_name:
                   type: string
-                  example: Maria
                   pattern: 'ˆ.*?$'
                   minLength: 3
                   maxLength: 16
@@ -148,38 +159,44 @@ paths:
           content:
             application/json:
               schema:
+                description: temp
                 type: object
                 properties:
-                  identifier:
+                  l_identifier:
                     type: string
-                    example: "abcdef012345"
-  /user/{id}/setMyUserName:
+                    pattern: '^.*?$'
+                    minLength: 1
+                    maxLength: 32
+  /user/{id}/MyUserName:
     post:
       tags: ["user profile"]
       summary: set the username of the user
       description: |
          sets the username
       operationId: setMyUserName 
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
         description: id utente
         required: true
         schema:
+          description: temp
           type: object
           properties:
-            name:
+            un_id:
               type: integer
       requestBody: 
         description: new username
         content:
           application/json:
             schema:
+              description: temp
               type: object
               properties:
-                name:
+                un_name:
                   type: string
-                  example: frabev
                   pattern: '^.*?$'
                   minLength: 1
                   maxLength: 32
@@ -192,10 +209,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  username:
+                  un_username:
                     type: string
                     pattern: '^.*?$'
-                    example: frabev
+                    minLength: 1
+                    maxLength: 32
         '401':
           description: not logged in
         '403':
@@ -203,13 +221,15 @@ paths:
         '406': 
           description: invalid username
   
-  /user/{id}/getMyConversations:
+  /user/{id}/MyConversations:
     get:
       tags: [chat management]
       summary: gets all the conversationof the user
       description: |
          gets all the conversation of the user 
       operationId: getMyConversations
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -218,7 +238,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            mc_name:
               type: integer
       responses:
         '200':
@@ -227,6 +247,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 32
                 items:
                   $ref: '#/components/schemas/chat'
         '401':
@@ -234,20 +256,21 @@ paths:
         '404': 
           description: The requested resource could not be found but may be available in the future
 
-  /user/{id}/getConversation/{conversationId}:
+  /user/{id}/Conversation/{conversationId}:
     get:
       tags: [chat management]
       summary: gets a conversation of the user
       description: |
          gets a the conversation of the user 
       operationId: getConversation
+      security:
+        - BearerAuth: []   
       parameters:
         - name: conversationId 
           in: path
           description: id of the conversation we are searching for
           schema:
             type: integer
-            example: 12
           required: true
         - name: id
           in: path
@@ -256,7 +279,7 @@ paths:
           schema:
             type: object
             properties:
-              name:
+              c_id:
                 type: integer
       responses:
         '200':
@@ -265,6 +288,8 @@ paths:
             application/json:
               schema:
                 type: array
+                minItems: 0
+                maxItems: 1028
                 items:
                   $ref: '#/components/schemas/textMessage'
         '401':
@@ -273,13 +298,15 @@ paths:
           description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid id
-  /user/{id}/getConversation/{conversationId}/sendMessage:
+  /user/{id}/Conversation/{conversationId}/SMessage:
     post:
       tags: ["message management"]
       summary: deliver a message in a chat. If delivered, return the message
       description: |
         send a message to a chat or a group
       operationId: sendMessage
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -288,7 +315,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sm_id:
               type: integer
       - name: conversationId
         in: path
@@ -297,7 +324,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sm_name:
               type: integer
       requestBody:
         description: new message
@@ -315,12 +342,14 @@ paths:
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
-  /user/{id}/getConversation/forwardMessage:
+  /user/{id}/Conversation/FMessage:
     post:
       tags: ["message management"]
       summary: send a text from a chat to another
       description: send a text from a chat to another, if successful returns the message sent
       operationId: forwardMessage
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -329,7 +358,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            fm_id:
               type: integer
       requestBody: 
         description: message to forward
@@ -338,9 +367,9 @@ paths:
             schema:
               type: object
               properties:
-                message:
+                fm_message:
                   $ref: '#/components/schemas/textMessage'
-                forwardChat:
+                fm_forwardChat:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
@@ -354,12 +383,14 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /user/{id}/getConversation/{conversationId}/commentMessage:
+  /user/{id}/Conversation/{conversationId}/CMessage:
     post:
       tags: ["message management"]
       summary: comment another message
       description: comment another message, if successfull returns the new message
       operationId: commentMessage
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -368,7 +399,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            cm_id:
               type: integer
       - name: conversationId
         in: path
@@ -377,7 +408,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            cm_con_id:
               type: integer
       requestBody: 
         description: message to comment
@@ -386,9 +417,9 @@ paths:
             schema:
               type: object
               properties:
-                messageToComment:
+                cm_messageToComment:
                   $ref: '#/components/schemas/textMessage'
-                comment:
+                cm_comment:
                   $ref: '#/components/schemas/textMessage'
         required: true
       responses:
@@ -402,12 +433,14 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /user/{id}/getConversation/{conversationId}/uncommentMessage/{messageId}:
+  /user/{id}/Conversation/{conversationId}/UMessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: uncomment another message
       description: uncomment another message
       operationId: uncommentMessage
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -416,7 +449,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            um_id:
               type: integer
       - name: conversationId
         in: path
@@ -425,7 +458,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            um_con_id:
               type: integer
       - name: messageId
         in: path
@@ -434,33 +467,25 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            um_mes:id:
               type: integer
-      #requestBody: 
-      #  description: message to uncomment
-      #  content:
-      #    application/json:
-      #      schema:
-      #        type: object
-      #        properties:
-      #          messageToUncomment:
-      #            $ref: '#/components/schemas/textMessage'
-      #  required: true
       responses:
-        '201': 
-          description: comment successfully deleted
+        '204': 
+          description: comment successfully uncommented
         '401':
           description: not logged in
         '403':
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /user/{id}/getConversation/{conversationId}/deleteMessage/{messageId}:
+  /user/{id}/Conversation/{conversationId}/DMessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: deletes a message
       description: delete a message previusly sent
       operationId: deleteMessage
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -469,7 +494,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            dm_id:
               type: integer
       - name: conversationId
         in: path
@@ -478,7 +503,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            dm_con_id:
               type: integer
       - name: messageId
         in: path
@@ -487,20 +512,10 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            dm_mes_id:
               type: integer
-      #requestBody: 
-      #  description: message to delete
-      #  content:
-      #    application/json:
-      #      schema:
-      #        type: object
-      #        properties:
-      #          messageToDelete:
-      #            $ref: '#/components/schemas/textMessage'
-      #  required: true
       responses:
-        '201': 
+        '204': 
           description: message successfully deleted
         '401':
           description: not logged in
@@ -508,12 +523,14 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /user/{id}/addToGroup:
+  /user/{id}/AGroup:
     post:
       tags: ["chat management"]
       summary: add a user to a group
       description: add a user to a group. If successful returns the group
       operationId: addToGroup
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -522,7 +539,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            adg_id:
               type: integer
       requestBody:
         description: the user to add and the group where he is going to be added
@@ -531,9 +548,9 @@ paths:
             schema:
               type: object
               properties:
-                user:
+                adg_user:
                   $ref: '#/components/schemas/user'
-                group:
+                adg_group:
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
@@ -549,12 +566,14 @@ paths:
           description: not authorized
         '406': 
           description: invalid user
-  /user/{id}/leaveGroup:
+  /user/{id}/LGroup:
     post:
       tags: ["chat management"]
       summary: the user leaves the group
       description: the user leaves the group
       operationId: leaveGroup
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -563,7 +582,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            lg_id:
               type: integer
       requestBody:
         description:  the group that the user want to leave
@@ -572,22 +591,24 @@ paths:
             schema:
               type: object
               properties:
-                group: 
+                lg_group: 
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': 
+        '204': 
           description: user left the group
         '401':
           description: not logged in
         '406': 
           description: invalid group
-  /user/{id}/getConversation/{conversationId}/setGroupName:
+  /user/{id}/Conversation/{conversationId}/GroupName:
     post:
       tags: ["chat management"]
       summary: change the name of a group
       description: change the name of a group . If successful returns the group
       operationId: setGroupName
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -596,7 +617,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sgn_id:
               type: integer
       - name: conversationId
         in: path
@@ -605,7 +626,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sgn_con_id:
               type: integer
       requestBody:
         description: the group where he is going to change the name and the new name
@@ -614,11 +635,10 @@ paths:
             schema:
               type: object
               properties:
-                group:
+                sgn_group:
                   $ref: '#/components/schemas/chat'
-                name:
+                sgn_name:
                   type: string
-                  example: i fratelli
                   pattern: '^.*?$'
                   minLength: 1
                   maxLength: 32
@@ -626,16 +646,22 @@ paths:
       responses:
         '201':
           description: group name changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
         '403':
           description: not authorized
-  /user/{id}/setMyPhoto:
+  /user/{id}/MyPhoto:
     post:
       tags: ["user profile"]
       summary: set the photo of the user
-      description: change the photo of the user
+      description: change the photo of the user, if successful returns the user
       operationId: setMyPhoto
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -644,7 +670,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            smp_id:
               type: integer
       requestBody:
         description: the new photo
@@ -653,21 +679,27 @@ paths:
             schema:
               type: object
               properties:
-                photo:
+                smp_photo:
                   type: string
                   format: binary
         required: true
       responses:
         '201': 
           description: photo changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
         '401':
           description: not logged in
-  /user/{id}/getConversation/{conversationId}/setGroupPhoto:
+  /user/{id}/Conversation/{conversationId}/GroupPhoto:
     post:
       tags: ["chat management"]
       summary: change the photo of the group
-      description: change the photo of the group
+      description: change the photo of the group, if successful returns the group
       operationId: setGroupPhoto
+      security:
+        - BearerAuth: []   
       parameters:
       - name: id
         in: path
@@ -676,7 +708,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sgp_id:
               type: integer
       - name: conversationId
         in: path
@@ -685,7 +717,7 @@ paths:
         schema:
           type: object
           properties:
-            name:
+            sgp_con_id:
               type: integer
       requestBody:
         description: the new photo and the group
@@ -694,15 +726,19 @@ paths:
             schema:
               type: object
               properties:
-                photo:
+                sgp_photo:
                   type: string
                   format: binary
-                group: 
+                sgp_group: 
                   $ref: '#/components/schemas/chat'
         required: true
       responses:
         '201': 
           description: photo changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
         '403':
