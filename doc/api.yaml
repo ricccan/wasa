@@ -169,7 +169,7 @@ paths:
                     pattern: '^.*?$'
                     minLength: 1
                     maxLength: 32
-  /user/{id}/MyUserName:
+  /users/{id}/username:
     post:
       tags: ["user profile"]
       summary: set the username of the user
@@ -227,7 +227,7 @@ paths:
         '406': 
           description: invalid username
   
-  /user/{id}/MyConversations:
+  /users/{id}/conversations:
     get:
       tags: [chat management]
       summary: gets all the conversationof the user
@@ -265,7 +265,7 @@ paths:
         '404': 
           description: The requested resource could not be found but may be available in the future
 
-  /user/{id}/Conversation/{conversationId}:
+  /users/{id}/conversations/{conversationId}:
     get:
       tags: [chat management]
       summary: gets a conversation of the user
@@ -311,7 +311,7 @@ paths:
           description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid id
-  /user/{id}/Conversation/{conversationId}/SMessage:
+  /users/{id}/conversations/{conversationId}/smessage:
     post:
       tags: ["message management"]
       summary: deliver a message in a chat. If delivered, return the message
@@ -359,7 +359,7 @@ paths:
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
-  /user/{id}/Conversation/FMessage:
+  /users/{id}/conversations/fmessage:
     post:
       tags: ["message management"]
       summary: send a text from a chat to another
@@ -403,7 +403,7 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /user/{id}/Conversation/{conversationId}/CMessage:
+  /users/{id}/conversations/{conversationId}/cmessage:
     post:
       tags: ["message management"]
       summary: comment another message
@@ -458,7 +458,7 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /user/{id}/Conversation/{conversationId}/UMessage/{messageId}:
+  /users/{id}/conversations/{conversationId}/umessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: uncomment another message
@@ -509,7 +509,7 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /user/{id}/Conversation/{conversationId}/DMessage/{messageId}:
+  /users/{id}/conversations/{conversationId}/dmessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: deletes a message
@@ -560,7 +560,7 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /user/{id}/AGroup:
+  /users/{id}/agroup:
     post:
       tags: ["chat management"]
       summary: add a user to a group
@@ -606,7 +606,7 @@ paths:
           description: not authorized
         '406': 
           description: invalid user
-  /user/{id}/LGroup:
+  /users/{id}/lgroup:
     post:
       tags: ["chat management"]
       summary: the user leaves the group
@@ -644,7 +644,7 @@ paths:
           description: not logged in
         '406': 
           description: invalid group
-  /user/{id}/Conversation/{conversationId}/GroupName:
+  /users/{id}/conversations/{conversationId}/groupName:
     post:
       tags: ["chat management"]
       summary: change the name of a group
@@ -703,7 +703,7 @@ paths:
           description: not logged in
         '403':
           description: not authorized
-  /user/{id}/MyPhoto:
+  /users/{id}/photo:
     post:
       tags: ["user profile"]
       summary: set the photo of the user
@@ -745,7 +745,7 @@ paths:
                 $ref: '#/components/schemas/user'
         '401':
           description: not logged in
-  /user/{id}/Conversation/{conversationId}/GroupPhoto:
+  /users/{id}/conversations/{conversationId}/groupphoto:
     post:
       tags: ["chat management"]
       summary: change the photo of the group
