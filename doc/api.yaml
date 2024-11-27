@@ -88,7 +88,7 @@ components:
           description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
           format: binary
-    chat:
+    chat: 
       title: chat
       description: the chat between two users or more users
       type: object
