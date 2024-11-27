@@ -26,6 +26,8 @@ components:
           type: string
           pattern: '^.*?$'
           format: binary
+          minLength: 1
+          maxLength: 1024
         u_bio:
           description: biography of the user
           type: string
@@ -84,10 +86,14 @@ components:
           description: the url of the photo, if its empty then this is a simple text message
           type: string
           format: binary
+          minLength: 1
+          maxLength: 1024
         t_icon:
           description: the preview of the photo in icon version, the value is taken only if its a photo message
           type: string
           format: binary
+          minLength: 1
+          maxLength: 1024
     chat: 
       title: chat
       description: the chat between two users or more users
@@ -735,6 +741,8 @@ paths:
                   description: temp
                   type: string
                   format: binary
+                  minLength: 1
+                  maxLength: 1024
         required: true
       responses:
         '201': 
@@ -788,6 +796,8 @@ paths:
                   description: temp
                   type: string
                   format: binary
+                  minLength: 1
+                  maxLength: 1024
                 sgp_group: 
                   $ref: '#/components/schemas/chat'
         required: true
