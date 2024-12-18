@@ -7,12 +7,12 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 	// Register routes
-	rt.router.GET("/", rt.getHelloWorld)
-	rt.router.GET("/context", rt.wrap(rt.getContextReply))
-	rt.router.POST("/users/:id/username", rt.setMyUserName) // per ogni api devo fare un handler che richiama la funzione
+	rt.router.GET("/context", rt.wrap(rt.getContextReply)) // per ogni api devo fare un handler che richiama la funzione
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
+
+	rt.router.POST("/session", rt.doLogin) // chiamo l'endpoint mettendo percorso e nome
 
 	return rt.router
 }

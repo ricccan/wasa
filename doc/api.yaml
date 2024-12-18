@@ -170,7 +170,7 @@ paths:
                 type: object
                 properties:
                   l_identifier:
-                    description: temp
+                    description: id dell' utente
                     type: string
                     pattern: '^.*?$'
                     minLength: 1

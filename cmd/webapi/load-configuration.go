@@ -26,7 +26,7 @@ type WebAPIConfiguration struct {
 	}
 	Debug bool
 	DB    struct {
-		Filename string `conf:"default:/service/database/databaseWasa.db"` // al posto di /tmp/decaf.db metto il percorso del db (conviene metterlo nella stessa cartella)
+		Filename string `conf:"default:./databaseWasa.db"` //path del database
 	}
 }
 
