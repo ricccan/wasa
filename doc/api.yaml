@@ -191,11 +191,7 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            un_id:
-              description: temp
-              type: integer
+          type: integer # cambiato 
       requestBody: 
         description: new username
         content:
