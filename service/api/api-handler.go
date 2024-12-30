@@ -15,5 +15,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.doLogin) // chiamo l'endpoint mettendo percorso e nome
 
 	rt.router.POST("/users/:id/username", rt.setMyUsername)
+
+	rt.router.POST("/users/:id/photo", rt.setMyPhoto)
 	return rt.router
 }
