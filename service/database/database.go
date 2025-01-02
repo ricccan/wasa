@@ -42,6 +42,8 @@ type AppDatabase interface {
 	DoLogin(username string) (*int, error) //tutte le funzioni vanno qui
 	SetMyUsername(id int, username string) (string, error)
 	SetMyPhoto(id int, photo []byte) (*User, error)
+	AddToGroup(utente int, gruppo int) error
+	RemoveFromGroup(utente int, gruppo int) error
 }
 
 type appdbimpl struct {

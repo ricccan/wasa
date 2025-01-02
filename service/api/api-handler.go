@@ -17,5 +17,9 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:id/username", rt.setMyUsername)
 
 	rt.router.POST("/users/:id/photo", rt.setMyPhoto)
+
+	rt.router.POST("/users/:id/groups", rt.addToGroup)
+
+	rt.router.DELETE("/users/:id/groups/:group", rt.removeFromGroup)
 	return rt.router
 }

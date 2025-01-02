@@ -116,13 +116,13 @@ components:
           maxItems: 1024
           items:
             $ref: '#/components/schemas/textMessage'
-        c_receiver:
-          description: the ids of the receiver of the message
-          type: array
-          minItems: 0
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/user'
+        #c_receiver: 
+        #  description: the ids of the receiver of the message
+        #  type: array
+        #  minItems: 0
+        #  maxItems: 32
+        #  items:
+        #    $ref: '#/components/schemas/user'
   securitySchemes:
     BearerAuth: 
       type: http 
@@ -191,7 +191,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: integer # cambiato 
+          type: integer
+          minimum: 0
       requestBody: 
         description: new username
         content:
@@ -245,11 +246,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            mc_name:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       responses:
         '200':
           description: list of the users chat
@@ -290,11 +288,8 @@ paths:
           required: true
           schema:
             description: temp
-            type: object
-            properties:
-              c_id:
-                description: temp
-                type: integer
+            type: integer
+            minimum: 0
       responses:
         '200':
           description: list of the message in the chat
@@ -313,7 +308,7 @@ paths:
           description: The requested resource could not be found but may be available in the future
         '406': 
           description: invalid id
-  /users/{id}/conversations/{conversationId}/smessage:
+  /users/{id}/conversations/{conversationId}/messages:
     post:
       tags: ["message management"]
       summary: deliver a message in a chat. If delivered, return the message
@@ -329,22 +324,16 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            sm_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: conversationId
         in: path
         description: id conversazione
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            sm_name:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       requestBody:
         description: new message
         content:
@@ -361,7 +350,7 @@ paths:
                 $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
-  /users/{id}/conversations/fmessage:
+  /users/{id}/conversations/{conversationId}/messages/{messageId}:
     post:
       tags: ["message management"]
       summary: send a text from a chat to another
@@ -376,11 +365,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            fm_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       requestBody: 
         description: message to forward
         content:
@@ -405,7 +391,54 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /users/{id}/conversations/{conversationId}/cmessage:
+    delete:
+      tags: ["message management"]
+      summary: deletes a message
+      description: delete a message previusly sent
+      operationId: deleteMessage
+      security:
+        - BearerAuth: []   
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          description: temp
+          type: object
+          properties:
+            dm_con_id:
+              description: temp
+              type: integer
+      - name: messageId
+        in: path
+        description: id message
+        required: true
+        schema:
+          description: temp
+          type: object
+          properties:
+            dm_mes_id:
+              description: temp
+              type: integer
+      responses:
+        '204': 
+          description: message successfully deleted
+        '401':
+          description: not logged in
+        '403':
+          description: unauthorized to delete this message
+        '404':
+          description: The requested resource could not be found 
+  /users/{id}/conversations/{conversationId}/messages/{messageId}/comments:
     post:
       tags: ["message management"]
       summary: comment another message
@@ -420,11 +453,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            cm_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: conversationId
         in: path
         description: id conversation
@@ -460,7 +490,6 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-  /users/{id}/conversations/{conversationId}/umessage/{messageId}:
     delete:
       tags: ["message management"]
       summary: uncomment another message
@@ -475,33 +504,24 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            um_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: conversationId
         in: path
         description: id conversation
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            um_con_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: messageId
         in: path
         description: id message
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            um_mes_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       responses:
         '204': 
           description: comment successfully uncommented
@@ -511,58 +531,8 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
-  /users/{id}/conversations/{conversationId}/dmessage/{messageId}:
-    delete:
-      tags: ["message management"]
-      summary: deletes a message
-      description: delete a message previusly sent
-      operationId: deleteMessage
-      security:
-        - BearerAuth: []   
-      parameters:
-      - name: id
-        in: path
-        description: id utente
-        required: true
-        schema:
-          description: temp
-          type: object
-          properties:
-            dm_id:
-              description: temp
-              type: integer
-      - name: conversationId
-        in: path
-        description: id conversation
-        required: true
-        schema:
-          description: temp
-          type: object
-          properties:
-            dm_con_id:
-              description: temp
-              type: integer
-      - name: messageId
-        in: path
-        description: id message
-        required: true
-        schema:
-          description: temp
-          type: object
-          properties:
-            dm_mes_id:
-              description: temp
-              type: integer
-      responses:
-        '204': 
-          description: message successfully deleted
-        '401':
-          description: not logged in
-        '403':
-          description: unauthorized to delete this message
-        '404':
-          description: The requested resource could not be found 
-  /users/{id}/agroup:
+    
+  /users/{id}/groups:
     post:
       tags: ["chat management"]
       summary: add a user to a group
@@ -577,12 +547,9 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            adg_id:
-              description: temp
-              type: integer
-      requestBody:
+          type: integer
+          minimum: 0
+      requestBody: 
         description: the user to add and the group where he is going to be added
         content:
           application/json:
@@ -590,26 +557,23 @@ paths:
               description: temp
               type: object
               properties:
-                adg_user:
-                  $ref: '#/components/schemas/user'
-                adg_group:
-                  $ref: '#/components/schemas/chat'
-        required: true
+                adg_utente_id:
+                  description: the id of the user to add to the group
+                  type: integer
+                adg_group_id:
+                  description: the id of the group where the user is going to be added
+                  type: integer
       responses:
-        '201':
-          description: user added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/chat'
+        '204': 
+          description: user added to the group
         '401':
           description: not logged in
         '403':
           description: not authorized
         '406': 
           description: invalid user
-  /users/{id}/lgroup:
-    post:
+  /users/{id}/groups/{groupId}:
+    delete: #cambiata vedere poi il prof
       tags: ["chat management"]
       summary: the user leaves the group
       description: the user leaves the group
@@ -623,21 +587,15 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            lg_id:
-              description: temp
-              type: integer
-      requestBody:
-        description:  the group that the user want to leave
-        content:
-          application/json:
-            schema:
-              description: temp
-              type: object
-              properties:
-                lg_group: 
-                  $ref: '#/components/schemas/chat'
+          type: integer
+          minimum: 0
+      - name: groupId
+        in: path
+        description: id group
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
         required: true
       responses:
         '204': 
@@ -661,11 +619,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            sgn_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: conversationId
         in: path
         description: id conversation
@@ -720,11 +675,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            smp_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       requestBody:
         description: the new photo
         content:
@@ -764,11 +716,8 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            sgp_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: conversationId
         in: path
         description: id conversation
