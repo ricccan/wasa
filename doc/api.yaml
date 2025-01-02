@@ -608,7 +608,7 @@ paths:
     post:
       tags: ["chat management"]
       summary: change the name of a group
-      description: change the name of a group . If successful returns the group
+      description: change the name of a group . If successful returns the group id
       operationId: setGroupName
       security:
         - BearerAuth: []   
@@ -633,29 +633,23 @@ paths:
               description: temp
               type: integer
       requestBody:
-        description: the group where he is going to change the name and the new name
+        description: the name of the group
         content:
           application/json:
             schema:
               description: temp
               type: object
               properties:
-                sgn_group:
-                  $ref: '#/components/schemas/chat'
                 sgn_name:
-                  description: temp
+                  description: the new name of the group
                   type: string
                   pattern: '^.*?$'
                   minLength: 1
                   maxLength: 32
         required: true
       responses:
-        '201':
+        '204':
           description: group name changed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
         '403':
@@ -743,16 +737,10 @@ paths:
                   format: binary
                   minLength: 1
                   maxLength: 1024
-                sgp_group: 
-                  $ref: '#/components/schemas/chat'
         required: true
       responses:
-        '201': 
+        '204': 
           description: photo changed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/chat'
         '401':
           description: not logged in
         '403':

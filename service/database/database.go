@@ -44,6 +44,8 @@ type AppDatabase interface {
 	SetMyPhoto(id int, photo []byte) (*User, error)
 	AddToGroup(utente int, gruppo int) error
 	RemoveFromGroup(utente int, gruppo int) error
+	SetGroupName(id int, name string) error
+	SetGroupPhoto(id int, photo []byte) error
 }
 
 type appdbimpl struct {
