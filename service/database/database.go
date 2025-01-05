@@ -46,6 +46,7 @@ type AppDatabase interface {
 	RemoveFromGroup(utente int, gruppo int) error
 	SetGroupName(id int, name string) error
 	SetGroupPhoto(id int, photo []byte) error
+	SendMessage(user int, chat int, photo []byte, text string) error
 }
 
 type appdbimpl struct {

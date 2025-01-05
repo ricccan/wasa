@@ -25,5 +25,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:id/conversations/:conversationId/groupName", rt.SetGroupName)
 
 	rt.router.POST("/users/:id/conversations/:conversationId/groupphoto", rt.SetGroupPhoto)
+
+	rt.router.POST("/users/:id/conversations/:conversationId/messages", rt.sendMessage)
 	return rt.router
 }

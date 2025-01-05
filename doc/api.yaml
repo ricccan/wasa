@@ -311,7 +311,7 @@ paths:
   /users/{id}/conversations/{conversationId}/messages:
     post:
       tags: ["message management"]
-      summary: deliver a message in a chat. If delivered, return the message
+      summary: send a message in a chat.
       description: |
         send a message to a chat or a group
       operationId: sendMessage
@@ -334,20 +334,24 @@ paths:
           description: temp
           type: integer
           minimum: 0
-      requestBody:
-        description: new message
+      requestBody: 
+        description: the messages specifications
         content:
           application/json:
-            schema: 
-              $ref: '#/components/schemas/textMessage'
+            schema:
+              description: temp
+              type: object
+              properties:
+                messageText:
+                  description: the text part of the message
+                  type: string
+                photoText:
+                  description: the photo part of the message
+                  type: string
         required: true
       responses:
-        '201': 
+        '204': 
           description: message successfully sent
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
   /users/{id}/conversations/{conversationId}/messages/{messageId}:
