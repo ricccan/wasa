@@ -48,6 +48,9 @@ type AppDatabase interface {
 	SetGroupPhoto(id int, photo []byte) error
 	SendMessage(user int, chat int, photo []byte, text string) error
 	DeleteMessage(utente int, gruppo int, messaggio int) error
+	UncommentMessage(utente int, gruppo int, messaggio int) error
+	CommentMessage(utente int, gruppo int, mess int, photo []byte, testo string) error
+	ForwardMessage(id int, chat int, message int, invio int) error
 }
 
 type appdbimpl struct {

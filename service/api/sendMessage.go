@@ -13,6 +13,7 @@ type sendMessageRequest struct {
 	// il nome delle robe json con maiuscola
 
 	Text string `json:"messageText"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
+	Foto string `json:"photoText"`
 }
 
 func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base

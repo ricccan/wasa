@@ -358,7 +358,7 @@ paths:
     post:
       tags: ["message management"]
       summary: send a text from a chat to another
-      description: send a text from a chat to another, if successful returns the message sent
+      description: send a text from a chat to another
       operationId: forwardMessage
       security:
         - BearerAuth: []   
@@ -370,27 +370,38 @@ paths:
         schema:
           description: temp
           type: integer
-          minimum: 0
+          minimum: 0 
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0 
+      - name: messageId
+        in: path
+        description: id messaggio
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0 
       requestBody: 
-        description: message to forward
+        description: new chat id
         content:
           application/json:
             schema:
-              description: temp
+              description: the id of the chat where the message is going to be forwarded
               type: object
               properties:
-                fm_message:
-                  $ref: '#/components/schemas/textMessage'
-                fm_forwardChat:
-                  $ref: '#/components/schemas/chat'
-        required: true
+                chatId:
+                  description: temp
+                  type: integer
+                  minimum: 0
       responses:
-        '201':
+        '204':
           description: message forwarded
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
         '406': 
@@ -417,22 +428,16 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            dm_con_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       - name: messageId
         in: path
         description: id message
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            dm_mes_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
       responses:
         '204': 
           description: message successfully deleted
@@ -446,7 +451,7 @@ paths:
     post:
       tags: ["message management"]
       summary: comment another message
-      description: comment another message, if successfull returns the new message
+      description: comment another message 
       operationId: commentMessage
       security:
         - BearerAuth: []   
@@ -465,11 +470,16 @@ paths:
         required: true
         schema:
           description: temp
-          type: object
-          properties:
-            cm_con_id:
-              description: temp
-              type: integer
+          type: integer
+          minimum: 0
+      - name: messageId
+        in: path
+        description: id message
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
       requestBody: 
         description: message to comment
         content:
@@ -478,18 +488,16 @@ paths:
               description: temp
               type: object
               properties:
-                cm_messageToComment:
-                  $ref: '#/components/schemas/textMessage'
-                cm_comment:
-                  $ref: '#/components/schemas/textMessage'
+                messageText:
+                  description: the text part of the message
+                  type: string
+                photoText:
+                  description: the photo part of the message
+                  type: string
         required: true
       responses:
-        '201': 
+        '204': 
           description: message commented
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/textMessage'
         '401':
           description: not logged in
         '406': 
