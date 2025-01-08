@@ -108,21 +108,37 @@ components:
           minItems: 1
           maxItems: 32
           items:
-            $ref: '#/components/schemas/user'
+            type: integer
+            minimum: 0
         c_textMessageList:
           description: the ids of the messages sent in this conversation
           type: array
           minItems: 0
           maxItems: 1024
           items:
-            $ref: '#/components/schemas/textMessage'
-        #c_receiver: 
-        #  description: the ids of the receiver of the message
-        #  type: array
-        #  minItems: 0
-        #  maxItems: 32
-        #  items:
-        #    $ref: '#/components/schemas/user'
+            type: integer
+            minimum: 0
+        c_groupName:
+          description: the name of the group
+          type: string
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 256
+        c_groupPhoto:
+          description: the photo of the group
+          type: string
+          format: binary
+          minLength: 1
+          maxLength: 1024
+        c_description:
+          description: the description of the group
+          type: string
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 256
+        c_group:
+          description: if the chat is a group chat or not
+          type: boolean
   securitySchemes:
     BearerAuth: 
       type: http 

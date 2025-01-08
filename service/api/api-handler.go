@@ -35,5 +35,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.commentMessage)
 
 	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId", rt.forwardMessage)
+
+	rt.router.GET("/users/:id/conversations", rt.getMyConversations)
 	return rt.router
 }
