@@ -1,20 +1,12 @@
 package api
 
 import (
-	"encoding/json"
 	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 )
-
-type sendMessageRequest struct {
-	// il nome delle robe json con maiuscola
-
-	Text string `json:"messageText"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
-	Foto string `json:"photoText"`
-}
 
 func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
 	parametroId := ps.ByName("id")
@@ -29,19 +21,6 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 	idChat, err := strconv.Atoi(parametroChat) //conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	body, err := io.ReadAll(r.Body) // readall funzione che legge il body
-	if err != nil {                 // se ci sono errori
-		http.Error(w, err.Error(), http.StatusBadRequest) //tira fuori errore
-		return
-	}
-	defer r.Body.Close() // Chiudere il body dopo averlo letto
-
-	var data sendMessageRequest
-	if err := json.Unmarshal(body, &data); err != nil { //mette il body in una variabile
-		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}
 
@@ -64,8 +43,10 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	mess := r.FormValue("messageText") // prende il file dalla form
+
 	// aggiungere modo per calcolare data, snippet e altri dati del messaggio
-	err = rt.db.SendMessage(idUser, idChat, imageData, data.Text)
+	err = rt.db.SendMessage(idUser, idChat, imageData, mess)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
