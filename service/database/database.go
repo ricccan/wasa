@@ -52,6 +52,7 @@ type AppDatabase interface {
 	CommentMessage(utente int, gruppo int, mess int, photo []byte, testo string) error
 	ForwardMessage(id int, chat int, message int, invio int) error
 	GetMyConversations(id int) (*[]Chat, error)
+	GetConversation(id int, group int) (*Chat, error)
 }
 
 type appdbimpl struct {
