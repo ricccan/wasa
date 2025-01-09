@@ -40,5 +40,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation)
 
+	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // prendo i messaggi di una conversazione (da aggiungere nelle api doc)
+
 	return rt.router
 }

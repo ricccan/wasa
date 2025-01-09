@@ -24,23 +24,32 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	isPhoto := r.FormValue("IsPhoto") // prende il file dalla form
+	messageType, err := strconv.ParseBool(isPhoto)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	err = r.ParseMultipartForm(10 << 20) // 10 MB converte da form a struttura
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	var imageData []byte
 	file, _, err := r.FormFile("photo") // prende il file dalla form
-	if err != nil {
+	if err != nil && messageType {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
-	}
-	defer file.Close()
-
-	imageData, err := io.ReadAll(file) // legge il file
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	} else if err == nil {
+		defer file.Close()
+		imageData, err = io.ReadAll(file) // legge il file
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	mess := r.FormValue("messageText") // prende il file dalla form

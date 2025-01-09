@@ -53,6 +53,7 @@ type AppDatabase interface {
 	ForwardMessage(id int, chat int, message int, invio int) error
 	GetMyConversations(id int) (*[]Chat, error)
 	GetConversation(id int, group int) (*Chat, error)
+	GetMessages(id int, chat int) (*[]Message, error)
 }
 
 type appdbimpl struct {
