@@ -8,24 +8,24 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) commentMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
+func (rt *_router) commentMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 	parametroId := ps.ByName("id")
 	parametroChat := ps.ByName("conversationId")
 	parametroMessage := ps.ByName("messageId")
 
-	idUser, err := strconv.Atoi(parametroId) //conversione da stringa a int
+	idUser, err := strconv.Atoi(parametroId) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	idChat, err := strconv.Atoi(parametroChat) //conversione da stringa a int
+	idChat, err := strconv.Atoi(parametroChat) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	idMessage, err := strconv.Atoi(parametroMessage) //conversione da stringa a int
+	idMessage, err := strconv.Atoi(parametroMessage) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

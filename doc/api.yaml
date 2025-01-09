@@ -361,9 +361,15 @@ paths:
                 messageText:
                   description: the text part of the message
                   type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
                 photoText:
                   description: the photo part of the message
                   type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
         required: true
       responses:
         '204': 
@@ -371,14 +377,7 @@ paths:
         '401':
           description: not logged in
   /users/{id}/conversations/{conversationId}/messages/{messageId}:
-    post:
-      tags: ["message management"]
-      summary: send a text from a chat to another
-      description: send a text from a chat to another
-      operationId: forwardMessage
-      security:
-        - BearerAuth: []   
-      parameters:
+    parameters:
       - name: id
         in: path
         description: id utente
@@ -403,6 +402,13 @@ paths:
           description: temp
           type: integer
           minimum: 0 
+    post:
+      tags: ["message management"]
+      summary: send a text from a chat to another
+      description: send a text from a chat to another
+      operationId: forwardMessage
+      security:
+        - BearerAuth: []   
       requestBody: 
         description: new chat id
         content:
@@ -429,31 +435,6 @@ paths:
       operationId: deleteMessage
       security:
         - BearerAuth: []   
-      parameters:
-      - name: id
-        in: path
-        description: id utente
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
-      - name: conversationId
-        in: path
-        description: id conversation
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
-      - name: messageId
-        in: path
-        description: id message
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
       responses:
         '204': 
           description: message successfully deleted
@@ -464,14 +445,7 @@ paths:
         '404':
           description: The requested resource could not be found 
   /users/{id}/conversations/{conversationId}/messages/{messageId}/comments:
-    post:
-      tags: ["message management"]
-      summary: comment another message
-      description: comment another message 
-      operationId: commentMessage
-      security:
-        - BearerAuth: []   
-      parameters:
+    parameters:
       - name: id
         in: path
         description: id utente
@@ -496,6 +470,13 @@ paths:
           description: temp
           type: integer
           minimum: 0
+    post:
+      tags: ["message management"]
+      summary: comment another message
+      description: comment another message 
+      operationId: commentMessage
+      security:
+        - BearerAuth: []   
       requestBody: 
         description: message to comment
         content:
@@ -507,9 +488,15 @@ paths:
                 messageText:
                   description: the text part of the message
                   type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
                 photoText:
                   description: the photo part of the message
                   type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
         required: true
       responses:
         '204': 
@@ -525,31 +512,6 @@ paths:
       operationId: uncommentMessage
       security:
         - BearerAuth: []   
-      parameters:
-      - name: id
-        in: path
-        description: id utente
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
-      - name: conversationId
-        in: path
-        description: id conversation
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
-      - name: messageId
-        in: path
-        description: id message
-        required: true
-        schema:
-          description: temp
-          type: integer
-          minimum: 0
       responses:
         '204': 
           description: comment successfully uncommented

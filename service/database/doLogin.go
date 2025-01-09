@@ -3,14 +3,14 @@ package database
 func (db *appdbimpl) DoLogin(username string) (*int, error) { // creazione funzione, prende i parametri che ci servono
 
 	// Preparare la query
-	stmt, err := db.c.Prepare("INSERT INTO users (username) VALUES (?)") //query
+	stmt, err := db.c.Prepare("INSERT INTO users (username) VALUES (?)") // query
 	if err != nil {
 		return nil, err // se c è errore
 	}
 	defer stmt.Close() // Chiude lo statement preparato
 
 	// Esegui la query con valori specifici
-	result, err := stmt.Exec(username) //esegue la query se non c è un return mettere underscore
+	result, err := stmt.Exec(username) // esegue la query se non c è un return mettere underscore
 	if err != nil {
 		return nil, err
 	}

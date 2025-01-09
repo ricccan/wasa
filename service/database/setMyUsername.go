@@ -4,7 +4,7 @@ func (db *appdbimpl) SetMyUsername(id int, username string) (string, error) { //
 	// Query di aggiornamento
 	query := "UPDATE users SET username = ? WHERE id = ?"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return "", err // se c è errore
 	}

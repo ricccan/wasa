@@ -9,10 +9,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) setMyPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
+func (rt *_router) setMyPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 	parametroId := ps.ByName("id")
 
-	id, err := strconv.Atoi(parametroId) //conversione da stringa a int
+	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

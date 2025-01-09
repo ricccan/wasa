@@ -4,7 +4,7 @@ func (db *appdbimpl) SetGroupPhoto(id int, photo []byte) error { // creazione fu
 	// Query di aggiornamento
 	query := "UPDATE conversations SET grup_photo = ? WHERE id = ?"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

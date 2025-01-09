@@ -4,7 +4,7 @@ func (db *appdbimpl) UncommentMessage(utente int, gruppo int, messaggio int) err
 	// Query di aggiornamento
 	query := "DELETE FROM `messages` WHERE (`us` = ? AND `conv` = ? AND `id` = ?)"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

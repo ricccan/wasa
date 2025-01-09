@@ -4,7 +4,7 @@ func (db *appdbimpl) SetGroupName(id int, name string) error { // creazione funz
 	// Query di aggiornamento
 	query := "UPDATE conversations SET grup_name = ? WHERE id = ?"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

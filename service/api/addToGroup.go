@@ -43,18 +43,18 @@ type addToGroup struct {
 	Id_group int `json:"adg_group_id"`
 }
 
-func (rt *_router) addToGroup(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
+func (rt *_router) addToGroup(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 
 	body, err := io.ReadAll(r.Body) // readall funzione che legge il body
 	if err != nil {                 // se ci sono errori
-		http.Error(w, err.Error(), http.StatusBadRequest) //tira fuori errore
+		http.Error(w, err.Error(), http.StatusBadRequest) // tira fuori errore
 		return
 	}
 	defer r.Body.Close() // Chiudere il body dopo averlo letto
 
 	// Deserializzare il JSON nel proprio tipo
 	var data addToGroup
-	if err := json.Unmarshal(body, &data); err != nil { //mette il body in una variabile
+	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile
 		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}

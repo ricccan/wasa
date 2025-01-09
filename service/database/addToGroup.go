@@ -4,7 +4,7 @@ func (db *appdbimpl) AddToGroup(utente int, gruppo int) error { // creazione fun
 	// Query di aggiornamento
 	query := "INSERT INTO us_con (us, conv) VALUES (?,?)" // da cambiare
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

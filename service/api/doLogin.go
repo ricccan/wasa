@@ -1,4 +1,4 @@
-package api //dice che è delle api
+package api // dice che è delle api
 import (
 	"encoding/json"
 	"io"
@@ -14,18 +14,18 @@ type myData struct {
 	Nome string `json:"l_name"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
 }
 
-func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
+func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 	// Leggere il body
 	body, err := io.ReadAll(r.Body) // readall funzione che legge il body
 	if err != nil {                 // se ci sono errori
-		http.Error(w, err.Error(), http.StatusBadRequest) //tira fuori errore
+		http.Error(w, err.Error(), http.StatusBadRequest) // tira fuori errore
 		return
 	}
 	defer r.Body.Close() // Chiudere il body dopo averlo letto
 
 	// Deserializzare il JSON nel proprio tipo
 	var data myData
-	if err := json.Unmarshal(body, &data); err != nil { //mette il body in una variabile
+	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile
 		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}

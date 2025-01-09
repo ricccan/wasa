@@ -4,7 +4,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 	// Query di aggiornamento
 	query := "INSERT INTO messages (us, conv, risponde, photo, messag) VALUES (?, ?, ?, ?, ?)"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

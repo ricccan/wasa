@@ -4,7 +4,7 @@ func (db *appdbimpl) RemoveFromGroup(utente int, gruppo int) error { // creazion
 	// Query di aggiornamento
 	query := "DELETE FROM `us_con` WHERE (`us` = ? AND `conv` = ?)"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

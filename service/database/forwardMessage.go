@@ -10,7 +10,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 	// Query di aggiornamento
 	query := "SELECT snippet, messag, photo FROM messages WHERE conv = ? and id = ?"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}
@@ -33,7 +33,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 
 	query = "INSERT INTO messages (conv, snippet, messag, photo, us) VALUES (?, ?, ?, ?, ?)"
 
-	stmt, err = db.c.Prepare(query) //query
+	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
 		return err // se c è errore
 	}

@@ -14,7 +14,7 @@ func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione 
 	// Query di aggiornamento
 	query := "SELECT id,grup_name,description,grup_photo,grup   FROM conversations, us_con WHERE us_con.us = ? AND us_con.conv = conversations.id"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return nil, err // se c è errore
 	}

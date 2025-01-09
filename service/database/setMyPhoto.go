@@ -15,7 +15,7 @@ func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazi
 	// Query di aggiornamento
 	query := "UPDATE users SET profile_picture = ? WHERE id = ?"
 
-	stmt, err := db.c.Prepare(query) //query
+	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
 		return nil, err // se c è errore
 	}
@@ -38,7 +38,7 @@ func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazi
 
 	query = "SELECT * FROM users WHERE id = ?"
 
-	stmt, err = db.c.Prepare(query) //query
+	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
 		return nil, err // se c è errore
 	}

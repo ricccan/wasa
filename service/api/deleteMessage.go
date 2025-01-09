@@ -7,24 +7,24 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) deleteMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //dichiarazioe funzione base
+func (rt *_router) deleteMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 	parametroId := ps.ByName("id")
 	gruppoId := ps.ByName("conversationId")
 	messaggio := ps.ByName("messageId")
 
-	id, err := strconv.Atoi(parametroId) //conversione da stringa a int
+	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	gruppo, err := strconv.Atoi(gruppoId) //conversione da stringa a int
+	gruppo, err := strconv.Atoi(gruppoId) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	mess, err := strconv.Atoi(messaggio) //conversione da stringa a int
+	mess, err := strconv.Atoi(messaggio) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
