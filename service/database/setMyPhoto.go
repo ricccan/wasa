@@ -59,6 +59,11 @@ func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazi
 		}
 	}
 
+	// Check for errors that may have occurred during iteration
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 
 }

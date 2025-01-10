@@ -25,6 +25,11 @@ func (db *appdbimpl) GetConversation(id int, group int) (*Chat, error) { // crea
 		}
 	}
 
+	// Check for errors that may have occurred during iteration
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return &conv, nil
 
 }

@@ -37,6 +37,11 @@ func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione 
 		listaChat = append(listaChat, chat)
 	}
 
+	// Check for errors that may have occurred during iteration
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return &listaChat, nil
 
 }

@@ -31,6 +31,11 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		}
 	}
 
+	// Check for errors that may have occurred during iteration
+	if err = rows.Err(); err != nil {
+		return err
+	}
+
 	query = "INSERT INTO messages (conv, snippet, messag, photo, us) VALUES (?, ?, ?, ?, ?)"
 
 	stmt, err = db.c.Prepare(query) // query

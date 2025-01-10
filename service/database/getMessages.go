@@ -41,6 +41,11 @@ func (db *appdbimpl) GetMessages(id int, gruppo int) (*[]Message, error) { // cr
 		listaMess = append(listaMess, mess) // appende alla lista
 	}
 
+	// Check for errors that may have occurred during iteration
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return &listaMess, nil // ritorna la lista
 
 }
