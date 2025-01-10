@@ -54,6 +54,7 @@ type AppDatabase interface {
 	GetMyConversations(id int) (*[]Chat, error)
 	GetConversation(id int, group int) (*Chat, error)
 	GetMessages(id int, chat int) (*[]Message, error)
+	SearchUser(username string) (*int, error)
 }
 
 type appdbimpl struct {

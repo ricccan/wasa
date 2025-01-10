@@ -16,6 +16,19 @@ type forwardMessageRequest struct {
 }
 
 func (rt *_router) forwardMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	tokenString := r.Header.Get("Authorization")
+	if tokenString == "" {
+		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
+		return
+	}
+	tokenString = tokenString[len("Bearer "):]
+
+	err := verifyToken(tokenString)
+	if err != nil {
+		http.Error(w, "Invalid token", http.StatusUnauthorized)
+		return
+	}
+
 	parametroId := ps.ByName("id")
 	chatId := ps.ByName("conversationId")
 	messageId := ps.ByName("messageId")

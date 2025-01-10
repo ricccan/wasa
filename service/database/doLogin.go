@@ -1,5 +1,33 @@
 package database
 
+func (db *appdbimpl) SearchUser(username string) (*int, error) {
+	query := "SELECT id FROM users WHERE username = ?"
+
+	stmt, err := db.c.Prepare(query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(username)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var id *int
+	if rows.Next() {
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, nil
+	}
+
+	return id, nil
+}
+
 func (db *appdbimpl) DoLogin(username string) (*int, error) { // creazione funzione, prende i parametri che ci servono
 
 	// Preparare la query

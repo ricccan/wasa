@@ -3,12 +3,12 @@ package database
 type User struct {
 	// il nome delle robe json con maiuscola
 
-	Id       int    `json:"u_id"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
-	Username string `json:"u_username"`
-	Image    string `json:"u_profileImage"`
-	Bio      string `json:"u_bio"`
-	Name     string `json:"u_firstName"`
-	Lastname string `json:"u_lastName"`
+	Id       int     `json:"u_id"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
+	Username string  `json:"u_username"`
+	Image    *string `json:"u_profileImage"`
+	Bio      *string `json:"u_bio"`
+	Name     *string `json:"u_firstName"`
+	Lastname *string `json:"u_lastName"`
 }
 
 func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazione funzione, prende i parametri che ci servono
