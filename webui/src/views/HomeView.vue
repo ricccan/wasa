@@ -36,6 +36,9 @@ export default {
 					<button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
 						Refresh
 					</button>
+					<button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
+						provas
+					</button>
 					<button type="button" class="btn btn-sm btn-outline-secondary" @click="exportList">
 						Export
 					</button>
