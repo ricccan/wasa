@@ -2,10 +2,19 @@ package api
 
 import (
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
+
+	rt.router.OPTIONS("/session", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")                            // Permette tutte le origini. Specifica un'origine particolare se necessario.
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")          // Metodi consentiti
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization") // Header consentiti
+		w.WriteHeader(http.StatusOK)                                                  // Risposta OK
+	})
 	// Register routes
 	rt.router.GET("/context", rt.wrap(rt.getContextReply)) // per ogni api devo fare un handler che richiama la funzione
 
@@ -41,6 +50,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation)
 
 	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // prendo i messaggi di una conversazione (da aggiungere nelle api doc)
+
+	rt.router.GET("/users/:id/photo", rt.getPhoto) // (da aggiungere nelle api doc)
 
 	return rt.router
 }

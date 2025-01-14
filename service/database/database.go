@@ -55,6 +55,7 @@ type AppDatabase interface {
 	GetConversation(id int, group int) (*Chat, error)
 	GetMessages(id int, chat int) (*[]Message, error)
 	SearchUser(username string) (*int, error)
+	GetPhoto(id int) ([]byte, error)
 }
 
 type appdbimpl struct {

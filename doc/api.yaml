@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.0 # appara col go
 info: 
   description: WASAText exam project Rest API
   title: WASAText
@@ -185,7 +185,7 @@ paths:
                 description: temp
                 type: object
                 properties:
-                  l_identifier:
+                  id:
                     description: id dell' utente
                     type: string
                     pattern: '^.*?$'
