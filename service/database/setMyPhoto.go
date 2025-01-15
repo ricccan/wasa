@@ -6,9 +6,6 @@ type User struct {
 	Id       int     `json:"u_id"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
 	Username string  `json:"u_username"`
 	Image    *string `json:"u_profileImage"`
-	Bio      *string `json:"u_bio"`
-	Name     *string `json:"u_firstName"`
-	Lastname *string `json:"u_lastName"`
 }
 
 func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazione funzione, prende i parametri che ci servono
@@ -53,7 +50,7 @@ func (db *appdbimpl) SetMyPhoto(id int, photo []byte) (*User, error) { // creazi
 
 	var user User
 	for rows.Next() {
-		err = rows.Scan(&user.Id, &user.Username, &user.Image, &user.Bio, &user.Name, &user.Lastname)
+		err = rows.Scan(&user.Id, &user.Username, &user.Image)
 		if err != nil {
 			return nil, err
 		}
