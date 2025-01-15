@@ -7,16 +7,16 @@
                         <h3>Login</h3>
                     </div>
                     <div class="card-body">
-                        <form @submit.prevent="handleLogin">
+                        <form @submit.prevent="doLogin">
                             <div class="mb-3">
                                 <label for="nome" class="form-label text-center w-100">
                                     Nome utente
                                 </label>
                                 <input type="text" class="form-control" id="nome" v-model="nome" 
-                                    placeholder="Inserisci il tuo nome utente" required />
+                                    placeholder="Inserisci il tuo nome utente" required >
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary" @click="doLogin">Login</button>
+                                <button type="submit" class="btn btn-primary">Login</button>
                             </div>
                         </form>
                         <p v-if="errorMessage" class="text-danger mt-3 text-center">
