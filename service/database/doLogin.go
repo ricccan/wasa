@@ -54,6 +54,14 @@ func (db *appdbimpl) DoLogin(username string) (*int, error) { // creazione funzi
 		return nil, err
 	}
 
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if rowsAffected != 1 {
+		return nil, err
+	}
+
 	return &id, nil
 
 }

@@ -1,7 +1,6 @@
 package api // dice che è delle api
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -56,7 +55,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		// Convert the string back to an integer
 		intValue, err := strconv.Atoi(strValue)
 		if err != nil {
-			fmt.Println("Error converting string to int:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -87,7 +86,7 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		// Convert the string back to an integer
 		intValue, err := strconv.Atoi(strValue)
 		if err != nil {
-			fmt.Println("Error converting string to int:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 

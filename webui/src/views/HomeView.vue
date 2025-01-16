@@ -6,7 +6,10 @@ export default {
 			loading: false,
 			some_data: null,
 			token: localStorage.getItem("token"),
-			username: localStorage.getItem("username")
+			username: localStorage.getItem("username"),
+			chats: {},
+			id: localStorage.getItem("id"),
+			dynamicData: {}
 		}
 	},
 	methods: {
@@ -30,8 +33,36 @@ export default {
 			}
 			this.loading = false;
 		},
+		async getChat() {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+
+				}); // crea un json che gli passa un nome
+				this.chats = response.data;
+				this.createDynamicListsFromJSON(this.chats);
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+		},
+		createDynamicListsFromJSON(json) {
+				// Dynamically assign the given JSON to the dynamicData property
+				this.dynamicData = json;
+				if (this.dynamicData) {
+					this.dynamicData.forEach((item, index) => {
+					item.GroupPhoto = "data:image/jpeg;base64," + item.GroupPhoto;
+				});
+				}
+				
+			}
 	},
 	mounted() {
+		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
 
 	}
 }
@@ -44,21 +75,27 @@ export default {
 			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
 				<div class="sidebar-sticky">
 					<!-- Sidebar Title -->
-					<div class="sidebar-title">
-						<h5>Menu</h5>
+					<div class="sidebar-title" style="text-align: center;">
+						<h5 class="me-2">Chat</h5>
+						<div class="btn-group me-2">
+							
+							<button type="button" class="btn btn-sm btn-outline-primary" @click="newPage">
+								New group
+							</button>
+							<button type="button" class="btn btn-sm btn-outline-primary" @click="login">
+								new chat
+							</button>
+						</div>
 					</div>
 
 					<!-- Scrollable List -->
-					<div class="sidebar-scroll">
-						<ul class="nav flex-column">
-							<li class="nav-item">
-								<a class="nav-link" >Dashboard</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" >Settings</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link">Notifications</a>
+					<div class="list-container">
+						<ul>
+							<li v-for="(item, index) in chats" :key="index" @click="handleClick(item)">
+								<a class="clickable-item">
+									<img :src="item.GroupPhoto" alt="Missing Photo" class="group-photo">
+									{{ item.GroupName }}
+								</a>
 							</li>
 						</ul>
 					</div>
@@ -184,5 +221,48 @@ export default {
 	background-color: #f1f1f1;
 	padding: 10px 20px;
 	border-radius: 8px;
+}
+
+.chat-list {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-item:hover {
+  background-color: #f0f0f0;
+}
+
+.group-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.chat-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.group-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.group-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
 }
 </style>
