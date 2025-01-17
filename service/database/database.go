@@ -58,6 +58,8 @@ type AppDatabase interface {
 	GetPhoto(id int) ([]byte, error)
 	CreateGroup(nome string, utente int) error
 	AddToGroup2(utente int, gruppo int64) error
+	CreateChat(nome string, utente int) error
+	AddToCollegamento(utente int, altro int, chat int64) error
 }
 
 type appdbimpl struct {

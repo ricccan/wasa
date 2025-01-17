@@ -11,7 +11,9 @@ export default {
 			id: localStorage.getItem("id"),
 			dynamicData: {},
 			showPopup: false,
-			newGroupname: null
+			showPopup1: false,
+			newGroupname: null,
+			newUser: null
 		}
 	},
 	methods: {
@@ -64,6 +66,7 @@ export default {
 		},
 		closePopup() {
 			this.showPopup = false;
+			this.showPopup1 = false;
 		},
 
 		async creaGruppo(){
@@ -72,6 +75,25 @@ export default {
             try {
                 let response = await this.$axios.post("/users/" + this.id + "/conversations", {
                     sgn_name: this.newGroupname,
+                },
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        }
+                    }); // crea un json che gli passa un nome
+            } catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+			this.getChat()
+		},
+
+		async creaConversazione(){
+			this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios.post("/users/" + this.id, {
+                    sgn_name: this.newUser,
                 },
                     {
                         headers: {
@@ -107,7 +129,7 @@ export default {
 							<button type="button" class="btn btn-sm btn-outline-primary" @click="showPopup = true">
 								create group
 							</button>
-							<button type="button" class="btn btn-sm btn-outline-primary" @click="login">
+							<button type="button" class="btn btn-sm btn-outline-primary" @click="showPopup1 = true">
 								new chat
 							</button>
 						</div>
@@ -167,6 +189,16 @@ export default {
 			<input type="text" v-model="newGroupname" placeholder="Type here..." />
 			<div class="popup-actions">
 				<button @click="creaGruppo">Submit</button>
+				<button @click="closePopup">Close</button>
+			</div>
+		</div>
+	</div>
+	<div v-if="showPopup1" class="popup-overlay" @click.self="closePopup">
+		<div class="popup-content">
+			<h2>User to contact</h2>
+			<input type="text" v-model="newUser" placeholder="Type here..." />
+			<div class="popup-actions">
+				<button @click="creaConversazione">Submit</button>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>

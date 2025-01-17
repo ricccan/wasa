@@ -55,6 +55,8 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id/conversations", rt.createGroup) // TODO: metterlo nelle api
 
+	rt.router.POST("/users/:id", rt.createChat) // TODO: metterlo nelle api
+
 	return rt.router
 }
 
@@ -64,3 +66,4 @@ func (rt *_router) Handler() http.Handler {
 // TODO: aggiungere funzione che calcola icona
 // TODO: aggiungere funzione che controlla il token
 // TODO: cambiare uncomment facendo in modo che cambi solo la sezione respond e non l'intero messaggio
+// TODO: sistemare sdoppiamento chat in caso di creazone con stesso utente
