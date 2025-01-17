@@ -37,6 +37,10 @@ func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione 
 		listaChat = append(listaChat, chat)
 	}
 
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	query = "SELECT conversations.id,username,description,profile_picture,grup  FROM conversations, us_con as us1 , us_con as us2, users WHERE us1.us = ? AND us1.conv = conversations.id AND us2.conv = conversations.id AND us2.us = users.id and us2.us <> us1.us and conversations.grup='false' " // prende solo i gruppi
 
 	stmt, err = db.c.Prepare(query) // query
