@@ -1,8 +1,12 @@
 package database
 
+import (
+	"time"
+)
+
 func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, text string) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "INSERT INTO messages (us, conv, risponde, photo, messag) VALUES (?, ?, ?, ?, ?)"
+	query := "INSERT INTO messages (us, conv, risponde, photo, messag, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -11,7 +15,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(user, chat, mess, photo, text)
+	result, err := stmt.Exec(user, chat, mess, photo, text, time.Now())
 	if err != nil {
 		return err
 	}

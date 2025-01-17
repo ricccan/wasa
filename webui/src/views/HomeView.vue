@@ -9,7 +9,9 @@ export default {
 			username: localStorage.getItem("username"),
 			chats: {},
 			id: localStorage.getItem("id"),
-			dynamicData: {}
+			dynamicData: {},
+			showPopup: false,
+			newGroupname: null
 		}
 	},
 	methods: {
@@ -51,15 +53,38 @@ export default {
 			this.loading = false;
 		},
 		createDynamicListsFromJSON(json) {
-				// Dynamically assign the given JSON to the dynamicData property
-				this.dynamicData = json;
-				if (this.dynamicData) {
-					this.dynamicData.forEach((item, index) => {
+			// Dynamically assign the given JSON to the dynamicData property
+			this.dynamicData = json;
+			if (this.dynamicData) {
+				this.dynamicData.forEach((item, index) => {
 					item.GroupPhoto = "data:image/jpeg;base64," + item.GroupPhoto;
 				});
-				}
-				
 			}
+
+		},
+		closePopup() {
+			this.showPopup = false;
+		},
+
+		async creaGruppo(){
+			this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios.post("/users/" + this.id + "/conversations", {
+                    sgn_name: this.newGroupname,
+                },
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        }
+                    }); // crea un json che gli passa un nome
+            } catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+			this.getChat()
+		}
+
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -78,9 +103,9 @@ export default {
 					<div class="sidebar-title" style="text-align: center;">
 						<h5 class="me-2">Chat</h5>
 						<div class="btn-group me-2">
-							
-							<button type="button" class="btn btn-sm btn-outline-primary" @click="newPage">
-								New group
+
+							<button type="button" class="btn btn-sm btn-outline-primary" @click="showPopup = true">
+								create group
 							</button>
 							<button type="button" class="btn btn-sm btn-outline-primary" @click="login">
 								new chat
@@ -135,6 +160,16 @@ export default {
 
 		<!-- Error Message -->
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+	</div>
+	<div v-if="showPopup" class="popup-overlay" @click.self="closePopup">
+		<div class="popup-content">
+			<h2>New group name</h2>
+			<input type="text" v-model="newGroupname" placeholder="Type here..." />
+			<div class="popup-actions">
+				<button @click="creaGruppo">Submit</button>
+				<button @click="closePopup">Close</button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -224,45 +259,45 @@ export default {
 }
 
 .chat-list {
-  padding: 0;
-  list-style: none;
-  margin: 0;
+	padding: 0;
+	list-style: none;
+	margin: 0;
 }
 
 .chat-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  transition: background-color 0.2s;
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
 .chat-item:hover {
-  background-color: #f0f0f0;
+	background-color: #f0f0f0;
 }
 
 .group-photo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	margin-right: 15px;
 }
 
 .chat-details {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .group-name {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0;
 }
 
 .group-description {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
+	font-size: 14px;
+	color: #666;
+	margin: 0;
 }
 </style>

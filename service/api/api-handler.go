@@ -53,6 +53,8 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/users/:id/photo", rt.getPhoto) // TODO: da aggiungere nelle api doc (funzione per ottenere la foto profilo avendo un id)
 
+	rt.router.POST("/users/:id/conversations", rt.createGroup) // TODO: metterlo nelle api
+
 	return rt.router
 }
 

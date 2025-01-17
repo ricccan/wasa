@@ -1,5 +1,9 @@
 package database
 
+import (
+	"time"
+)
+
 type Messaggio struct {
 	snippet string
 	messag  string
@@ -36,7 +40,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
-	query = "INSERT INTO messages (conv, snippet, messag, photo, us) VALUES (?, ?, ?, ?, ?)"
+	query = "INSERT INTO messages (conv, snippet, messag, photo, us, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
@@ -45,7 +49,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(invio, mess.snippet, mess.messag, mess.photo, id)
+	result, err := stmt.Exec(invio, mess.snippet, mess.messag, mess.photo, id, time.Now())
 	if err != nil {
 		return err
 	}
