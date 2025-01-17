@@ -14,9 +14,6 @@ type User struct {
 	Id       int    `json:"u_id"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
 	Username string `json:"u_username"`
 	Image    string `json:"u_profileImage"`
-	Bio      string `json:"u_bio"`
-	Name     string `json:"u_firstName"`
-	Lastname string `json:"u_lastName"`
 }
 
 type TextMessage struct {

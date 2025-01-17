@@ -13,7 +13,7 @@ components:
       type: object
       properties:
         u_id:
-          description: unique identifier
+          description: unique identifier of the user
           type: integer
         u_username:
           description: Unique name of the user
@@ -28,31 +28,13 @@ components:
           format: binary
           minLength: 1
           maxLength: 1024
-        u_bio:
-          description: biography of the user
-          type: string
-          pattern: '^.*?$'
-          minLength: 1
-          maxLength: 256
-        u_firstName:
-          description: the real name of the user 
-          type: string
-          pattern: '^.*?$'
-          minLength: 1
-          maxLength: 32
-        u_lastName:
-          description: the real surname of the user
-          type: string
-          pattern: '^.*?$'
-          minLength: 1
-          maxLength: 32
     textMessage:
       title: text message
       description: a simple text between users
       type: object
       properties:
         t_id: 
-          description: unique identifier
+          description: unique identifier of the message
           type: integer
         t_textContent:
           description: the text content of the message
@@ -166,11 +148,11 @@ paths:
         content:
           application/json:
             schema:
-              description: temp
+              description: parameters to log in the user
               type: object
               properties:
                 l_name:
-                  description: temp
+                  description: the name of the user who wants to log in
                   type: string
                   pattern: 'ˆ.*?$'
                   minLength: 3
@@ -182,7 +164,7 @@ paths:
           content:
             application/json:
               schema:
-                description: temp
+                description: returned value
                 type: object
                 properties:
                   id:
