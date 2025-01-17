@@ -8,15 +8,14 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type User struct {
-	// il nome delle robe json con maiuscola
+type User struct { // creo una classe per il json
 
 	Id       int    `json:"u_id"` // le parti del json che passiamo alla funzione tramite chiamata, si vedono dagli esempi nella pagina delle api grafiche
 	Username string `json:"u_username"`
 	Image    string `json:"u_profileImage"`
 }
 
-type TextMessage struct {
+type TextMessage struct { // creo una classe per il json
 	Id        int         `json:"t_id"`
 	Messaggio string      `json:"t_textContent"`
 	Preview   string      `json:"t_preview"`
@@ -24,15 +23,14 @@ type TextMessage struct {
 	Data      json.Number `json:"t_date"` // da cambiare in data
 	Checkmark int         `json:"t_checkmark"`
 	Response  int         `json:"t_responseTo"`
-	Photo     string      `json:"t_photoContent"` // da cambiare in formato foto
-	Icon      string      `json:"t_icon"`         // formato foto
+	Photo     string      `json:"t_photoContent"`
+	Icon      string      `json:"t_icon"`
 }
 
-type Chat struct {
-	// creo una classe per il json
+type Chat struct { // creo una classe per il json
 	Id       int           `json:"c_id"`
-	Utenti   []User        `json:"c_userIds"`
-	Messaggi []TextMessage `json:"c_textMessageList"`
+	Utenti   []User        `json:"c_userIds"`         // lista di utenti
+	Messaggi []TextMessage `json:"c_textMessageList"` // lista di messaggi
 }
 
 type addToGroup struct {
@@ -41,41 +39,39 @@ type addToGroup struct {
 }
 
 func (rt *_router) addToGroup(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
+	tokenString := r.Header.Get("Authorization") // prende il token dalla richiesta
+	if tokenString == "" {                       // gestisco il caso in cui non ci sia il token
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
 		return
 	}
 	tokenString = tokenString[len("Bearer "):]
 
-	err := verifyToken(tokenString)
+	err := verifyToken(tokenString) // verifica il token
 	if err != nil {
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
+		http.Error(w, "Invalid token", http.StatusUnauthorized) // se il token non è valido
 		return
 	}
 
 	body, err := io.ReadAll(r.Body) // readall funzione che legge il body
-	if err != nil {                 // se ci sono errori
-		http.Error(w, err.Error(), http.StatusBadRequest) // tira fuori errore
+	if err != nil {                 // gestisco gli errori
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close() // Chiudere il body dopo averlo letto
 
-	// Deserializzare il JSON nel proprio tipo
-	var data addToGroup
+	var data addToGroup                                 // dichiaro una variabile di tipo addToGroup
 	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile
 		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}
 
-	err = rt.db.AddToGroup(data.Id_us, data.Id_group) // da creare la funzione e mettere i dati che passo alla query
-	if err != nil {
+	err = rt.db.AddToGroup(data.Id_us, data.Id_group) // chiamo la funzione AddToGroup con i dati passati
+	if err != nil {                                   // gestisco gli errori
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Imposta il Content-Type della risposta come JSON
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json") // Imposta il Content-Type della risposta come JSON
 	w.WriteHeader(http.StatusNoContent)
 
 }

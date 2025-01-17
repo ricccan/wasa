@@ -16,42 +16,49 @@ func (rt *_router) Handler() http.Handler {
 		w.WriteHeader(http.StatusOK)                                                  // Risposta OK
 	})
 	// Register routes
-	rt.router.GET("/context", rt.wrap(rt.getContextReply)) // per ogni api devo fare un handler che richiama la funzione
+	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
 
-	rt.router.POST("/session", rt.doLogin) // chiamo l'endpoint mettendo percorso e nome
+	rt.router.POST("/session", rt.doLogin) // funzione per il login, crea utente se non esiste o accede alle sue chat
 
-	rt.router.POST("/users/:id/username", rt.setMyUsername)
+	rt.router.POST("/users/:id/username", rt.setMyUsername) // funzione per cambiare il nome utente
 
-	rt.router.POST("/users/:id/photo", rt.setMyPhoto)
+	rt.router.POST("/users/:id/photo", rt.setMyPhoto) // funzione per cambiare la foto profilo
 
-	rt.router.POST("/users/:id/groups", rt.addToGroup)
+	rt.router.POST("/users/:id/groups", rt.addToGroup) // funzione per aggiungere un utente a un gruppo
 
-	rt.router.DELETE("/users/:id/groups/:group", rt.removeFromGroup)
+	rt.router.DELETE("/users/:id/groups/:group", rt.removeFromGroup) // funzione per rimuovere un utente da un gruppo
 
-	rt.router.POST("/users/:id/conversations/:conversationId/groupName", rt.SetGroupName)
+	rt.router.POST("/users/:id/conversations/:conversationId/groupName", rt.SetGroupName) // funzione per cambiare il nome del gruppo
 
-	rt.router.POST("/users/:id/conversations/:conversationId/groupphoto", rt.SetGroupPhoto)
+	rt.router.POST("/users/:id/conversations/:conversationId/groupphoto", rt.SetGroupPhoto) // funzione per cambiare la foto del gruppo
 
-	rt.router.POST("/users/:id/conversations/:conversationId/messages", rt.sendMessage)
+	rt.router.POST("/users/:id/conversations/:conversationId/messages", rt.sendMessage) // funzione per inviare un messaggio
 
-	rt.router.DELETE("/users/:id/conversations/:conversationId/messages/:messageId", rt.deleteMessage)
+	rt.router.DELETE("/users/:id/conversations/:conversationId/messages/:messageId", rt.deleteMessage) // funzione per eliminare un messaggio
 
-	rt.router.DELETE("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.uncommentMessage)
+	rt.router.DELETE("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.uncommentMessage) // funzione per eliminare un commento (da cambiare)
 
-	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.commentMessage)
+	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.commentMessage) // funzione per commentare un messaggio
 
-	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId", rt.forwardMessage)
+	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId", rt.forwardMessage) // funzione per inoltrare un messaggio
 
-	rt.router.GET("/users/:id/conversations", rt.getMyConversations)
+	rt.router.GET("/users/:id/conversations", rt.getMyConversations) // funzione per ottenere le conversazioni dell'utente
 
-	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation)
+	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation) // funzione per ottenere una conversazione specifica
 
-	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // prendo i messaggi di una conversazione (da aggiungere nelle api doc)
+	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // TODO: da aggiungere nelle api doc (funzione per ottenere i messaggi di una conversazione)
 
-	rt.router.GET("/users/:id/photo", rt.getPhoto) // (da aggiungere nelle api doc)
+	rt.router.GET("/users/:id/photo", rt.getPhoto) // TODO: da aggiungere nelle api doc (funzione per ottenere la foto profilo avendo un id)
 
 	return rt.router
 }
+
+// TODO: aggiungere la funzione per dare orario al messaggio
+// TODO: aggiungere funzione che calcola snippet
+// TODO: aggiungere funzione che calcola checkmark
+// TODO: aggiungere funzione che calcola icona
+// TODO: aggiungere funzione che controlla il token
+// TODO: cambiare uncomment facendo in modo che cambi solo la sezione respond e non l'intero messaggio
