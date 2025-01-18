@@ -9,6 +9,7 @@ import (
 )
 
 func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -22,6 +23,7 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	// prendo i parametri
 	parametroId := ps.ByName("id")
 	parametroChat := ps.ByName("conversationId")
 
@@ -37,8 +39,8 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	isPhoto := r.FormValue("IsPhoto") // prende il file dalla form
-	messageType, err := strconv.ParseBool(isPhoto)
+	isPhoto := r.FormValue("IsPhoto")              // prende il valore dalla form
+	messageType, err := strconv.ParseBool(isPhoto) // converte il valore in booleano
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -53,10 +55,10 @@ func (rt *_router) sendMessage(w http.ResponseWriter, r *http.Request, ps httpro
 
 	var imageData []byte
 	file, _, err := r.FormFile("photo") // prende il file dalla form
-	if err != nil && messageType {
+	if err != nil && messageType {      // nel caso non sia una foto
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
-	} else if err == nil {
+	} else if err == nil { // nel caso sia una foto
 		defer file.Close()
 		imageData, err = io.ReadAll(file) // legge il file
 		if err != nil {

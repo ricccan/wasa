@@ -5,107 +5,136 @@ export default {
 			errormsg: null,
 			loading: false,
 			some_data: null,
-			token: localStorage.getItem("token"),
-			username: localStorage.getItem("username"),
-			chats: {},
-			id: localStorage.getItem("id"),
-			dynamicData: {},
-			showPopup: false,
-			showPopup1: false,
-			newGroupname: null,
-			newUser: null
+			token: localStorage.getItem("token"), // prende il valore del token dato dal login
+			username: localStorage.getItem("username"), // prende il valore dell'username dato nel login
+			chats: {}, // json che conterrà la lista delle chat
+			id: localStorage.getItem("id"), // id utente collegato allo username
+			dynamicData: {}, // json che utilizzo insieme a chats per gestire le conversazioni
+			showPopup: false, // popup che apre la sezione "crea gruppo"
+			showPopup1: false, // popup che apre la sezione "nuova chat"
+			newGroupname: null, // valore che contiene il nome da dare al gruppo che sta venendo creato
+			newUser: null, // valore dello username dell'utente con cui si vuole creare una nuova conversazione
+			messages: {}, // json a cui passo i messaggi
+			dynamicData2: {}, // json che utilizzo insieme a chats per gestire i messaggi
 		}
 	},
 	methods: {
-		async newPage() {
+		async newPage() { // funzione che porta alla pagina del profilo
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				this.$router.push({ path: "/profile" });
+				this.$router.push({ path: "/profile" }); // reindirizza alla pagina del profilo
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.errormsg = e.toString(); // gestisco errori
 			}
 			this.loading = false;
 		},
-		async login() {
+		async login() { // funzione che porta alla pagina del login
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				this.$router.push({ path: "/" });
+				this.$router.push({ path: "/" }); // reindirizza al login
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.errormsg = e.toString(); // gestisco errori
 			}
 			this.loading = false;
 		},
-		async getChat() {
+		async getChat() { // funzione che prende tutte le chat dal databse
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/users/" + this.id + "/conversations", {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations", { // chiama la query che trova le chat
 					headers: {
-						Authorization: "Bearer " + localStorage.getItem("token"),
+						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
 					}
 
-				}); // crea un json che gli passa un nome
-				this.chats = response.data;
-				this.createDynamicListsFromJSON(this.chats);
+				});
+				this.chats = response.data; // i dati in risposta della query
+				this.createDynamicListsFromJSON(this.chats); // chiama la funzione
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
 		},
-		createDynamicListsFromJSON(json) {
-			// Dynamically assign the given JSON to the dynamicData property
-			this.dynamicData = json;
+		createDynamicListsFromJSON(json) { // funzione che crea dinamicamente la lista delle chat
+			this.dynamicData = json; // assegnazione dati
 			if (this.dynamicData) {
-				this.dynamicData.forEach((item, index) => {
+				this.dynamicData.forEach((item, index) => { // per ogni sezione groupPhoto specifica che si tratti di un immagine
 					item.GroupPhoto = "data:image/jpeg;base64," + item.GroupPhoto;
 				});
 			}
 
 		},
-		closePopup() {
+		closePopup() { // chiude tutti i popup
 			this.showPopup = false;
 			this.showPopup1 = false;
 		},
 
-		async creaGruppo(){
+		async creaGruppo() {
 			this.loading = true;
-            this.errormsg = null;
-            try {
-                let response = await this.$axios.post("/users/" + this.id + "/conversations", {
-                    sgn_name: this.newGroupname,
-                },
-                    {
-                        headers: {
-                            Authorization: "Bearer " + localStorage.getItem("token"),
-                        }
-                    }); // crea un json che gli passa un nome
-            } catch (e) {
-                this.errormsg = e.toString();
-            }
-            this.loading = false;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.post("/users/" + this.id + "/conversations", {
+					sgn_name: this.newGroupname,
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
 			this.getChat()
 		},
 
-		async creaConversazione(){
+		async creaConversazione() {
 			this.loading = true;
-            this.errormsg = null;
-            try {
-                let response = await this.$axios.post("/users/" + this.id, {
-                    sgn_name: this.newUser,
-                },
-                    {
-                        headers: {
-                            Authorization: "Bearer " + localStorage.getItem("token"),
-                        }
-                    }); // crea un json che gli passa un nome
-            } catch (e) {
-                this.errormsg = e.toString();
-            }
-            this.loading = false;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.post("/users/" + this.id, {
+					sgn_name: this.newUser,
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
 			this.getChat()
-		}
+		},
+
+		async apriChat(conv) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + conv.IdChat + "/messages", { // chiama la query che trova le chat
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
+					}
+
+				});
+				this.messages = response.data; // i dati in risposta della query
+				this.createDynamicListsFromJSON_2(this.messages); // chiama la funzione
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+		},
+		createDynamicListsFromJSON_2(json) { // funzione che crea dinamicamente la lista dei messaggi
+			this.dynamicData2 = json; // assegnazione dati
+			if (this.dynamicData2) {
+				this.dynamicData2.forEach((item, index) => { // per ogni sezione groupPhoto specifica che si tratti di un immagine
+					item.Foto = "data:image/jpeg;base64," + item.Foto;
+				});
+			}
+
+		},
+
 
 	},
 	mounted() {
@@ -138,9 +167,9 @@ export default {
 					<!-- Scrollable List -->
 					<div class="list-container">
 						<ul>
-							<li v-for="(item, index) in chats" :key="index" @click="handleClick(item)">
+							<li v-for="(item, index) in chats" :key="index" @click="apriChat(item)">
 								<a class="clickable-item">
-									<img :src="item.GroupPhoto" alt="Missing Photo" class="group-photo">
+									<img :src="item.GroupPhoto" alt="" class="group-photo">
 									{{ item.GroupName }}
 								</a>
 							</li>
@@ -170,6 +199,26 @@ export default {
 				<!-- Body Content -->
 				<div class="body-content" style="overflow-y: auto; max-height: 75vh;">
 					<p>Welcome to the main content area. Here is where you can display information.</p>
+
+					<div class="chatlist-container">
+						<div class="list-container">
+							<ul>
+								<li v-for="(item, index) in messages" :key="index"
+									:class="{ 'user-message': item.User === this.id }">
+									<a class="chatclickable-item">
+										<img :src="item.Foto" alt=" ">
+										<span class="user">{{ item.User }}</span>
+										<span class="chatmessage-text">{{ item.Messaggio }}</span>
+										<div class="chattimestamp">
+											{{ item.Timestamp }}
+											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
 				</div>
 
 				<!-- Bottom Section -->
@@ -332,4 +381,82 @@ export default {
 	color: #666;
 	margin: 0;
 }
+
+.chatbody-content {
+            background-color: #ffffff;
+            width: 400px;
+            height: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+.chatlist-container {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+.chatclickable-item {
+            display: block;
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #dcf8c6;
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+.chatclickable-item img {
+            width: 200px;
+            height: 200px;
+            margin-right: 8px;
+        }
+
+
+
+.chattimestamp {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+
+.chatclickable-item .user {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+li.user-message.clickable-item {
+    background-color: #fff;
+    align-self: flex-end;
+    }
+
+	 .clickable-item .message-text {
+            margin-bottom: 5px;
+        }
+
+
+        
 </style>

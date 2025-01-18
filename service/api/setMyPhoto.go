@@ -10,6 +10,7 @@ import (
 )
 
 func (rt *_router) setMyPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -22,6 +23,8 @@ func (rt *_router) setMyPhoto(w http.ResponseWriter, r *http.Request, ps httprou
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
+
+	// gestione parametri
 	parametroId := ps.ByName("id")
 
 	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
@@ -49,6 +52,7 @@ func (rt *_router) setMyPhoto(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
+	// chiamo la funzione
 	result, err := rt.db.SetMyPhoto(id, imageData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

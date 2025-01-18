@@ -8,6 +8,7 @@ import (
 )
 
 func (rt *_router) removeFromGroup(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -21,6 +22,7 @@ func (rt *_router) removeFromGroup(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
+	// prendo i parametri passati
 	parametroId := ps.ByName("id")
 	gruppoId := ps.ByName("group")
 
@@ -36,6 +38,7 @@ func (rt *_router) removeFromGroup(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
+	// chiamata di funzione e output
 	err = rt.db.RemoveFromGroup(id, gruppo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

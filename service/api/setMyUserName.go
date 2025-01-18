@@ -16,6 +16,7 @@ type setusernameRequest struct {
 }
 
 func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -28,6 +29,8 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
+
+	// gestione parametri
 	parametroId := ps.ByName("id")
 
 	id, err := strconv.Atoi(parametroId) // conversione da stringa a int

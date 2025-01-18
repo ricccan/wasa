@@ -9,18 +9,20 @@ import (
 )
 
 func (rt *_router) getConversation(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
+	tokenString := r.Header.Get("Authorization") // prendo il token
+	if tokenString == "" {                       // gestisco se non c'è
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
 		return
 	}
 	tokenString = tokenString[len("Bearer "):]
 
-	err := verifyToken(tokenString)
-	if err != nil {
+	err := verifyToken(tokenString) // lo verifico
+	if err != nil {                 // gestisco se non è valido
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
+
+	// prendo i parametri dall'url
 	parametroId := ps.ByName("id")
 	chatId := ps.ByName("conversationId")
 
@@ -36,8 +38,8 @@ func (rt *_router) getConversation(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
-	result, err := rt.db.GetConversation(id, chat)
-	if err != nil {
+	result, err := rt.db.GetConversation(id, chat) // chiamo la funzione
+	if err != nil {                                // gestione errori
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

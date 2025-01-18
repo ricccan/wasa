@@ -8,6 +8,7 @@ import (
 )
 
 func (rt *_router) uncommentMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -21,6 +22,7 @@ func (rt *_router) uncommentMessage(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// gestione parametri
 	parametroId := ps.ByName("id")
 	gruppoId := ps.ByName("conversationId")
 	messaggio := ps.ByName("messageId")
@@ -43,6 +45,7 @@ func (rt *_router) uncommentMessage(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// chiamata funzione
 	err = rt.db.UncommentMessage(id, gruppo, mess)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -9,6 +9,7 @@ import (
 )
 
 func (rt *_router) SetGroupPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
+	// gestione token
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -22,6 +23,7 @@ func (rt *_router) SetGroupPhoto(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	// gestione parametri
 	parametroId := ps.ByName("conversationId")
 
 	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
@@ -49,6 +51,7 @@ func (rt *_router) SetGroupPhoto(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	// chiamo la funzione
 	err = rt.db.SetGroupPhoto(id, imageData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
