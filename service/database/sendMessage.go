@@ -16,7 +16,7 @@ func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) 
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(user, chat, photo, text, time.Now())
+	result, err := stmt.Exec(user, chat, photo, text, time.Now().Unix())
 	if err != nil {
 		return err
 	}

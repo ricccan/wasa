@@ -134,7 +134,10 @@ export default {
 			}
 
 		},
-
+		conversioneUnix(tempo){
+			const date = new Date(tempo);
+			return date.toLocaleString();
+		}
 
 	},
 	mounted() {
@@ -204,13 +207,13 @@ export default {
 						<div class="list-container">
 							<ul>
 								<li v-for="(item, index) in messages" :key="index"
-									:class="{ 'user-message': item.User === this.id }">
+									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
 										<img :src="item.Foto" alt=" ">
 										<span class="user">{{ item.User }}</span>
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
 										<div class="chattimestamp">
-											{{ item.Timestamp }}
+											{{ conversioneUnix(item.Timestamp*1000) }}
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
 									</a>
@@ -383,80 +386,84 @@ export default {
 }
 
 .chatbody-content {
-            background-color: #ffffff;
-            width: 400px;
-            height: 600px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+	background-color: #ffffff;
+	width: 400px;
+	height: 600px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+}
 
 .chatlist-container {
-            padding: 10px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+	padding: 10px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+}
 
 ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
 
 li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: flex-end;
-        }
+	margin-bottom: 10px;
+	display: flex;
+	align-items: flex-end;
+}
 
 .chatclickable-item {
-            display: block;
-            max-width: 80%;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: #dcf8c6;
-            color: #333;
-            font-size: 14px;
-            text-decoration: none;
-            word-wrap: break-word;
-            position: relative;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
+	display: block;
+	max-width: 80%;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #dcf8c6;
+	color: #333;
+	font-size: 14px;
+	text-decoration: none;
+	word-wrap: break-word;
+	position: relative;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 
 .chatclickable-item img {
-            width: 200px;
-            height: 200px;
-            margin-right: 8px;
-        }
+	width: 200px;
+	height: 200px;
+	margin-right: 8px;
+}
 
 
 
 .chattimestamp {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-            text-align: right;
-        }
+	font-size: 12px;
+	color: #999;
+	margin-top: 5px;
+	text-align: right;
+}
 
 
 .chatclickable-item .user {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-li.user-message.clickable-item {
-    background-color: #fff;
-    align-self: flex-end;
-    }
-
-	 .clickable-item .message-text {
-            margin-bottom: 5px;
-        }
+	font-weight: bold;
+	display: block;
+	margin-bottom: 5px;
+}
 
 
-        
+
+.clickable-item .message-text {
+	margin-bottom: 5px;
+}
+
+.user-message {
+  display: flex;
+ 
+  justify-content: flex-end; /* Aligns the content to the right */
+  text-align: right; /* Ensures the text aligns to the right */
+  margin: 5px 10px; /* Adds some spacing around the message */
+}
+
+
 </style>
