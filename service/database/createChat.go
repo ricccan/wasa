@@ -87,7 +87,10 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 			return err
 		}
 
-		db.AddToCollegamento(utente, altro, chatid)
+		err = db.AddToCollegamento(utente, altro, chatid)
+		if err != nil {
+			return err
+		}
 
 		return nil
 	}

@@ -209,11 +209,12 @@ export default {
 								<li v-for="(item, index) in messages" :key="index"
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
-										<img :src="item.Foto" alt=" ">
 										<span class="user">{{ item.User }}</span>
+										<span ><img :src="item.Foto" alt=" "> </span>
+										<span class="user"></span>
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
 										<div class="chattimestamp">
-											{{ conversioneUnix(item.Timestamp*1000) }}
+											{{ conversioneUnix(item.Timestamp* 1000) }}
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
 									</a>

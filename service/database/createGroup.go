@@ -29,7 +29,10 @@ func (db *appdbimpl) CreateGroup(nome string, utente int) error { // creazione f
 	if err != nil {
 		return err
 	}
-	db.AddToGroup2(utente, id)
+	err = db.AddToGroup2(utente, id)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
