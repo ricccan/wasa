@@ -29,7 +29,7 @@ func (db *appdbimpl) CreateGroup(nome string, utente int) error { // creazione f
 	if err != nil {
 		return err
 	}
-	err = db.AddToGroup2(utente, id)
+	err = db.AddToGroup(utente, int(id))
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (db *appdbimpl) CreateGroup(nome string, utente int) error { // creazione f
 	return nil
 }
 
-func (db *appdbimpl) AddToGroup2(utente int, gruppo int64) error { // creazione funzione, prende i parametri che ci servono
+/* func (db *appdbimpl) AddToGroup2(utente int, gruppo int64) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 	query := "INSERT INTO us_con (us, conv) VALUES (?,?)" // da cambiare
 
@@ -63,3 +63,4 @@ func (db *appdbimpl) AddToGroup2(utente int, gruppo int64) error { // creazione 
 	}
 	return nil
 }
+*/

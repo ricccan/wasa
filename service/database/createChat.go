@@ -30,7 +30,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		return err
 	}
 
-	query = "SELECT conversations.id FROM conversations, us_con as primo, us_con as secondo WHERE conversations.id = primo.conv AND conversations.id = secondo.conv AND primo.us = ? AND secondo.us = ?" // da cambiare
+	query = "SELECT conversations.id FROM conversations, us_con as primo, us_con as secondo WHERE conversations.id = primo.conv AND conversations.id = secondo.conv AND primo.us = ? AND secondo.us = ? AND conversations.grup = 'false'" // da cambiare
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
