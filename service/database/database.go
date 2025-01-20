@@ -39,7 +39,7 @@ import (
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	Ping() error
-	DoLogin(username string) (*int, error) // tutte le funzioni vanno qui
+	DoLogin(username string) (*int, error)
 	SetMyUsername(id int, username string) (string, error)
 	SetMyPhoto(id int, photo []byte) (*User, error)
 	AddToGroup(utente int, gruppo int) error
@@ -60,6 +60,7 @@ type AppDatabase interface {
 	// AddToGroup2(utente int, gruppo int64) error
 	CreateChat(nome string, utente int) error
 	AddToCollegamento(utente int, altro int, chat int64) error
+	GetName(id int) (string, error)
 }
 
 type appdbimpl struct {

@@ -16,6 +16,7 @@ export default {
 			newUser: null, // valore dello username dell'utente con cui si vuole creare una nuova conversazione
 			messages: {}, // json a cui passo i messaggi
 			dynamicData2: {}, // json che utilizzo insieme a chats per gestire i messaggi
+			nomi: {} // variabile a cui do il valore dei nomi nei messaggi
 		}
 	},
 	methods: {
@@ -137,7 +138,25 @@ export default {
 		conversioneUnix(tempo){
 			const date = new Date(tempo);
 			return date.toLocaleString();
-		}
+		},
+
+		async getNome(identifier) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + identifier, { // chiama la query che trova il nome
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
+					}
+
+				});
+				this.nomi = response.data; // i dati in risposta della query
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			return this.nomi
+		},
 
 	},
 	mounted() {
@@ -209,7 +228,8 @@ export default {
 								<li v-for="(item, index) in messages" :key="index"
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
-										<span class="user">{{ item.User }}</span>
+										<!-- non funziona la funzione getnome -->
+										<span class="user">{{ getNome(item.User) }}</span>
 										<span ><img :src="item.Foto" alt=" "> </span>
 										<span class="user"></span>
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>

@@ -7,11 +7,14 @@
                     <div class="card-header">
                         <h3>Profile</h3>
                     </div>
+                    <!-- sezione centrale -->
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-center mt-2">
+                            <!-- sezione nome utente -->
                             <h5 class="card-title me-2 mb-2 ">{{ username }}</h5>
                             <button class="btn btn-primary mb-2" @click="showPopup1 = true"><i class="fas fa-pencil-alt"
                                     style="color: black;"></i></button>
+                            <!-- popup nel caso prema su cambia nome -->
                             <div v-if="showPopup1" class="popup-overlay" @click.self="closePopup">
                                 <div class="popup-content">
                                     <h2>New username</h2>
@@ -24,11 +27,13 @@
                             </div>
                         </div>
                         <div class="position-relative">
+                            <!-- sezione foto profilo -->
                             <img :src="photo" alt="User Photo" class="img-thumbnail" />
                             <button class="edit-button position-absolute bottom-0 end-0 m-2 " @click="showPopup = true">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </div>
+                        <!-- popup nel caso prema su cambia foto -->
                         <div v-if="showPopup" class="popup-overlay" @click.self="closePopup">
                             <div class="popup-content">
                                 <h2>New photo</h2>
@@ -57,10 +62,10 @@ export default {
     data() {
         return {
             username: localStorage.getItem("username"), // prendo la variabile username
-            photo: null,
-            id: localStorage.getItem("id"),
+            photo: null, // variabile foto
+            id: localStorage.getItem("id"), // prendo l'id dell'utente che ha fatto il login
             newUsername: "",
-            showPopup1: false,
+            showPopup1: false, // variabili per far aprire i popup
             showPopup: false,
             textInput: "",
             selectedFile: null,

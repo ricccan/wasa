@@ -5,7 +5,7 @@ import (
 )
 
 func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, text string) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// crea un messaggio nel database
 	query := "INSERT INTO messages (us, conv, risponde, photo, messag, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
 
 	stmt, err := db.c.Prepare(query) // query

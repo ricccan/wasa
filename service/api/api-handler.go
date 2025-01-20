@@ -57,10 +57,11 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id", rt.createChat) // TODO: metterlo nelle api
 
+	rt.router.GET("/users/:id", rt.getName) // TODO: da aggiungere nelle api doc
+
 	return rt.router
 }
 
-// TODO: aggiungere la funzione per dare orario al messaggio
 // TODO: aggiungere funzione che calcola snippet
 // TODO: aggiungere funzione che calcola checkmark
 // TODO: aggiungere funzione che calcola icona

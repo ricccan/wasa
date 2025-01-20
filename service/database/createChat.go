@@ -2,7 +2,7 @@ package database
 
 func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "SELECT id FROM users WHERE username = ?" // da cambiare
+	query := "SELECT id FROM users WHERE username = ?" // dato il nome utente, ritorna il suo id
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -16,7 +16,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		return err
 	}
 
-	var altro int
+	var altro int // salvo l'id in una variabile
 	for result.Next() {
 		err = result.Scan(&altro)
 		if err != nil {
@@ -30,6 +30,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		return err
 	}
 
+	// controllo se esiste già una conversazione tra i due utenti
 	query = "SELECT conversations.id FROM conversations, us_con as primo, us_con as secondo WHERE conversations.id = primo.conv AND conversations.id = secondo.conv AND primo.us = ? AND secondo.us = ? AND conversations.grup = 'false'" // da cambiare
 
 	stmt, err = db.c.Prepare(query) // query
@@ -50,6 +51,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		return err
 	}
 
+	// salvo il valore della query
 	var prova *int
 	for controllo.Next() {
 		err = controllo.Scan(&prova)
@@ -58,7 +60,9 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		}
 	}
 
+	// nel caso non ci siano già conversazioni
 	if prova == nil {
+		// creo la conversazione
 		query = "INSERT INTO conversations (grup) VALUES ('false')"
 
 		stmt, err = db.c.Prepare(query) // query
@@ -87,6 +91,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 			return err
 		}
 
+		// chiamo la funzione che crea il collegamento tra chat e utenti
 		err = db.AddToCollegamento(utente, altro, chatid)
 		if err != nil {
 			return err
@@ -100,7 +105,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 
 func (db *appdbimpl) AddToCollegamento(utente int, altro int, chat int64) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "INSERT INTO us_con (us, conv) VALUES (?,?)" // da cambiare
+	query := "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il collegamento
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -123,7 +128,7 @@ func (db *appdbimpl) AddToCollegamento(utente int, altro int, chat int64) error 
 		return err
 	}
 
-	query = "INSERT INTO us_con (us, conv) VALUES (?,?)" // da cambiare
+	query = "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il secondo collegamento
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {

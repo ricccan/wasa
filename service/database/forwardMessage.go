@@ -12,7 +12,7 @@ type Messaggio struct {
 
 func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "SELECT snippet, messag, photo FROM messages WHERE conv = ? and id = ?"
+	query := "SELECT snippet, messag, photo FROM messages WHERE conv = ? and id = ?" // prende il messaggio da inviare
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -40,7 +40,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
-	query = "INSERT INTO messages (conv, snippet, messag, photo, us, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
+	query = "INSERT INTO messages (conv, snippet, messag, photo, us, timestamp) VALUES (?, ?, ?, ?, ?, ?)" // copia il messaggio in un altra conversazione
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
