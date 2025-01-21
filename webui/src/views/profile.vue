@@ -73,9 +73,6 @@ export default {
         };
     },
     methods: {
-        editInfo() {
-            alert("Edit Info functionality not implemented yet.");
-        },
         async cambiaFoto() {
             this.loading = true;
             this.errormsg = null;

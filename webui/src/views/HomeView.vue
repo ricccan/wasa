@@ -24,7 +24,8 @@ export default {
 			removeUser: null, // variabile per utente da rimuovere dal gruppo
 			newName: null, // variabile per nuovo nome del gruppo
 			newId: {}, // id che prendo dalla funzione getID
-			idGroup: null // id del gruppo
+			idGroup: null, // id del gruppo
+			changeGroupPhoto: null, // valore che contiene la foto da dare al gruppo che sta venendo creato
 		}
 	},
 	methods: {
@@ -184,7 +185,7 @@ export default {
 			return this.newId
 		},
 
-		async addMember() { // da finire
+		async addMember() { 
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.addUser)
@@ -206,7 +207,7 @@ export default {
 			this.closePopup()
 		},
 
-		async removeMember() { // da finire
+		async removeMember() { 
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.removeUser)
@@ -224,6 +225,45 @@ export default {
 			this.getChat()
 		},
 
+		async cambiaNomeGruppo() {
+            this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupName" , {
+                    sgn_name: this.newName,
+                },
+                    {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        }
+                    }); // crea un json che gli passa un nome
+            } catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+			this.getChat();
+        },
+
+		async cambiaFoto() {
+            this.loading = true;
+            this.errormsg = null;
+            try {
+                let formData = new FormData();
+                formData.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
+
+                let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupphoto", formData, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                        "Content-Type": "multipart/form-data",
+                    }
+                });
+                
+            } catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+			this.getChat();
+        },
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -256,7 +296,7 @@ export default {
 					<!-- Scrollable List -->
 					<div class="list-container">
 						<ul>
-							<li v-for="(item, index) in chats" :key="index" @click="apriChat(item)">
+							<li v-for="(item, index) in chats" :key="index" @click="apriChat(item), idGroup = item.IdChat">
 								<a class="clickable-item">
 									<img :src="item.GroupPhoto" alt="" class="group-photo">
 									{{ item.GroupName }}
@@ -364,12 +404,12 @@ export default {
 			<a>Change name</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="cambiaNome">Submit</button>
+				<button @click="cambiaNomeGruppo">Submit</button>
 			</div>
 			<a>change photo</a>
 			<div style="display: flex; align-items: center;">
 				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
-				<button @click="cambiaNome">Submit</button>
+				<button @click="cambiaFoto">Submit</button>
 			</div>
 			<div v-if="imagePreview" class="image-preview">
 				<img :src="imagePreview" alt="Selected photo preview" />
