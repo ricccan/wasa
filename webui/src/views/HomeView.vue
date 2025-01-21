@@ -12,14 +12,35 @@ export default {
 			dynamicData: {}, // json che utilizzo insieme a chats per gestire le conversazioni
 			showPopup: false, // popup che apre la sezione "crea gruppo"
 			showPopup1: false, // popup che apre la sezione "nuova chat"
+			showPopup2: false, // popup che apre la sezione info gruppo
 			newGroupname: null, // valore che contiene il nome da dare al gruppo che sta venendo creato
 			newUser: null, // valore dello username dell'utente con cui si vuole creare una nuova conversazione
 			messages: {}, // json a cui passo i messaggi
 			dynamicData2: {}, // json che utilizzo insieme a chats per gestire i messaggi
-			nomi: {} // variabile a cui do il valore dei nomi nei messaggi
+			nomi: {}, // variabile a cui do il valore dei nomi nei messaggi
+			selectedFile: null, // file messo da input
+			imagePreview: null, // preview
+			addUser: null, // variabile per utente da aggiungere nel gruppo
+			removeUser: null, // variabile per utente da rimuovere dal gruppo
+			newName: null, // variabile per nuovo nome del gruppo
+			newId: {}, // id che prendo dalla funzione getID
+			idGroup: null // id del gruppo
 		}
 	},
 	methods: {
+		onFileChange(event) {
+			const file = event.target.files[0];
+			if (file) {
+				this.selectedFile = file;
+
+				// Create a preview of the image
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					this.imagePreview = e.target.result;
+				};
+				reader.readAsDataURL(file);
+			}
+		},
 		async newPage() { // funzione che porta alla pagina del profilo
 			this.loading = true;
 			this.errormsg = null;
@@ -69,6 +90,7 @@ export default {
 		closePopup() { // chiude tutti i popup
 			this.showPopup = false;
 			this.showPopup1 = false;
+			this.showPopup2 = false
 		},
 
 		async creaGruppo() {
@@ -135,27 +157,71 @@ export default {
 			}
 
 		},
-		conversioneUnix(tempo){
+		conversioneUnix(tempo) {
 			const date = new Date(tempo);
 			return date.toLocaleString();
 		},
 
-		async getNome(identifier) {
+
+		async getId(nome) { 
+			
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/users/" + identifier, { // chiama la query che trova il nome
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
+				let response = await this.$axios.post("/users", {
+						name: nome
+					},
+					{
+					headers: { // Headers should be part of the same object
+						Authorization: "Bearer " + localStorage.getItem("token"),
 					}
-
-				});
-				this.nomi = response.data; // i dati in risposta della query
+				}); // crea un json che gli passa un nome
+				this.newId = response.data; // i dati in risposta della query
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
-			return this.nomi
+			return this.newId
+		},
+
+		async addMember() { // da finire
+			this.loading = true;
+			this.errormsg = null;
+			var temp = await this.getId(this.addUser)
+			console.log(temp)
+			try {
+				let response = await this.$axios.post("/users/" + this.id + "/groups", {
+					adg_utente_id: temp, // forse giusto?
+					adg_group_id: this.idGroup // FORSE GIUSTO?
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.closePopup()
+		},
+
+		async removeMember() { // da finire
+			this.loading = true;
+			this.errormsg = null;
+			var temp = await this.getId(this.removeUser)
+			try {
+				await this.$axios.delete("/users/" + temp + "/groups/" + this.idGroup, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+				}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.closePopup()
+			this.getChat()
 		},
 
 	},
@@ -167,6 +233,7 @@ export default {
 </script>
 
 <template>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<div class="container-fluid">
 		<div class="row">
 			<!-- Lateral Section -->
@@ -193,6 +260,11 @@ export default {
 								<a class="clickable-item">
 									<img :src="item.GroupPhoto" alt="" class="group-photo">
 									{{ item.GroupName }}
+
+									<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
+									<button v-if="item.Group" class="edit-button mb-2"
+										@click="showPopup2 = true, idGroup = item.IdChat"><i class="fas fa-pencil-alt"
+											style="color: black;"></i></button>
 								</a>
 							</li>
 						</ul>
@@ -220,7 +292,6 @@ export default {
 
 				<!-- Body Content -->
 				<div class="body-content" style="overflow-y: auto; max-height: 75vh;">
-					<p>Welcome to the main content area. Here is where you can display information.</p>
 
 					<div class="chatlist-container">
 						<div class="list-container">
@@ -228,13 +299,13 @@ export default {
 								<li v-for="(item, index) in messages" :key="index"
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
-										<!-- non funziona la funzione getnome -->
-										<span class="user">{{ getNome(item.User) }}</span>
-										<span ><img :src="item.Foto" alt=" "> </span>
+
+										<span class="user">{{ item.Username }}</span>
+										<span><img :src="item.Foto" alt=" "> </span>
 										<span class="user"></span>
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
 										<div class="chattimestamp">
-											{{ conversioneUnix(item.Timestamp* 1000) }}
+											{{ conversioneUnix(item.Timestamp * 1000) }}
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
 									</a>
@@ -272,6 +343,39 @@ export default {
 			<input type="text" v-model="newUser" placeholder="Type here..." />
 			<div class="popup-actions">
 				<button @click="creaConversazione">Submit</button>
+				<button @click="closePopup">Close</button>
+			</div>
+		</div>
+	</div>
+	<div v-if="showPopup2" class="popup-overlay" @click.self="closePopup">
+		<!-- TODO: cambiare i pulsanti-->
+		<div class="popup-content">
+			<h2>Group action</h2>
+			<a>Add member</a>
+			<div style="display: flex; align-items: center;">
+				<input type="text" v-model="addUser" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="addMember">Submit</button>
+			</div>
+			<a>remove member</a>
+			<div style="display: flex; align-items: center;">
+				<input type="text" v-model="removeUser" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="removeMember">Submit</button>
+			</div>
+			<a>Change name</a>
+			<div style="display: flex; align-items: center;">
+				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="cambiaNome">Submit</button>
+			</div>
+			<a>change photo</a>
+			<div style="display: flex; align-items: center;">
+				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
+				<button @click="cambiaNome">Submit</button>
+			</div>
+			<div v-if="imagePreview" class="image-preview">
+				<img :src="imagePreview" alt="Selected photo preview" />
+			</div>
+
+			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -479,12 +583,46 @@ li {
 }
 
 .user-message {
-  display: flex;
- 
-  justify-content: flex-end; /* Aligns the content to the right */
-  text-align: right; /* Ensures the text aligns to the right */
-  margin: 5px 10px; /* Adds some spacing around the message */
+	display: flex;
+
+	justify-content: flex-end;
+	/* Aligns the content to the right */
+	text-align: right;
+	/* Ensures the text aligns to the right */
+	margin: 5px 10px;
+	/* Adds some spacing around the message */
 }
 
+.edit-icon-container {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	border: 2px solid #007bff;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
+/* Pencil Icon */
+.edit-icon {
+	color: #007bff;
+	font-size: 16px;
+	transition: color 0.3s ease;
+}
+
+/* Hover Effects */
+.edit-icon-container:hover {
+	background-color: #007bff;
+	transform: scale(1.1);
+}
+
+.edit-icon-container:hover .edit-icon {
+	color: white;
+}
 </style>

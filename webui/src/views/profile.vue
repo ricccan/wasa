@@ -12,7 +12,7 @@
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <!-- sezione nome utente -->
                             <h5 class="card-title me-2 mb-2 ">{{ username }}</h5>
-                            <button class="btn btn-primary mb-2" @click="showPopup1 = true"><i class="fas fa-pencil-alt"
+                            <button class="edit-button mb-2" @click="showPopup1 = true"><i class="fas fa-pencil-alt"
                                     style="color: black;"></i></button>
                             <!-- popup nel caso prema su cambia nome -->
                             <div v-if="showPopup1" class="popup-overlay" @click.self="closePopup">

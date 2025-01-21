@@ -24,7 +24,7 @@ func (rt *_router) removeFromGroup(w http.ResponseWriter, r *http.Request, ps ht
 
 	// prendo i parametri passati
 	parametroId := ps.ByName("id")
-	gruppoId := ps.ByName("group")
+	gruppoId := ps.ByName("groups")
 
 	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
 	if err != nil {

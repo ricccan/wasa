@@ -29,7 +29,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id/groups", rt.addToGroup) // funzione per aggiungere un utente a un gruppo
 
-	rt.router.DELETE("/users/:id/groups/:group", rt.removeFromGroup) // funzione per rimuovere un utente da un gruppo
+	rt.router.DELETE("/users/:id/groups/:groups", rt.removeFromGroup) // funzione per rimuovere un utente da un gruppo
 
 	rt.router.POST("/users/:id/conversations/:conversationId/groupName", rt.SetGroupName) // funzione per cambiare il nome del gruppo
 
@@ -57,7 +57,9 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id", rt.createChat) // TODO: metterlo nelle api
 
-	rt.router.GET("/users/:id", rt.getName) // TODO: da aggiungere nelle api doc
+	// rt.router.GET("/users/:id", rt.getName) // TODO: da aggiungere nelle api doc
+
+	rt.router.POST("/users", rt.getUserId) // TODO: da aggiungere nelle api doc
 
 	return rt.router
 }

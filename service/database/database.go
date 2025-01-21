@@ -61,6 +61,7 @@ type AppDatabase interface {
 	CreateChat(nome string, utente int) error
 	AddToCollegamento(utente int, altro int, chat int64) error
 	GetName(id int) (string, error)
+	GetUserId(nome string) (*int, error)
 }
 
 type appdbimpl struct {
