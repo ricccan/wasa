@@ -26,6 +26,8 @@ export default {
 			newId: {}, // id che prendo dalla funzione getID
 			idGroup: null, // id del gruppo
 			changeGroupPhoto: null, // valore che contiene la foto da dare al gruppo che sta venendo creato
+			newMessage: null, // valore che contiene il messaggio che si vuole inviare
+			currentChat: null, // chat attuale
 		}
 	},
 	methods: {
@@ -136,7 +138,7 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + conv.IdChat + "/messages", { // chiama la query che trova le chat
+				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + conv + "/messages", { // chiama la query che trova le chat
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
 					}
@@ -164,19 +166,19 @@ export default {
 		},
 
 
-		async getId(nome) { 
-			
+		async getId(nome) {
+
 			this.loading = true;
 			this.errormsg = null;
 			try {
 				let response = await this.$axios.post("/users", {
-						name: nome
-					},
+					name: nome
+				},
 					{
-					headers: { // Headers should be part of the same object
-						Authorization: "Bearer " + localStorage.getItem("token"),
-					}
-				}); // crea un json che gli passa un nome
+						headers: { // Headers should be part of the same object
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
 				this.newId = response.data; // i dati in risposta della query
 			} catch (e) {
 				this.errormsg = e.toString();
@@ -185,7 +187,7 @@ export default {
 			return this.newId
 		},
 
-		async addMember() { 
+		async addMember() {
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.addUser)
@@ -207,7 +209,7 @@ export default {
 			this.closePopup()
 		},
 
-		async removeMember() { 
+		async removeMember() {
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.removeUser)
@@ -226,44 +228,73 @@ export default {
 		},
 
 		async cambiaNomeGruppo() {
-            this.loading = true;
-            this.errormsg = null;
-            try {
-                let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupName" , {
-                    sgn_name: this.newName,
-                },
-                    {
-                        headers: {
-                            Authorization: "Bearer " + localStorage.getItem("token"),
-                        }
-                    }); // crea un json che gli passa un nome
-            } catch (e) {
-                this.errormsg = e.toString();
-            }
-            this.loading = false;
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupName", {
+					sgn_name: this.newName,
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
 			this.getChat();
-        },
+			this.closePopup()
+		},
 
 		async cambiaFoto() {
-            this.loading = true;
-            this.errormsg = null;
-            try {
-                let formData = new FormData();
-                formData.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let formData = new FormData();
+				formData.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
 
-                let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupphoto", formData, {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                        "Content-Type": "multipart/form-data",
-                    }
-                });
-                
-            } catch (e) {
-                this.errormsg = e.toString();
-            }
-            this.loading = false;
+				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupphoto", formData, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+						"Content-Type": "multipart/form-data",
+					}
+				});
+
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
 			this.getChat();
-        },
+			this.closePopup()
+		},
+
+		async sendMessage(){
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let formData2 = new FormData();
+				formData2.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
+				formData2.append("messageText", this.newMessage);
+				if (this.selectedFile) {
+					formData2.append("IsPhoto", "true");
+				} else{
+					formData2.append("IsPhoto", "false");
+				}
+				await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages", formData2, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+						"Content-Type": "multipart/form-data",
+					}
+				});
+
+			} catch (e) {
+				this.errormsg = e.toString();
+				console.log("sucaaaaaaa")
+			}
+			this.loading = false;
+			this.apriChat(this.idGroup)  
+		},
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -296,7 +327,8 @@ export default {
 					<!-- Scrollable List -->
 					<div class="list-container">
 						<ul>
-							<li v-for="(item, index) in chats" :key="index" @click="apriChat(item), idGroup = item.IdChat">
+							<li v-for="(item, index) in chats" :key="index"
+								@click="apriChat(item.IdChat), idGroup = item.IdChat, currentChat = item.GroupName">
 								<a class="clickable-item">
 									<img :src="item.GroupPhoto" alt="" class="group-photo">
 									{{ item.GroupName }}
@@ -331,7 +363,7 @@ export default {
 				</div>
 
 				<!-- Body Content -->
-				<div class="body-content" style="overflow-y: auto; max-height: 75vh;">
+				<div class="body-content" style="overflow-y: auto; max-height: 60vh;">
 
 					<div class="chatlist-container">
 						<div class="list-container">
@@ -355,11 +387,23 @@ export default {
 					</div>
 
 				</div>
-
 				<!-- Bottom Section -->
 				<div class="bottom-section mt-4 pt-3 border-top">
-					<h5>Footer Section</h5>
-					<p>This is the bottom section of the body.</p>
+					<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="messageInput">Your Message:</label>
+							<input type="text" id="messageInput" v-model="newMessage" class="form-control"
+								name="message" placeholder="Enter your message" required>
+						</div>
+						<div class="form-group mt-2">
+							<label for="photoInput">Attach a Photo:</label>
+							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo" accept="image/*">
+						</div>
+						<div v-if="imagePreview" class="image-preview">
+							<img :src="imagePreview" alt="Selected photo preview" />
+						</div>	
+						<button @click.prevent="sendMessage">Submit</button>
+					</form>
 				</div>
 			</main>
 		</div>
