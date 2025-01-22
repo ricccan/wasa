@@ -28,6 +28,11 @@ export default {
 			changeGroupPhoto: null, // valore che contiene la foto da dare al gruppo che sta venendo creato
 			newMessage: null, // valore che contiene il messaggio che si vuole inviare
 			currentChat: null, // chat attuale
+			entrato: false, // variabile che mi dice se sono entrato in una chat
+			showPopup3: false, // popup che apre la sezione info messaggio
+			idTemp: null, // id temporaneo
+			tempMessId: null, // id temporaneo messaggio
+			forwardedUser: null, // utente a cui inoltrare il messaggio
 		}
 	},
 	methods: {
@@ -93,7 +98,8 @@ export default {
 		closePopup() { // chiude tutti i popup
 			this.showPopup = false;
 			this.showPopup1 = false;
-			this.showPopup2 = false
+			this.showPopup2 = false;
+			this.showPopup3 = false;
 		},
 
 		async creaGruppo() {
@@ -269,7 +275,7 @@ export default {
 			this.closePopup()
 		},
 
-		async sendMessage(){
+		async sendMessage() {
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -278,7 +284,7 @@ export default {
 				formData2.append("messageText", this.newMessage);
 				if (this.selectedFile) {
 					formData2.append("IsPhoto", "true");
-				} else{
+				} else {
 					formData2.append("IsPhoto", "false");
 				}
 				await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages", formData2, {
@@ -293,8 +299,43 @@ export default {
 				console.log("sucaaaaaaa")
 			}
 			this.loading = false;
-			this.apriChat(this.idGroup)  
+			this.apriChat(this.idGroup)
 		},
+		async deleteMessage(){
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				await this.$axios.delete("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId,  {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+				}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.closePopup()
+			this.apriChat(this.idGroup)
+		},
+		async forward(){
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupName", {
+					chatId: this.idGroup,
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.getChat();
+			this.closePopup()
+		}
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -328,7 +369,7 @@ export default {
 					<div class="list-container">
 						<ul>
 							<li v-for="(item, index) in chats" :key="index"
-								@click="apriChat(item.IdChat), idGroup = item.IdChat, currentChat = item.GroupName">
+								@click="apriChat(item.IdChat), idGroup = item.IdChat, currentChat = item.GroupName, entrato = true">
 								<a class="clickable-item">
 									<img :src="item.GroupPhoto" alt="" class="group-photo">
 									{{ item.GroupName }}
@@ -363,7 +404,7 @@ export default {
 				</div>
 
 				<!-- Body Content -->
-				<div class="body-content" style="overflow-y: auto; max-height: 60vh;">
+				<div class="body-content" v-if="entrato" style="overflow-y: auto; max-height: 60vh;">
 
 					<div class="chatlist-container">
 						<div class="list-container">
@@ -372,7 +413,15 @@ export default {
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
 
-										<span class="user">{{ item.Username }}</span>
+										<div style="display: flex; align-items: center;">
+											<button class="edit-button mb-2"
+												@click="idTemp = item.User, showPopup3 = true, tempMessId = item.IdMess"
+												style="margin-right: 10px;">
+												<i class="fas fa-pencil-alt" style="color: black;"></i>
+											</button>
+											<span class="user">{{ item.Username }}</span>
+										</div>
+
 										<span><img :src="item.Foto" alt=" "> </span>
 										<span class="user"></span>
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
@@ -388,7 +437,7 @@ export default {
 
 				</div>
 				<!-- Bottom Section -->
-				<div class="bottom-section mt-4 pt-3 border-top">
+				<div class="bottom-section mt-4 pt-3 border-top" v-if="entrato">
 					<form class="footer-form text-center" method="post" enctype="multipart/form-data">
 						<div class="form-group">
 							<label for="messageInput">Your Message:</label>
@@ -397,12 +446,11 @@ export default {
 						</div>
 						<div class="form-group mt-2">
 							<label for="photoInput">Attach a Photo:</label>
-							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo" accept="image/*">
+							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
+								accept="image/*">
 						</div>
-						<div v-if="imagePreview" class="image-preview">
-							<img :src="imagePreview" alt="Selected photo preview" />
-						</div>	
-						<button @click.prevent="sendMessage">Submit</button>
+						<button @click.prevent="sendMessage" type="submit" class="btn btn-primary mt-3">Send to {{
+							currentChat }}</button>
 					</form>
 				</div>
 			</main>
@@ -444,6 +492,39 @@ export default {
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="removeUser" placeholder="Type here..." style="margin-right: 10px;" />
 				<button @click="removeMember">Submit</button>
+			</div>
+			<a>Change name</a>
+			<div style="display: flex; align-items: center;">
+				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="cambiaNomeGruppo">Submit</button>
+			</div>
+			<a>change photo</a>
+			<div style="display: flex; align-items: center;">
+				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
+				<button @click="cambiaFoto">Submit</button>
+			</div>
+			<div v-if="imagePreview" class="image-preview">
+				<img :src="imagePreview" alt="Selected photo preview" />
+			</div>
+
+			<div class="popup-actions">
+				<button @click="closePopup">Close</button>
+			</div>
+		</div>
+	</div>
+	<div v-if="showPopup3" class="popup-overlay" @click.self="closePopup">
+		<!-- TODO: cambiare i pulsanti-->
+		<div class="popup-content">
+			<h2>message actions</h2>
+			<div v-if="idTemp == this.id"
+				style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button v-if="idTemp == this.id" @click="deleteMessage">Delete message</button>
+			</div>
+
+			<a>forward message</a>
+			<div style="display: flex; align-items: center;">
+				<input type="text" v-model="forwardedUser" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="forward">Submit</button>
 			</div>
 			<a>Change name</a>
 			<div style="display: flex; align-items: center;">
