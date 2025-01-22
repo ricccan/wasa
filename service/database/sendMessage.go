@@ -7,7 +7,7 @@ import (
 func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 
-	query := "INSERT INTO messages (us, conv, photo, messag, timestamp) VALUES (?, ?, ?, ?, ?)"
+	query := "INSERT INTO messages (us, conv, photo, messag, timestamp, forwarded) VALUES (?, ?, ?, ?, ?, false)"
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {

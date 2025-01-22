@@ -5,14 +5,13 @@ import (
 )
 
 type Messaggio struct {
-	snippet string
-	messag  string
-	photo   []byte
+	Messag string
+	Photo  []byte
 }
 
 func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "SELECT snippet, messag, photo FROM messages WHERE conv = ? and id = ?" // prende il messaggio da inviare
+	query := "SELECT messag, photo FROM messages WHERE conv = ? and id = ?" // prende il messaggio da inviare
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -29,7 +28,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 
 	var mess Messaggio
 	for rows.Next() {
-		err = rows.Scan(&mess.snippet, &mess.messag, &mess.photo)
+		err = rows.Scan(&mess.Messag, &mess.Photo)
 		if err != nil {
 			return err
 		}
@@ -40,7 +39,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
-	query = "INSERT INTO messages (conv, snippet, messag, photo, us, timestamp) VALUES (?, ?, ?, ?, ?, ?)" // copia il messaggio in un altra conversazione
+	query = "INSERT INTO messages (conv, messag, photo, us, timestamp, forwarded) VALUES ( ?, ?, ?, ?, ?, true)" // copia il messaggio in un altra conversazione
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
@@ -49,7 +48,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(invio, mess.snippet, mess.messag, mess.photo, id, time.Now())
+	result, err := stmt.Exec(invio, mess.Messag, mess.Photo, id, time.Now().Unix())
 	if err != nil {
 		return err
 	}

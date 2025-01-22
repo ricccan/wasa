@@ -33,6 +33,7 @@ export default {
 			idTemp: null, // id temporaneo
 			tempMessId: null, // id temporaneo messaggio
 			forwardedUser: null, // utente a cui inoltrare il messaggio
+			showPopup4: false, // popup che apre la sezione inoltro messaggio
 		}
 	},
 	methods: {
@@ -100,6 +101,7 @@ export default {
 			this.showPopup1 = false;
 			this.showPopup2 = false;
 			this.showPopup3 = false;
+			this.showPopup4 = false;
 		},
 
 		async creaGruppo() {
@@ -173,7 +175,6 @@ export default {
 
 
 		async getId(nome) {
-
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -314,12 +315,13 @@ export default {
 			this.closePopup()
 			this.apriChat(this.idGroup)
 		},
-		async forward(){
+		async forward(messi){
 			this.loading = true;
 			this.errormsg = null;
+			console.log(this.idGroup,this.tempMessId,messi)
 			try {
-				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/groupName", {
-					chatId: this.idGroup,
+				let response = await this.$axios.post("/users/"+ this.id + "/conversations/"+ this.idGroup + "/messages/" + this.tempMessId, {
+					chatId: messi,
 				},
 					{
 						headers: {
@@ -331,7 +333,8 @@ export default {
 			}
 			this.loading = false;
 			this.getChat();
-			this.closePopup()
+			this.closePopup();
+			this.apriChat(messi)
 		}
 	},
 	mounted() {
@@ -409,7 +412,7 @@ export default {
 								<li v-for="(item, index) in messages" :key="index"
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
-
+										<span class="user" v-if="item.Inoltrato"> forwarded -> </span>
 										<div style="display: flex; align-items: center;">
 											<button class="edit-button mb-2"
 												@click="idTemp = item.User, showPopup3 = true, tempMessId = item.IdMess"
@@ -517,11 +520,9 @@ export default {
 				style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<button v-if="idTemp == this.id" @click="deleteMessage">Delete message</button>
 			</div>
-
-			<a>forward message</a>
-			<div style="display: flex; align-items: center;">
-				<input type="text" v-model="forwardedUser" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="forward">Submit</button>
+			<div
+				style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button  @click="showPopup4= true">Forward message</button>
 			</div>
 			<a>Change name</a>
 			<div style="display: flex; align-items: center;">
@@ -536,6 +537,30 @@ export default {
 			<div v-if="imagePreview" class="image-preview">
 				<img :src="imagePreview" alt="Selected photo preview" />
 			</div>
+
+			<div class="popup-actions">
+				<button @click="closePopup">Close</button>
+			</div>
+		</div>
+	</div>
+	<div v-if="showPopup4" class="popup-overlay" @click.self="closePopup">
+		<!-- TODO: cambiare i pulsanti-->
+		<div class="popup-content">
+			<h2>forward</h2>
+			<div class="list-container">
+						<ul>
+							<li v-for="(item, index) in chats" :key="index">
+								<a class="clickable-item">
+									<img :src="item.GroupPhoto" alt="" class="group-photo">
+									{{ item.GroupName }}
+
+									<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
+									<button class="edit-button mb-2"
+										@click="forward(item.IdChat)"> send</button>
+								</a>
+							</li>
+						</ul>
+					</div>
 
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>

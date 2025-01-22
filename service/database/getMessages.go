@@ -4,7 +4,6 @@ type Message struct {
 	// il nome delle robe json con maiuscola
 
 	IdMess     int
-	Snippet    *string
 	Timestamp  *int
 	Messaggio  *string
 	Checkmarks *int
@@ -12,11 +11,12 @@ type Message struct {
 	Username   string
 	Risposta   *int
 	Foto       []byte
+	Inoltrato  *bool
 }
 
 func (db *appdbimpl) GetMessages(id int, gruppo int) (*[]Message, error) { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "SELECT messages.id,snippet,timestamp,messag,checkmarks,us,username,risponde,photo FROM messages,users WHERE conv = ? and us = users.id" // query
+	query := "SELECT messages.id,timestamp,messag,checkmarks,us,username,risponde,photo,forwarded FROM messages,users WHERE conv = ? and us = users.id" // query
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -35,7 +35,7 @@ func (db *appdbimpl) GetMessages(id int, gruppo int) (*[]Message, error) { // cr
 	var mess Message
 
 	for rows.Next() {
-		err = rows.Scan(&mess.IdMess, &mess.Snippet, &mess.Timestamp, &mess.Messaggio, &mess.Checkmarks, &mess.User, &mess.Username, &mess.Risposta, &mess.Foto) // scan dei risultati
+		err = rows.Scan(&mess.IdMess, &mess.Timestamp, &mess.Messaggio, &mess.Checkmarks, &mess.User, &mess.Username, &mess.Risposta, &mess.Foto, &mess.Inoltrato) // scan dei risultati
 		if err != nil {
 			return nil, err // se c è errore
 		}
