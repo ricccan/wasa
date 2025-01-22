@@ -177,14 +177,11 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.post("/users", {
-					name: nome
-				},
-					{
-						headers: { // Headers should be part of the same object
-							Authorization: "Bearer " + localStorage.getItem("token"),
-						}
-					}); // crea un json che gli passa un nome
+				let response = await this.$axios.get("/usernames/" + nome, {
+					headers: { // Headers should be part of the same object
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+				}); // crea un json che gli passa un nome
 				this.newId = response.data; // i dati in risposta della query
 			} catch (e) {
 				this.errormsg = e.toString();
