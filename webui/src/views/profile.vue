@@ -12,8 +12,9 @@
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <!-- sezione nome utente -->
                             <h5 class="card-title me-2 mb-2 ">{{ username }}</h5>
-                            <button class="edit-button mb-2" @click="showPopup1 = true"><i class="fas fa-pencil-alt"
-                                    style="color: black;"></i></button>
+                            <button class="btn btn-outline-light mb-2" @click="showPopup1 = true">
+                                <i class="fas fa-pencil-alt" style="color: black;"></i>
+                            </button>
                             <!-- popup nel caso prema su cambia nome -->
                             <div v-if="showPopup1" class="popup-overlay" @click.self="closePopup">
                                 <div class="popup-content">
@@ -28,16 +29,25 @@
                         </div>
                         <div class="position-relative">
                             <!-- sezione foto profilo -->
-                            <img :src="photo" alt="User Photo" class="img-thumbnail" />
+                            <img :src="photo" alt="User Photo" class="img-thumbnail" id="foto1" />
                             <button class="edit-button position-absolute bottom-0 end-0 m-2 " @click="showPopup = true">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </div>
+                        <button class="btn btn-primary mt-3" @click="home">Home</button>
                         <!-- popup nel caso prema su cambia foto -->
                         <div v-if="showPopup" class="popup-overlay" @click.self="closePopup">
                             <div class="popup-content">
                                 <h2>New photo</h2>
-                                <input type="file" @change="onFileChange" accept="image/*" />
+                                <div class="file-upload-container">
+                                    <!-- File Input -->
+                                    <input type="file" @change="onFileChange" accept="image/*" />
+
+                                    <!-- Remove Photo Button -->
+                                    <button v-if="imagePreview" @click="imagePreview = null" class="remove-button">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
 
                                 <!-- Image Preview -->
                                 <div v-if="imagePreview" class="image-preview">
@@ -49,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -147,7 +157,12 @@ export default {
                 reader.readAsDataURL(file);
             }
         },
+        home() {
+            this.$router.push({ path: "/link1" });
+        }
     },
+
+
     mounted() {
         this.getPhoto(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
     }
@@ -155,45 +170,31 @@ export default {
 </script>
 
 <style scoped>
-.container {
-    margin-top: 100px;
-}
+
 
 .card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.edit-icon-container {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  border: 2px solid #007bff;
-  border-radius: 50%;
+.file-upload-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-items: center; /* Vertically center items */
+  gap: 10px; /* Add spacing between the input and button */
 }
 
-/* Pencil Icon */
-.edit-icon {
-  color: #007bff;
-  font-size: 16px;
-  transition: color 0.3s ease;
-}
-
-/* Hover Effects */
-.edit-icon-container:hover {
-  background-color: #007bff;
-  transform: scale(1.1);
-}
-
-.edit-icon-container:hover .edit-icon {
+.remove-button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #e74c3c;
   color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+.remove-button:hover {
+  background-color: #c0392b;
+}
+
+
 
 </style>

@@ -444,7 +444,7 @@ export default {
 									{{ item.GroupName }}
 
 									<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
-									<button v-if="item.Group" class="edit-button mb-2"
+									<button v-if="item.Group" class="btn btn-outline-light mb-2"
 										@click="showPopup2 = true, idGroup = item.IdChat"><i class="fas fa-pencil-alt"
 											style="color: black;"></i></button>
 								</a>
@@ -480,15 +480,15 @@ export default {
 							<ul>
 								<li v-for="(item, index) in messages" :key="index"
 									:class="{ 'user-message': item.User == this.id }">
-									<a class="chatclickable-item">
+									<div class="chatclickable-item">
 										<span class="user" v-if="item.Inoltrato"> forwarded -> </span>
 										<div class="response-row">
 											<span class="user" v-if="item.Risposta">response to message {{ item.Risposta
 												}}</span>
-											
+
 										</div>
 										<div style="display: flex; align-items: center;">
-											<button class="edit-button mb-2"
+											<button class="btn btn-outline-light mb-2"
 												@click="idTemp = item.User, showPopup3 = true, tempMessId = item.IdMess"
 												style="margin-right: 10px;">
 												<i class="fas fa-pencil-alt" style="color: black;"></i>
@@ -504,7 +504,7 @@ export default {
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
 										<div> message:{{ item.IdMess }}</div>
-									</a>
+									</div>
 								</li>
 							</ul>
 						</div>
@@ -561,26 +561,29 @@ export default {
 			<a>Add member</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="addUser" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="addMember">Submit</button>
+				<button @click="addMember" class="btn btn-primary">Submit</button>
 			</div>
 			<a>remove member</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="removeUser" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="removeMember">Submit</button>
+				<button @click="removeMember" class="btn btn-primary">Submit</button>
 			</div>
 			<a>Change name</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="cambiaNomeGruppo">Submit</button>
+				<button @click="cambiaNomeGruppo" class="btn btn-primary">Submit</button>
 			</div>
 			<a>change photo</a>
 			<div style="display: flex; align-items: center;">
 				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
-				<button @click="cambiaFoto">Submit</button>
+				<button @click="cambiaFoto" class="btn btn-primary">Submit</button>
 			</div>
 			<div v-if="imagePreview" class="image-preview">
 				<img :src="imagePreview" alt="Selected photo preview" />
 			</div>
+			<button v-if="imagePreview" @click="imagePreview = null" class="btn btn-danger">
+				<i class="fas fa-trash-alt"></i>
+			</button>
 
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
@@ -588,57 +591,93 @@ export default {
 		</div>
 	</div>
 	<div v-if="showPopup3" class="popup-overlay" @click.self="closePopup">
-		<!-- TODO: cambiare i pulsanti-->
+		<!-- TODO: Update button styles if needed -->
 		<div class="popup-content">
-			<h2>message actions</h2>
+			<h2>Message Actions</h2>
+
+			<!-- Delete Message Section -->
 			<div v-if="idTemp == this.id"
-				style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button v-if="idTemp == this.id" @click="deleteMessage">Delete message</button>
-			</div>
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button @click="showPopup4 = true">Forward message</button>
-			</div>
-
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button @click="showPopup5 = true">Respond</button>
+				style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+				<div style="text-align: center; margin-bottom: 1rem;">
+					<div>Delete message</div>
+					<button v-if="idTemp == this.id" @click="deleteMessage" class="btn btn-danger">
+						<i class="fas fa-trash-alt"></i>
+					</button>
+				</div>
 			</div>
 
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button @click="showPopup6 = true">react</button>
+			<!-- First Row: Forward and React to Message -->
+			<div style="display: flex; justify-content: space-around; margin-bottom: 1rem;">
+				<div style="text-align: center;">
+					<div>Forward message</div>
+					<button @click="showPopup4 = true" class="btn btn-success">
+						<i class="fas fa-paper-plane"></i>
+					</button>
+				</div>
+				<div style="text-align: center;">
+					<div>React to message</div>
+					<button @click="showPopup6 = true" class="btn btn-primary">
+						<i class="fas fa-spell-check"></i>
+					</button>
+				</div>
 			</div>
 
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button @click="deleteReaction">delete reaction</button>
+			<!-- Second Row: Reply and Delete Reaction -->
+			<div style="display: flex; justify-content: space-around; margin-bottom: 1rem;">
+				<div style="text-align: center;">
+					<div>Reply to message</div>
+					<button @click="showPopup5 = true" class="btn btn-success">
+						<i class="fas fa-reply"></i>
+					</button>
+				</div>
+				<div style="text-align: center;">
+					<div>Delete reaction</div>
+					<button @click="deleteReaction" class="btn btn-danger">
+						<i class="fas fa-remove-format"></i>
+					</button>
+				</div>
 			</div>
 
+			<!-- Close Button -->
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
 	</div>
-	<div v-if="showPopup4" class="popup-overlay" @click.self="closePopup">
-		<!-- TODO: cambiare i pulsanti-->
-		<div class="popup-content">
-			<h2>forward</h2>
-			<div class="list-container">
-				<ul>
-					<li v-for="(item, index) in chats" :key="index">
-						<a class="clickable-item">
-							<img :src="item.GroupPhoto" alt="" class="group-photo">
-							{{ item.GroupName }}
 
-							<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
-							<button class="edit-button mb-2" @click="forward(item.IdChat)"> send</button>
-						</a>
+	<div v-if="showPopup4" class="popup-overlay" @click.self="closePopup">
+		<!-- TODO: cambiare i pulsanti -->
+		<div class="popup-content">
+			<h2>Forward</h2>
+			<div class="list-container"
+				style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 1rem; border-radius: 8px; background-color: #f9f9f9;">
+				<ul style="list-style-type: none; margin: 0; padding: 0;">
+					<li v-for="(item, index) in chats" :key="index"
+						style="display: flex; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
+						<img :src="item.GroupPhoto" alt="" class="group-photo"
+							style="width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;">
+						<div style="flex-grow: 1;">
+							<span>{{ item.GroupName }}</span>
+						</div>
+						<button class="edit-button mb-2" @click="forward(item.IdChat)"
+							style="padding: 0.5rem 1rem; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send</button>
 					</li>
 				</ul>
+				
 			</div>
 
-			<div class="popup-actions">
-				<button @click="closePopup">Close</button>
+			<div class="popup-actions" style="text-align: right; margin-top: 1rem;">
+				<button @click="showPopup4 = false" type="submit" class="btn btn-primary mt-3">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+				<button @click="closePopup"
+					style="padding: 0.5rem 1rem; background-color: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+					
 			</div>
+			
 		</div>
 	</div>
+
 	<div v-if="showPopup5" class="popup-overlay" @click.self="closePopup">
 		<div class="bottom-section mt-4 pt-3 border-top">
 			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
@@ -654,28 +693,40 @@ export default {
 					<div v-if="imagePreview" class="image-preview">
 						<img :src="imagePreview" alt="Selected photo preview" />
 					</div>
+					<button v-if="imagePreview" @click="imagePreview = null" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
 				</div>
-				<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-primary mt-3">Send to {{
-					currentChat }}</button>
+				<div style="display: flex; gap: 1rem; justify-content: flex-start;">
+					<button @click="showPopup5 = false" type="submit" class="btn btn-primary mt-3">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-success mt-3">
+						Send to {{ currentChat }}
+					</button>
+				</div>
+
+
+
 			</form>
 		</div>
 	</div>
 	<div v-if="showPopup6" class="popup-overlay" @click.self="closePopup">
-    <div class="bottom-section mt-4 pt-3 border-top">
-      <form class="footer-form text-center" method="post" enctype="multipart/form-data">
-        <div class="emoji-buttons">
-          <button type="button" @click="react('&#128511;')" class="emoji-button">&#128511;</button>
-          <button type="button" @click="react('&#128512;')" class="emoji-button">&#128512;</button>
-          <button type="button" @click="react('&#128513;')" class="emoji-button">&#128513;</button>
-          <button type="button" @click="react('&#128514;')" class="emoji-button">&#128514;</button>
-          <button type="button" @click="react('&#128517;')" class="emoji-button">	&#128517;</button>
-        </div>
-        <div class="popup-actions">
-          <button type="button" @click="closePopup" class="close-button">Close</button>
-        </div>
-      </form>
-    </div>
-  </div>
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+				<div class="emoji-buttons">
+					<button type="button" @click="react('&#128511;')" class="emoji-button">&#128511;</button>
+					<button type="button" @click="react('&#128512;')" class="emoji-button">&#128512;</button>
+					<button type="button" @click="react('&#128513;')" class="emoji-button">&#128513;</button>
+					<button type="button" @click="react('&#128514;')" class="emoji-button">&#128514;</button>
+					<button type="button" @click="react('&#128517;')" class="emoji-button"> &#128517;</button>
+				</div>
+				<div class="popup-actions">
+					<button type="button" @click="closePopup" class="close-button">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </template>
 
 <style>
@@ -691,6 +742,7 @@ export default {
 }
 
 .sidebar-title {
+	/* Sidebar title styling */
 	padding: 10px 20px;
 	border-bottom: 1px solid #ddd;
 	background-color: #f8f9fa;
@@ -698,30 +750,27 @@ export default {
 	color: #333;
 }
 
-.sidebar-scroll {
-	overflow-y: auto;
-	/* Add scroll for the list */
-	flex-grow: 1;
-	/* Allow the list to grow and take remaining height */
-	padding: 10px;
-}
-
-.sidebar ul {
-	list-style: none;
-	padding: 0;
+.sidebar ul li {
+	/* Sidebar list item styling */
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ddd;
+	/* Adds a border between items */
 }
 
 .sidebar ul li {
-	margin-bottom: 10px;
+	position: relative;
 }
 
 .sidebar ul li a {
 	display: block;
-	padding: 10px;
+	padding: 20px;
 	text-decoration: none;
 	color: #333;
 	border-radius: 4px;
 	transition: background-color 0.3s ease;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
 }
 
 .sidebar ul li a:hover {
@@ -837,6 +886,7 @@ li {
 }
 
 .chatclickable-item {
+	/* Chat item styling */
 	display: block;
 	max-width: 80%;
 	padding: 10px;
@@ -941,61 +991,60 @@ li {
 }
 
 .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
 }
 
 
 .emoji-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 20px;
 }
 
 .emoji-button {
-  background: #f0f0f0;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	background: #f0f0f0;
+	border: none;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	font-size: 24px;
+	cursor: pointer;
+	transition: transform 0.2s, background 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .emoji-button:hover {
-  background: #dfe6e9;
-  transform: scale(1.2);
+	background: #dfe6e9;
+	transform: scale(1.2);
 }
 
 .popup-actions {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 .close-button {
-  background: #e74c3c;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+	background: #e74c3c;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
 }
 
 .close-button:hover {
-  background: #c0392b;
+	background: #c0392b;
 }
 </style>
-
