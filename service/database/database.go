@@ -62,6 +62,7 @@ type AppDatabase interface {
 	AddToCollegamento(utente int, altro int, chat int64) error
 	GetName(id int) (string, error)
 	GetUserId(nome string) (*int, error)
+	GetOneMessage(id int) (*[]Message, error)
 }
 
 type appdbimpl struct {

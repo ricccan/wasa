@@ -34,6 +34,8 @@ export default {
 			tempMessId: null, // id temporaneo messaggio
 			forwardedUser: null, // utente a cui inoltrare il messaggio
 			showPopup4: false, // popup che apre la sezione inoltro messaggio
+			showPopup5: false, // popup che apre la sezione risposta messaggio
+			respondMessage: null, // messaggio di risposta
 		}
 	},
 	methods: {
@@ -102,6 +104,7 @@ export default {
 			this.showPopup2 = false;
 			this.showPopup3 = false;
 			this.showPopup4 = false;
+			this.showPopup5 = false;
 		},
 
 		async creaGruppo() {
@@ -335,7 +338,33 @@ export default {
 			this.getChat();
 			this.closePopup();
 			this.apriChat(messi)
-		}
+		},
+		async respond(risponde) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let formData2 = new FormData();
+				formData2.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
+				formData2.append("messageText", this.respondMessage);
+				if (this.selectedFile) {
+					formData2.append("IsPhoto", "true");
+				} else {
+					formData2.append("IsPhoto", "false");
+				}
+				await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + risponde + "/comments", formData2, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+						"Content-Type": "multipart/form-data",
+					}
+				});
+
+			} catch (e) {
+				this.errormsg = e.toString();
+				console.log("sucaaaaaaa")
+			}
+			this.loading = false;
+			this.apriChat(this.idGroup)
+		},
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -524,10 +553,10 @@ export default {
 				style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<button  @click="showPopup4= true">Forward message</button>
 			</div>
-			<a>Change name</a>
-			<div style="display: flex; align-items: center;">
-				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="cambiaNomeGruppo">Submit</button>
+			
+			<div
+				style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button  @click="showPopup5= true">Respond</button>
 			</div>
 			<a>change photo</a>
 			<div style="display: flex; align-items: center;">
@@ -567,6 +596,25 @@ export default {
 			</div>
 		</div>
 	</div>
+		<div v-if="showPopup5" class="popup-overlay" @click.self="closePopup">
+			<div class="bottom-section mt-4 pt-3 border-top" >
+					<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="messageInput">Your Message:</label>
+							<input type="text" id="messageInput" v-model="respondMessage" class="form-control"
+								name="message" placeholder="Enter your message" required>
+						</div>
+						<div class="form-group mt-2">
+							<label for="photoInput">Attach a Photo:</label>
+							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
+								accept="image/*">
+						</div>
+						<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-primary mt-3">Send to {{
+							currentChat }}</button>
+					</form>
+			</div>
+
+		</div>
 </template>
 
 <style>

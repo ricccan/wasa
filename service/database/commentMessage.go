@@ -15,7 +15,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(user, chat, mess, photo, text, time.Now())
+	result, err := stmt.Exec(user, chat, mess, photo, text, time.Now().Unix())
 	if err != nil {
 		return err
 	}
