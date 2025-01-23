@@ -41,7 +41,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/usernames/:name", rt.getUserId) // da aggiungere nelle api doc
 
-	rt.router.DELETE("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.uncommentMessage) // funzione per eliminare un commento (da cambiare)
+	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId", rt.uncommentMessage) // funzione per eliminare un commento (da cambiare)
 
 	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.commentMessage) // funzione per commentare un messaggio
 
@@ -52,8 +52,6 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation) // funzione per ottenere una conversazione specifica
 
 	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // TODO: da aggiungere nelle api doc (funzione per ottenere i messaggi di una conversazione)
-
-	rt.router.GET("/users/:id/conversations/:conversationId/messages/:messageId", rt.getOneMessage) // TODO: da aggiungere nelle api doc (funzione per ottenere i messaggi di una conversazione)
 
 	rt.router.GET("/users/:id/photo", rt.getPhoto) // TODO: da aggiungere nelle api doc (funzione per ottenere la foto profilo avendo un id)
 

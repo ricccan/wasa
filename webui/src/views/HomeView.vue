@@ -36,6 +36,8 @@ export default {
 			showPopup4: false, // popup che apre la sezione inoltro messaggio
 			showPopup5: false, // popup che apre la sezione risposta messaggio
 			respondMessage: null, // messaggio di risposta
+			oneMessage: {}, // messaggio singolo
+			datiTemp: {}, // dati temporanei
 		}
 	},
 	methods: {
@@ -302,11 +304,11 @@ export default {
 			this.loading = false;
 			this.apriChat(this.idGroup)
 		},
-		async deleteMessage(){
+		async deleteMessage() {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				await this.$axios.delete("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId,  {
+				await this.$axios.delete("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("token"),
 					}
@@ -318,12 +320,12 @@ export default {
 			this.closePopup()
 			this.apriChat(this.idGroup)
 		},
-		async forward(messi){
+		async forward(messi) {
 			this.loading = true;
 			this.errormsg = null;
-			console.log(this.idGroup,this.tempMessId,messi)
+			console.log(this.idGroup, this.tempMessId, messi)
 			try {
-				let response = await this.$axios.post("/users/"+ this.id + "/conversations/"+ this.idGroup + "/messages/" + this.tempMessId, {
+				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId, {
 					chatId: messi,
 				},
 					{
@@ -364,6 +366,22 @@ export default {
 			}
 			this.loading = false;
 			this.apriChat(this.idGroup)
+		},
+		async getMessaggio(idMessaggio) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + this.idGroup + "/messages" + idMessaggio, { // chiama la query che trova le chat
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
+					}
+
+				});
+				this.oneMessage = response.data; // i dati in risposta della query
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
 		},
 	},
 	mounted() {
@@ -442,6 +460,11 @@ export default {
 									:class="{ 'user-message': item.User == this.id }">
 									<a class="chatclickable-item">
 										<span class="user" v-if="item.Inoltrato"> forwarded -> </span>
+										<div class="response-row">
+											<span class="user" v-if="item.Risposta">response to message {{ item.Risposta
+												}}</span>
+											
+										</div>
 										<div style="display: flex; align-items: center;">
 											<button class="edit-button mb-2"
 												@click="idTemp = item.User, showPopup3 = true, tempMessId = item.IdMess"
@@ -458,6 +481,7 @@ export default {
 											{{ conversioneUnix(item.Timestamp * 1000) }}
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
+										<div> message:{{ item.IdMess }}</div>
 									</a>
 								</li>
 							</ul>
@@ -549,22 +573,12 @@ export default {
 				style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<button v-if="idTemp == this.id" @click="deleteMessage">Delete message</button>
 			</div>
-			<div
-				style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button  @click="showPopup4= true">Forward message</button>
+			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button @click="showPopup4 = true">Forward message</button>
 			</div>
-			
-			<div
-				style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<button  @click="showPopup5= true">Respond</button>
-			</div>
-			<a>change photo</a>
-			<div style="display: flex; align-items: center;">
-				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
-				<button @click="cambiaFoto">Submit</button>
-			</div>
-			<div v-if="imagePreview" class="image-preview">
-				<img :src="imagePreview" alt="Selected photo preview" />
+
+			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button @click="showPopup5 = true">Respond</button>
 			</div>
 
 			<div class="popup-actions">
@@ -577,44 +591,46 @@ export default {
 		<div class="popup-content">
 			<h2>forward</h2>
 			<div class="list-container">
-						<ul>
-							<li v-for="(item, index) in chats" :key="index">
-								<a class="clickable-item">
-									<img :src="item.GroupPhoto" alt="" class="group-photo">
-									{{ item.GroupName }}
+				<ul>
+					<li v-for="(item, index) in chats" :key="index">
+						<a class="clickable-item">
+							<img :src="item.GroupPhoto" alt="" class="group-photo">
+							{{ item.GroupName }}
 
-									<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
-									<button class="edit-button mb-2"
-										@click="forward(item.IdChat)"> send</button>
-								</a>
-							</li>
-						</ul>
-					</div>
+							<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
+							<button class="edit-button mb-2" @click="forward(item.IdChat)"> send</button>
+						</a>
+					</li>
+				</ul>
+			</div>
 
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
 	</div>
-		<div v-if="showPopup5" class="popup-overlay" @click.self="closePopup">
-			<div class="bottom-section mt-4 pt-3 border-top" >
-					<form class="footer-form text-center" method="post" enctype="multipart/form-data">
-						<div class="form-group">
-							<label for="messageInput">Your Message:</label>
-							<input type="text" id="messageInput" v-model="respondMessage" class="form-control"
-								name="message" placeholder="Enter your message" required>
-						</div>
-						<div class="form-group mt-2">
-							<label for="photoInput">Attach a Photo:</label>
-							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
-								accept="image/*">
-						</div>
-						<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-primary mt-3">Send to {{
-							currentChat }}</button>
-					</form>
-			</div>
-
+	<div v-if="showPopup5" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+				<div class="form-group">
+					<label for="messageInput">Your Message:</label>
+					<input type="text" id="messageInput" v-model="respondMessage" class="form-control" name="message"
+						placeholder="Enter your message" required>
+				</div>
+				<div class="form-group mt-2">
+					<label for="photoInput">Attach a Photo:</label>
+					<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
+						accept="image/*">
+					<div v-if="imagePreview" class="image-preview">
+						<img :src="imagePreview" alt="Selected photo preview" />
+					</div>
+				</div>
+				<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-primary mt-3">Send to {{
+					currentChat }}</button>
+			</form>
 		</div>
+
+	</div>
 </template>
 
 <style>
@@ -859,5 +875,23 @@ li {
 
 .edit-icon-container:hover .edit-icon {
 	color: white;
+}
+
+.response-row {
+	display: flex;
+	align-items: center;
+	/* Align items vertically centered */
+	gap: 8px;
+	/* Add some spacing between the elements */
+}
+
+.user {
+	font-size: 14px;
+	/* Adjust as needed */
+}
+
+.edit-button {
+	margin-left: 8px;
+	/* Optional if more spacing is needed */
 }
 </style>
