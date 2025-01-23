@@ -1,8 +1,8 @@
 package database
 
-func (db *appdbimpl) UncommentMessage(utente int, gruppo int, messaggio int) error { // creazione funzione, prende i parametri che ci servono
+func (db *appdbimpl) UncommentMessage(utente int, gruppo int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "DELETE FROM `messages` WHERE (`us` = ? AND `conv` = ? AND `id` = ?)"
+	query := "DELETE FROM `reactions` WHERE (`us` = ? AND `mess` = ? )"
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -11,7 +11,7 @@ func (db *appdbimpl) UncommentMessage(utente int, gruppo int, messaggio int) err
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
-	result, err := stmt.Exec(utente, gruppo, messaggio)
+	result, err := stmt.Exec(utente, gruppo)
 	if err != nil {
 		return err
 	}

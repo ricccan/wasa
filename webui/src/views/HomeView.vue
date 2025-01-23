@@ -39,6 +39,7 @@ export default {
 			oneMessage: {}, // messaggio singolo
 			datiTemp: {}, // dati temporanei
 			showPopup6: false,
+			reazione: null,
 		}
 	},
 	methods: {
@@ -325,7 +326,6 @@ export default {
 		async forward(messi) {
 			this.loading = true;
 			this.errormsg = null;
-			console.log(this.idGroup, this.tempMessId, messi)
 			try {
 				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId, {
 					chatId: messi,
@@ -369,6 +369,41 @@ export default {
 			this.loading = false;
 			this.apriChat(this.idGroup)
 			this.closePopup()
+		},
+		async react(emoji) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.post("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId + "/reactions", {
+					reaction: emoji,
+				},
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						}
+					}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.getChat();
+			this.closePopup();
+		},
+		async deleteReaction() {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				await this.$axios.delete("/users/" + this.id + "/conversations/" + this.idGroup + "/messages/" + this.tempMessId + "/reactions", {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+				}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.closePopup()
+			this.apriChat(this.idGroup)
 		},
 	},
 	mounted() {
@@ -572,6 +607,10 @@ export default {
 				<button @click="showPopup6 = true">react</button>
 			</div>
 
+			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button @click="deleteReaction">delete reaction</button>
+			</div>
+
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
@@ -622,19 +661,21 @@ export default {
 		</div>
 	</div>
 	<div v-if="showPopup6" class="popup-overlay" @click.self="closePopup">
-		<div class="bottom-section mt-4 pt-3 border-top">
-			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
-				<button> 	&#128511; </button>
-				<button> 		&#128512; </button>
-				<button> 	&#128513; </button>
-				<button> 	&#128514; </button>
-				<button> 		&#128517; </button>
-				<div class="popup-actions">
-				<button @click="closePopup">Close</button>
-			</div>
-			</form>
-		</div>
-	</div>
+    <div class="bottom-section mt-4 pt-3 border-top">
+      <form class="footer-form text-center" method="post" enctype="multipart/form-data">
+        <div class="emoji-buttons">
+          <button type="button" @click="react('&#128511;')" class="emoji-button">&#128511;</button>
+          <button type="button" @click="react('&#128512;')" class="emoji-button">&#128512;</button>
+          <button type="button" @click="react('&#128513;')" class="emoji-button">&#128513;</button>
+          <button type="button" @click="react('&#128514;')" class="emoji-button">&#128514;</button>
+          <button type="button" @click="react('&#128517;')" class="emoji-button">	&#128517;</button>
+        </div>
+        <div class="popup-actions">
+          <button type="button" @click="closePopup" class="close-button">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -898,4 +939,63 @@ li {
 	margin-left: 8px;
 	/* Optional if more spacing is needed */
 }
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+
+.emoji-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.emoji-button {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-button:hover {
+  background: #dfe6e9;
+  transform: scale(1.2);
+}
+
+.popup-actions {
+  margin-top: 10px;
+}
+
+.close-button {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.close-button:hover {
+  background: #c0392b;
+}
 </style>
+

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -15,6 +16,7 @@ type React struct {
 
 func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { // dichiarazioe funzione base
 	// gestione token
+
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" {
 		http.Error(w, "Missing authorization header", http.StatusUnauthorized)
@@ -29,8 +31,10 @@ func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// prendo i parametri
-	userId := ps.ByName("Id")
+	userId := ps.ByName("id")
+	fmt.Println(userId)
 	messageId := ps.ByName("messageId")
+	fmt.Println(messageId)
 
 	id, err := strconv.Atoi(userId) // conversione da stringa a int
 	if err != nil {
@@ -50,14 +54,13 @@ func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 	defer r.Body.Close() // Chiudere il body dopo averlo letto
-
 	// Deserializzare il JSON nel proprio tipo
 	var data React
 	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile
 		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}
-
+	fmt.Println(data.Reazione) // output
 	// chiamata funzione
 	err = rt.db.ReactMessage(id, data.Reazione, messid)
 	if err != nil {

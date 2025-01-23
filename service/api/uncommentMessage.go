@@ -24,16 +24,10 @@ func (rt *_router) uncommentMessage(w http.ResponseWriter, r *http.Request, ps h
 
 	// gestione parametri
 	parametroId := ps.ByName("id")
-	gruppoId := ps.ByName("conversationId")
+
 	messaggio := ps.ByName("messageId")
 
 	id, err := strconv.Atoi(parametroId) // conversione da stringa a int
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	gruppo, err := strconv.Atoi(gruppoId) // conversione da stringa a int
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -46,7 +40,7 @@ func (rt *_router) uncommentMessage(w http.ResponseWriter, r *http.Request, ps h
 	}
 
 	// chiamata funzione
-	err = rt.db.UncommentMessage(id, gruppo, mess)
+	err = rt.db.UncommentMessage(id, mess)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
