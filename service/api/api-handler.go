@@ -41,7 +41,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/usernames/:name", rt.getUserId) // da aggiungere nelle api doc
 
-	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId", rt.uncommentMessage) // funzione per eliminare un commento (da cambiare)
+	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.uncommentMessage) // funzione per eliminare un commento (da cambiare)
 
 	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/comments", rt.commentMessage) // funzione per commentare un messaggio
 
@@ -59,7 +59,7 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id", rt.createChat) // TODO: metterlo nelle api
 
-	// rt.router.GET("/users/:id", rt.getName) // TODO: da aggiungere nelle api doc
+	rt.router.GET("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.reactMessage) // TODO AGGIUNGERE ALLE API
 
 	return rt.router
 }

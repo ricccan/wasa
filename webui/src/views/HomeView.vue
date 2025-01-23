@@ -38,6 +38,7 @@ export default {
 			respondMessage: null, // messaggio di risposta
 			oneMessage: {}, // messaggio singolo
 			datiTemp: {}, // dati temporanei
+			showPopup6: false,
 		}
 	},
 	methods: {
@@ -107,6 +108,7 @@ export default {
 			this.showPopup3 = false;
 			this.showPopup4 = false;
 			this.showPopup5 = false;
+			this.showPopup6 = false;
 		},
 
 		async creaGruppo() {
@@ -366,22 +368,7 @@ export default {
 			}
 			this.loading = false;
 			this.apriChat(this.idGroup)
-		},
-		async getMessaggio(idMessaggio) {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + this.idGroup + "/messages" + idMessaggio, { // chiama la query che trova le chat
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
-					}
-
-				});
-				this.oneMessage = response.data; // i dati in risposta della query
-			} catch (e) {
-				this.errormsg = e.toString();
-			}
-			this.loading = false;
+			this.closePopup()
 		},
 	},
 	mounted() {
@@ -581,6 +568,10 @@ export default {
 				<button @click="showPopup5 = true">Respond</button>
 			</div>
 
+			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<button @click="showPopup6 = true">react</button>
+			</div>
+
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
@@ -629,7 +620,20 @@ export default {
 					currentChat }}</button>
 			</form>
 		</div>
-
+	</div>
+	<div v-if="showPopup6" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+				<button> 	&#128511; </button>
+				<button> 		&#128512; </button>
+				<button> 	&#128513; </button>
+				<button> 	&#128514; </button>
+				<button> 		&#128517; </button>
+				<div class="popup-actions">
+				<button @click="closePopup">Close</button>
+			</div>
+			</form>
+		</div>
 	</div>
 </template>
 

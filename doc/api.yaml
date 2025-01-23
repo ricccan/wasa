@@ -487,22 +487,6 @@ paths:
           description: not logged in
         '406': 
           description: invalid text
-    delete:
-      tags: ["message management"]
-      summary: uncomment another message
-      description: uncomment another message
-      operationId: uncommentMessage
-      security:
-        - BearerAuth: []   
-      responses:
-        '204': 
-          description: comment successfully uncommented
-        '401':
-          description: not logged in
-        '403':
-          description: unauthorized to delete this message
-        '404':
-          description: The requested resource could not be found 
     
   /users/{id}/groups:
     post:
@@ -717,3 +701,45 @@ paths:
           description: not logged in
         '403':
           description: not authorized
+  /users/{id}/conversations/{conversationId}/messages/{messageId}/reactions:
+    parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: messageId
+        in: path
+        description: id message
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+    delete:
+      tags: ["message management"]
+      summary: uncomment another message
+      description: uncomment another message
+      operationId: uncommentMessage
+      security:
+        - BearerAuth: []   
+      responses:
+        '204': 
+          description: comment successfully uncommented
+        '401':
+          description: not logged in
+        '403':
+          description: unauthorized to delete this message
+        '404':
+          description: The requested resource could not be found 
