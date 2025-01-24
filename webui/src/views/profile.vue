@@ -21,7 +21,7 @@
                                     <h2>New username</h2>
                                     <input type="text" v-model="newUsername" placeholder="Type here..." />
                                     <div class="popup-actions">
-                                        <button @click="cambiaNome">Submit</button>
+                                        <button @click="cambiaNome" v-if="newUsername">Submit</button>
                                         <button @click="closePopup">Close</button>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                     <img :src="imagePreview" alt="Selected photo preview" />
                                 </div>
                                 <div class="popup-actions">
-                                    <button @click="cambiaFoto">Submit</button>
+                                    <button @click="cambiaFoto" v-if="imagePreview" >Submit</button>
                                     <button @click="closePopup">Close</button>
                                 </div>
                             </div>

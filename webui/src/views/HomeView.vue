@@ -129,6 +129,7 @@ export default {
 			}
 			this.loading = false;
 			this.getChat()
+			this.closePopup()
 		},
 
 		async creaConversazione() {
@@ -148,6 +149,7 @@ export default {
 			}
 			this.loading = false;
 			this.getChat()
+			this.closePopup()
 		},
 
 		async apriChat(conv) {
@@ -524,7 +526,7 @@ export default {
 							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
 								accept="image/*">
 						</div>
-						<button @click.prevent="sendMessage" type="submit" class="btn btn-primary mt-3">Send to {{
+						<button v-if="newMessage" @click.prevent="sendMessage" type="submit" class="btn btn-primary mt-3">Send to {{
 							currentChat }}</button>
 					</form>
 				</div>
@@ -539,7 +541,7 @@ export default {
 			<h2>New group name</h2>
 			<input type="text" v-model="newGroupname" placeholder="Type here..." />
 			<div class="popup-actions">
-				<button @click="creaGruppo">Submit</button>
+				<button v-if="newGroupname"  @click="creaGruppo">Submit</button>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -549,7 +551,7 @@ export default {
 			<h2>User to contact</h2>
 			<input type="text" v-model="newUser" placeholder="Type here..." />
 			<div class="popup-actions">
-				<button @click="creaConversazione">Submit</button>
+				<button  v-if="newUser" @click="creaConversazione">Submit</button>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -663,18 +665,21 @@ export default {
 							style="padding: 0.5rem 1rem; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send</button>
 					</li>
 				</ul>
-				
+
 			</div>
 
-			<div class="popup-actions" style="text-align: right; margin-top: 1rem;">
-				<button @click="showPopup4 = false" type="submit" class="btn btn-primary mt-3">
-						<i class="fas fa-chevron-left"></i>
-					</button>
+			<div class="popup-actions"
+				style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1rem;">
+				<button @click="showPopup4 = false" type="submit" class="btn btn-primary">
+					<i class="fas fa-chevron-left"></i>
+				</button>
 				<button @click="closePopup"
-					style="padding: 0.5rem 1rem; background-color: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-					
+					style="background-color: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+					Close
+				</button>
 			</div>
-			
+
+
 		</div>
 	</div>
 
@@ -694,14 +699,14 @@ export default {
 						<img :src="imagePreview" alt="Selected photo preview" />
 					</div>
 					<button v-if="imagePreview" @click="imagePreview = null" class="btn btn-danger">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+						<i class="fas fa-trash-alt"></i>
+					</button>
 				</div>
 				<div style="display: flex; gap: 1rem; justify-content: flex-start;">
 					<button @click="showPopup5 = false" type="submit" class="btn btn-primary mt-3">
 						<i class="fas fa-chevron-left"></i>
 					</button>
-					<button @click.prevent="respond(tempMessId)" type="submit" class="btn btn-success mt-3">
+					<button v-if="respondMessage" @click.prevent="respond(tempMessId)" type="submit" class="btn btn-success mt-3">
 						Send to {{ currentChat }}
 					</button>
 				</div>
