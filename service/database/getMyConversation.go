@@ -12,7 +12,7 @@ type Chat struct {
 
 func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
-	query := "SELECT id,grup_name,description,grup_photo,grup  FROM conversations, us_con WHERE us_con.us = ? AND us_con.conv = conversations.id AND grup = 'true' " // prende solo i gruppi
+	query := "SELECT id,grup_name,description,grup_photo,grup  FROM conversations, us_con WHERE us_con.us = ? AND us_con.conv = conversations.id AND grup = 'true' order by lastchange desc" // prende solo i gruppi
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
@@ -41,7 +41,7 @@ func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione 
 		return nil, err
 	}
 
-	query = "SELECT conversations.id,username,description,profile_picture,grup  FROM conversations, us_con as us1 , us_con as us2, users WHERE us1.us = ? AND us1.conv = conversations.id AND us2.conv = conversations.id AND us2.us = users.id and us2.us <> us1.us and conversations.grup='false' " // prende solo i gruppi
+	query = "SELECT conversations.id,username,description,profile_picture,grup  FROM conversations, us_con as us1 , us_con as us2, users WHERE us1.us = ? AND us1.conv = conversations.id AND us2.conv = conversations.id AND us2.us = users.id and us2.us <> us1.us and conversations.grup='false' order by lastchange desc" // prende solo i gruppi
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {

@@ -1,5 +1,7 @@
 package database
 
+import "time"
+
 func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 	query := "SELECT id FROM users WHERE username = ?" // dato il nome utente, ritorna il suo id
@@ -63,7 +65,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 	// nel caso non ci siano già conversazioni
 	if prova == nil {
 		// creo la conversazione
-		query = "INSERT INTO conversations (grup) VALUES ('false')"
+		query = "INSERT INTO conversations (grup, lastchange) VALUES ('false', ?)"
 
 		stmt, err = db.c.Prepare(query) // query
 		if err != nil {
@@ -72,7 +74,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 		defer stmt.Close() // Chiude lo statement preparato
 		// Eseguire l'aggiornamento
 
-		result2, err := stmt.Exec()
+		result2, err := stmt.Exec(time.Now().Unix())
 		if err != nil {
 			return err
 		}

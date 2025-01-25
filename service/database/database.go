@@ -62,6 +62,7 @@ type AppDatabase interface {
 	GetName(id int) (string, error)
 	GetUserId(nome string) (*int, error)
 	ReactMessage(id int, reazione string, mess int) error
+	GetReactions(chat int) (*Reazione, error)
 }
 
 type appdbimpl struct {

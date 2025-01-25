@@ -59,6 +59,8 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.reactMessage) // TODO AGGIUNGERE ALLE API
 
+	rt.router.GET("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.getReactions) // TODO AGGIUNGERE ALLE API
+
 	return rt.router
 }
 
