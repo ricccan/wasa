@@ -40,6 +40,8 @@ export default {
 			datiTemp: {}, // dati temporanei
 			showPopup6: false,
 			reazione: null,
+			showPopup7: false,
+			reactions: {}, // json a cui passo le reazioni
 		}
 	},
 	methods: {
@@ -118,6 +120,7 @@ export default {
 			this.showPopup4 = false;
 			this.showPopup5 = false;
 			this.showPopup6 = false;
+			this.showPopup7 = false;
 		},
 
 		async creaGruppo() {
@@ -396,6 +399,7 @@ export default {
 			this.loading = false;
 			this.getChat();
 			this.closePopup();
+
 		},
 		async deleteReaction() {
 			this.loading = true;
@@ -412,6 +416,27 @@ export default {
 			this.loading = false;
 			this.closePopup()
 			this.apriChat(this.idGroup)
+		},
+		async getReaction(conv, messId) {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + conv + "/messages/" + messId + "/reactions", { // chiama la query che trova le chat
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json
+					}
+
+				});
+				this.reactions = response.data; // i dati in risposta della query
+
+
+			} catch (e) {
+				this.errormsg = e.toString();
+
+			}
+			this.loading = false;
+			console.log(this.reactions)
+
 		},
 	},
 	mounted() {
@@ -492,9 +517,12 @@ export default {
 										<span class="user" v-if="item.Inoltrato"> forwarded -> </span>
 										<div class="response-row">
 											<!-- da sistemare il css della risposta-->
-											<span class="user" v-if="item.Risposta"> {{ messages.find(msg => msg.IdMess
-												== item.Risposta)?.Messaggio
-												}}</span>
+											<div class="response-row" v-if="item.Risposta"
+												style="background-color: #f0f0f0; border-left: 4px solid #34b7f1; padding: 5px 10px; margin-bottom: 8px; border-radius: 5px;">
+												<span class="response-text">
+													{{ messages.find(msg => msg.IdMess == item.Risposta)?.Messaggio }}
+												</span>
+											</div>
 
 										</div>
 										<div style="display: flex; align-items: center;">
@@ -504,6 +532,11 @@ export default {
 												<i class="fas fa-pencil-alt" style="color: black;"></i>
 											</button>
 											<span class="user">{{ item.Username }}</span>
+											<button class="btn btn-outline-light mb-2"
+												@click="idTemp = item.User, showPopup7 = true, tempMessId = item.IdMess, getReaction(idGroup, item.IdMess)"
+												style="margin-right: 10px;">
+												<i class="fas fa-eye" style="color: black;"></i>
+											</button>
 										</div>
 
 										<span><img :src="item.Foto" alt=" "> </span>
@@ -740,9 +773,45 @@ export default {
 					<button type="button" @click="react('&#128514;')" class="emoji-button">&#128514;</button>
 					<button type="button" @click="react('&#128517;')" class="emoji-button"> &#128517;</button>
 				</div>
-				<div class="popup-actions">
-					<button type="button" @click="closePopup" class="close-button">Close</button>
+				<div class="popup-header" style="display: flex; justify-content: space-between; align-items: center;">
+					<button @click="showPopup6 = false" type="submit" class="btn btn-primary mt-3">
+						<i class="fas fa-chevron-left"></i>
+					</button>
+					<div class="popup-actions">
+						<button type="button" @click="closePopup" class="close-button">Close</button>
+					</div>
 				</div>
+
+			</form>
+		</div>
+	</div>
+	<div v-if="showPopup7" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<h1>Reactions</h1>
+			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+				<div class="reaction-list-container" style="display: flex; flex-direction: column; height: 300px;">
+					<!-- Scrollable List -->
+					<ul class="reaction-list"
+						style="overflow-y: auto; height: 100%; padding: 0; margin: 0; list-style: none;">
+						<li v-for="(item, index) in reactions" :key="index"
+							style="padding: 10px; border-bottom: 1px solid #ddd;">
+							<span class="chatmessage-text">{{ item.User }}</span>
+							<span class="chatmessage-text" style="margin-left: 10px;">{{ item.Reazione }}</span>
+						</li>
+					</ul>
+
+					<!-- Popup Header with Buttons -->
+					<div class="popup-header"
+						style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+						<button @click="showPopup7 = false" type="submit" class="btn btn-primary">
+							<i class="fas fa-chevron-left"></i>
+						</button>
+						<div class="popup-actions">
+							<button type="button" @click="closePopup" class="close-button">Close</button>
+						</div>
+					</div>
+				</div>
+
 			</form>
 		</div>
 	</div>

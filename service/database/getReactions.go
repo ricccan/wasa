@@ -5,7 +5,7 @@ type Reazione struct {
 	User     string
 }
 
-func (db *appdbimpl) GetReactions(chat int) (*Reazione, error) { // creazione funzione, prende i parametri che ci servono
+func (db *appdbimpl) GetReactions(chat int) (*[]Reazione, error) { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 	query := "SELECT react, users.username FROM reactions,users WHERE mess = ? and us = users.id" // query
 
@@ -22,12 +22,14 @@ func (db *appdbimpl) GetReactions(chat int) (*Reazione, error) { // creazione fu
 	}
 	defer rows.Close()
 
+	var listaReaz []Reazione
 	var reaz Reazione
 	for rows.Next() {
 		err = rows.Scan(&reaz.Reazione, &reaz.User)
 		if err != nil {
 			return nil, err
 		}
+		listaReaz = append(listaReaz, reaz)
 	}
 
 	// Check for errors that may have occurred during iteration
@@ -35,5 +37,5 @@ func (db *appdbimpl) GetReactions(chat int) (*Reazione, error) { // creazione fu
 		return nil, err
 	}
 
-	return &reaz, nil
+	return &listaReaz, nil
 } // ritorna la lista
