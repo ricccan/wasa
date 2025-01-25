@@ -34,7 +34,6 @@ func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httpr
 	userId := ps.ByName("id")
 	fmt.Println(userId)
 	messageId := ps.ByName("messageId")
-	fmt.Println(messageId)
 
 	id, err := strconv.Atoi(userId) // conversione da stringa a int
 	if err != nil {

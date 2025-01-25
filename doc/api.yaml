@@ -262,50 +262,6 @@ paths:
           description: not logged in
         '404': 
           description: The requested resource could not be found but may be available in the future
-
-  /users/{id}/conversations/{conversationId}:
-    get:
-      tags: [chat management]
-      summary: gets a conversation of the user
-      description: |
-         gets a the conversation of the user 
-      operationId: getConversation
-      security:
-        - BearerAuth: []   
-      parameters:
-        - name: conversationId 
-          in: path
-          description: id of the conversation we are searching for
-          schema:
-            description: temp
-            type: integer
-          required: true
-        - name: id
-          in: path
-          description: id utente
-          required: true
-          schema:
-            description: temp
-            type: integer
-            minimum: 0
-      responses:
-        '200':
-          description: list of the message in the chat
-          content:
-            application/json:
-              schema:
-                description: temp
-                type: array
-                minItems: 0
-                maxItems: 1024
-                items:
-                  $ref: '#/components/schemas/textMessage'
-        '401':
-          description: not logged in
-        '404': 
-          description: The requested resource could not be found but may be available in the future
-        '406': 
-          description: invalid id
   /users/{id}/conversations/{conversationId}/messages:
     post:
       tags: ["message management"]

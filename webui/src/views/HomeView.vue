@@ -43,6 +43,14 @@ export default {
 		}
 	},
 	methods: {
+		unselectFile() {
+			this.selectedFile = null;
+			const fileInput = document.getElementById('photoInput');
+			if (fileInput) {
+				fileInput.value = '';
+			}
+		},
+
 		onFileChange(event) {
 			const file = event.target.files[0];
 			if (file) {
@@ -205,7 +213,6 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.addUser)
-			console.log(temp)
 			try {
 				let response = await this.$axios.post("/users/" + this.id + "/groups", {
 					adg_utente_id: temp, // forse giusto?
@@ -304,10 +311,10 @@ export default {
 
 			} catch (e) {
 				this.errormsg = e.toString();
-				console.log("sucaaaaaaa")
 			}
 			this.loading = false;
 			this.apriChat(this.idGroup)
+			this.unselectFile() // da usare anche dalle altre parti
 		},
 		async deleteMessage() {
 			this.loading = true;
@@ -366,7 +373,6 @@ export default {
 
 			} catch (e) {
 				this.errormsg = e.toString();
-				console.log("sucaaaaaaa")
 			}
 			this.loading = false;
 			this.apriChat(this.idGroup)
@@ -485,7 +491,9 @@ export default {
 									<div class="chatclickable-item">
 										<span class="user" v-if="item.Inoltrato"> forwarded -> </span>
 										<div class="response-row">
-											<span class="user" v-if="item.Risposta">response to message {{ item.Risposta
+											<!-- da sistemare il css della risposta-->
+											<span class="user" v-if="item.Risposta"> {{ messages.find(msg => msg.IdMess
+												== item.Risposta)?.Messaggio
 												}}</span>
 
 										</div>
@@ -505,7 +513,7 @@ export default {
 											{{ conversioneUnix(item.Timestamp * 1000) }}
 											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
 										</div>
-										<div> message:{{ item.IdMess }}</div>
+
 									</div>
 								</li>
 							</ul>
@@ -521,13 +529,18 @@ export default {
 							<input type="text" id="messageInput" v-model="newMessage" class="form-control"
 								name="message" placeholder="Enter your message" required>
 						</div>
-						<div class="form-group mt-2">
-							<label for="photoInput">Attach a Photo:</label>
-							<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
-								accept="image/*">
+						<div class="form-group d-flex align-items-center mt-2">
+							<label for="photoInput" class="me-2">Attach a Photo:</label>
+							<input type="file" id="photoInput" class="form-control me-2" @change="onFileChange"
+								name="photo" accept="image/*">
+							<button @click="unselectFile" class="btn btn-danger">
+								<i class="fas fa-trash-alt"></i>
+							</button>
 						</div>
-						<button v-if="newMessage" @click.prevent="sendMessage" type="submit" class="btn btn-primary mt-3">Send to {{
-							currentChat }}</button>
+
+						<button v-if="newMessage" @click.prevent="sendMessage" type="submit"
+							class="btn btn-primary mt-3">Send to {{
+								currentChat }}</button>
 					</form>
 				</div>
 			</main>
@@ -541,7 +554,7 @@ export default {
 			<h2>New group name</h2>
 			<input type="text" v-model="newGroupname" placeholder="Type here..." />
 			<div class="popup-actions">
-				<button v-if="newGroupname"  @click="creaGruppo">Submit</button>
+				<button v-if="newGroupname" @click="creaGruppo">Submit</button>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -551,7 +564,7 @@ export default {
 			<h2>User to contact</h2>
 			<input type="text" v-model="newUser" placeholder="Type here..." />
 			<div class="popup-actions">
-				<button  v-if="newUser" @click="creaConversazione">Submit</button>
+				<button v-if="newUser" @click="creaConversazione">Submit</button>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -706,7 +719,8 @@ export default {
 					<button @click="showPopup5 = false" type="submit" class="btn btn-primary mt-3">
 						<i class="fas fa-chevron-left"></i>
 					</button>
-					<button v-if="respondMessage" @click.prevent="respond(tempMessId)" type="submit" class="btn btn-success mt-3">
+					<button v-if="respondMessage" @click.prevent="respond(tempMessId)" type="submit"
+						class="btn btn-success mt-3">
 						Send to {{ currentChat }}
 					</button>
 				</div>

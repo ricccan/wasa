@@ -44,7 +44,7 @@
                                     <input type="file" @change="onFileChange" accept="image/*" />
 
                                     <!-- Remove Photo Button -->
-                                    <button v-if="imagePreview" @click="imagePreview = null" class="remove-button">
+                                    <button v-if="imagePreview" @click="removePhoto()" class="remove-button">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -83,6 +83,10 @@ export default {
         };
     },
     methods: {
+        removePhoto() {
+            this.selectedFile = null;
+            this.imagePreview = null;
+        },
         async cambiaFoto() {
             this.loading = true;
             this.errormsg = null;
