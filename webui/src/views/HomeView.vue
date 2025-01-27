@@ -97,7 +97,9 @@ export default {
 
 				});
 				this.chats = response.data; // i dati in risposta della query
+				this.chats.sort((a, b) => new Date(b.LastChange) - new Date(a.LastChange));
 				this.createDynamicListsFromJSON(this.chats); // chiama la funzione
+
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
@@ -318,6 +320,7 @@ export default {
 			this.loading = false;
 			this.apriChat(this.idGroup)
 			this.unselectFile() // da usare anche dalle altre parti
+			this.getChat()
 		},
 		async deleteMessage() {
 			this.loading = true;
@@ -334,6 +337,7 @@ export default {
 			this.loading = false;
 			this.closePopup()
 			this.apriChat(this.idGroup)
+			this.getChat()
 		},
 		async forward(messi) {
 			this.loading = true;
@@ -354,6 +358,7 @@ export default {
 			this.getChat();
 			this.closePopup();
 			this.apriChat(messi)
+			this.getChat()
 		},
 		async respond(risponde) {
 			this.loading = true;
@@ -469,20 +474,31 @@ export default {
 
 					<!-- Scrollable List -->
 					<div class="list-container">
-						<ul>
+						<ul style="list-style: none; padding: 0; margin: 0;">
 							<li v-for="(item, index) in chats" :key="index"
+								style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #e6e6e6; cursor: pointer;"
 								@click="apriChat(item.IdChat), idGroup = item.IdChat, currentChat = item.GroupName, entrato = true">
-								<a class="clickable-item">
-									<img :src="item.GroupPhoto" alt="" class="group-photo">
-									{{ item.GroupName }}
-
-									<!-- aggiungere if che si apre solo se è un gruppo (possibile soluzione, @click = idGroup = item.IdChat)-->
-									<button v-if="item.Group" class="btn btn-outline-light mb-2"
-										@click="showPopup2 = true, idGroup = item.IdChat"><i class="fas fa-pencil-alt"
-											style="color: black;"></i></button>
+								<a
+									style="display: flex; align-items: center; width: 100%; text-decoration: none; color: inherit;">
+									<img :src="item.GroupPhoto" 
+										style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
+									<div style="flex-grow: 1;">
+										<p style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">
+											{{ item.GroupName }}
+										</p>
+										<p style="margin: 5px 0 0; font-size: 14px; color: #666;">
+											{{ item.Snippet }}
+										</p>
+									</div>
+									<button v-if="item.Group"
+										style="background: none; border: none; cursor: pointer; padding: 5px; color: #666; transition: color 0.2s;"
+										@click.stop="showPopup2 = true, idGroup = item.IdChat">
+										<i class="fas fa-pencil-alt" style="font-size: 16px; color: black;"></i>
+									</button>
 								</a>
 							</li>
 						</ul>
+
 					</div>
 				</div>
 			</nav>

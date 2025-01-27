@@ -30,5 +30,28 @@ func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) 
 		return err
 	}
 
+	query = "UPDATE conversations SET lastchange = ?, snippet = ? WHERE id = ?" // query di aggiornamento
+
+	stmt, err = db.c.Prepare(query) // query
+	if err != nil {
+		return err // se c è errore
+	}
+	defer stmt.Close() // Chiude lo statement preparato
+	// Eseguire l'aggiornamento
+
+	risultato, err := stmt.Exec(time.Now().Unix(), text, chat)
+	if err != nil {
+		return err
+	}
+
+	// Controlla il numero di righe interessate
+	rowsAffected, err = risultato.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected != 1 {
+		return err
+	}
+
 	return nil
 }

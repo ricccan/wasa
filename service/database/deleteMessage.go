@@ -24,6 +24,7 @@ func (db *appdbimpl) DeleteMessage(utente int, gruppo int, messaggio int) error 
 	if rowsAffected != 1 {
 		return err
 	}
+
 	return nil
 
 }
