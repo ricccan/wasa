@@ -464,10 +464,10 @@ export default {
 						<div class="btn-group me-2">
 
 							<button type="button" class="btn btn-sm btn-outline-primary" @click="showPopup = true">
-								create group
+								Create group
 							</button>
 							<button type="button" class="btn btn-sm btn-outline-primary" @click="showPopup1 = true">
-								new chat
+								New chat
 							</button>
 						</div>
 					</div>
@@ -627,7 +627,7 @@ export default {
 				<input type="text" v-model="addUser" placeholder="Type here..." style="margin-right: 10px;" />
 				<button @click="addMember" class="btn btn-primary">Submit</button>
 			</div>
-			<a>remove member</a>
+			<a>Remove member</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="removeUser" placeholder="Type here..." style="margin-right: 10px;" />
 				<button @click="removeMember" class="btn btn-primary">Submit</button>
@@ -635,9 +635,9 @@ export default {
 			<a>Change name</a>
 			<div style="display: flex; align-items: center;">
 				<input type="text" v-model="newName" placeholder="Type here..." style="margin-right: 10px;" />
-				<button @click="cambiaNomeGruppo" class="btn btn-primary">Submit</button>
+				<button v-if="newName" @click="cambiaNomeGruppo" class="btn btn-primary">Submit</button>
 			</div>
-			<a>change photo</a>
+			<a>Change photo</a>
 			<div style="display: flex; align-items: center;">
 				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
 				<button @click="cambiaFoto" class="btn btn-primary">Submit</button>

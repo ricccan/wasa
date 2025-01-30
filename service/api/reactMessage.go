@@ -32,7 +32,6 @@ func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// prendo i parametri
 	userId := ps.ByName("id")
-	fmt.Println(userId)
 	messageId := ps.ByName("messageId")
 
 	id, err := strconv.Atoi(userId) // conversione da stringa a int

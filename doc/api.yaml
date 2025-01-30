@@ -121,6 +121,16 @@ components:
         c_group:
           description: if the chat is a group chat or not
           type: boolean
+        c_LastChange:
+          description: the time of the last change in the chat
+          type: integer
+        c_snippet:
+          description: the snippet of the last message
+          type: string
+          pattern: '^.*?$'
+          minLength: 1
+          maxLength: 256
+        
   securitySchemes:
     BearerAuth: 
       type: http 
@@ -168,7 +178,7 @@ paths:
                 type: object
                 properties:
                   id:
-                    description: id dell' utente
+                    description: id of the user
                     type: string
                     pattern: '^.*?$'
                     minLength: 1
@@ -176,7 +186,7 @@ paths:
   /users/{id}/username:
     post:
       tags: ["user profile"]
-      summary: set the username of the user
+      summary: set the username of the user, if successful returns the new name of the user
       description: |
          sets the username
       operationId: setMyUserName 
@@ -216,7 +226,7 @@ paths:
                 type: object
                 properties:
                   un_username:
-                    description: temp
+                    description: the new username
                     type: string
                     pattern: '^.*?$'
                     minLength: 1
@@ -591,7 +601,7 @@ paths:
               description: temp
               type: object
               properties:
-                smp_photo:
+                photo:
                   description: temp
                   type: string
                   format: binary
@@ -699,3 +709,234 @@ paths:
           description: unauthorized to delete this message
         '404':
           description: The requested resource could not be found 
+# aggiunti post 30
+  /users/:id/conversations/:conversationId/messages:
+    get:
+      tags: [chat management]
+      summary: gets all the messages of the conversation
+      description: |
+         gets all the messages of the conversation
+      operationId: getMessages
+      security:
+        - BearerAuth: []   
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      responses:
+        '200':
+          description: list of the messages in the chat
+          content:
+            application/json:
+              schema:
+                description: temp
+                type: array
+                minItems: 0
+                maxItems: 32
+                items:
+                  $ref: '#/components/schemas/textMessage'
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
+  /users/:id/photo:
+    get:
+      tags: [user profile]
+      summary: gets the photo of the user
+      description: |
+         gets the photo of the user
+      operationId: getPhoto
+      security:
+        - BearerAuth: []   
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      responses:
+        '200':
+          description: the photo
+          content:
+            application/json:
+              schema:
+                description: temp
+                type: object
+                properties:
+                  photo:
+                    description: the photo
+                    type: string
+                    format: binary
+                    minLength: 1
+                    maxLength: 1024
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
+  /users/:id/conversations:
+    post:
+      tags: ["chat management"]
+      summary: create a new group
+      description: create a new group
+      operationId: createGroup
+      security:
+        - BearerAuth: []   
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      responses:
+        '204': 
+          description: group created
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
+  /users/:id:
+    post:
+      tags: ["chat management"]
+      summary: create a new chat
+      description: create a new chat
+      operationId: createChat
+      security:
+        - BearerAuth: []   
+      parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      requestBody:
+        description: the name of the user you want to chat with
+        content:
+          application/json:
+            schema:
+              description: temp
+              type: object
+              properties:
+                sgn_name:
+                  description: the name of the user you want to chat with
+                  type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
+        required: true
+      responses:
+        '204': 
+          description: chat created
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
+  /users/:id/conversations/:conversationId/messages/:messageId/reactions:
+    parameters:
+      - name: id
+        in: path
+        description: id utente
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: conversationId
+        in: path
+        description: id conversation
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+      - name: messageId
+        in: path
+        description: id of the message
+        required: true
+        schema:
+          description: temp
+          type: integer
+          minimum: 0
+    post:
+      tags: ["message management"]
+      summary: react an existing message
+      description:  react an existing message
+      operationId: reactMessage
+      security:
+        - BearerAuth: []   
+      requestBody:
+        description: the name reaction
+        content:
+          application/json:
+            schema:
+              description: temp
+              type: object
+              properties:
+                reaction:
+                  description: the reaction to the message
+                  type: string
+                  pattern: '^.*?$'
+                  minLength: 1
+                  maxLength: 32
+        required: true
+      responses:
+        '204': 
+          description: chat created
+        '401':
+          description: not logged in
+        '403':
+          description: not authorized
+    get:
+      tags: [chat management]
+      summary: gets all the reaction of the message
+      description: |
+         gets all the reaction of the message
+      operationId: getReactions
+      security:
+        - BearerAuth: []   
+      responses:
+        '200':
+          description: User action successful
+          content:
+            application/json:
+              schema:
+                description: returned value
+                type: object
+                properties:
+                  user:
+                    description: name of the user
+                    type: string
+                    pattern: '^.*?$'
+                    minLength: 1
+                    maxLength: 32
+                  reaction:
+                    description: reaction of the user
+                    type: string
+                    pattern: '^.*?$'
+                    minLength: 1
+                    maxLength: 32
+        '401':
+          description: not logged in
+        '404': 
+          description: The requested resource could not be found but may be available in the future
