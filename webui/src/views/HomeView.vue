@@ -97,7 +97,7 @@ export default {
 
 				});
 				this.chats = response.data; // i dati in risposta della query
-				this.chats.sort((a, b) => new Date(b.LastChange) - new Date(a.LastChange));
+				if (this.chats) this.chats = this.chats.sort((a, b) => new Date(b.LastChange) - new Date(a.LastChange)); // ordina le chat per data
 				this.createDynamicListsFromJSON(this.chats); // chiama la funzione
 
 			} catch (e) {
