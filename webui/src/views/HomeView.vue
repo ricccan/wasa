@@ -50,7 +50,7 @@ export default {
 			this.imagePreview = null;
 			this.newMessage = null;
 			this.selectedFile = null;
-			const fileInput = document.getElementById('photoInput');
+			let fileInput = document.getElementById('photoInput');
 			if (fileInput) {
 				fileInput.value = '';
 			}
@@ -498,7 +498,7 @@ export default {
 								@click="apriChat(item.IdChat), idGroup = item.IdChat, currentChat = item.GroupName, entrato = true">
 								<a
 									style="display: flex; align-items: center; width: 100%; text-decoration: none; color: inherit;">
-									<img :src="item.GroupPhoto" 
+									<img :src="item.GroupPhoto"
 										style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
 									<div style="flex-grow: 1;">
 										<p style="margin: 0; font-size: 16px; font-weight: bold; color: #333;">
@@ -578,7 +578,14 @@ export default {
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
 										<div class="chattimestamp">
 											{{ conversioneUnix(item.Timestamp * 1000) }}
-											<span class="chatcheckmarks">{{ item.Checkmarks }}</span>
+											<span v-if="item.Checkmarks >= 1"
+												:style="{ color: item.Checkmarks === 1 ? '#53bdeb' : 'gray', fontSize: '16px' }">
+												&#xe013;
+											</span>
+											<span v-if="item.Checkmarks >= 1"
+												:style="{ color: item.Checkmarks === 1 ? '#53bdeb' : 'gray', fontSize: '16px' }">
+												&#xe013;
+											</span>
 										</div>
 
 									</div>
@@ -657,7 +664,8 @@ export default {
 			</div>
 			<a>Change photo</a>
 			<div style="display: flex; align-items: center;">
-				<input type="file" id="photoInput2" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
+				<input type="file" id="photoInput2" @change="onFileChange" accept="image/*"
+					style="margin-right: 10px;" />
 				<button @click="cambiaFoto" class="btn btn-primary">Submit</button>
 			</div>
 			<div v-if="imagePreview" class="image-preview">

@@ -112,5 +112,10 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
+	err = db.SetSeen(id, invio)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

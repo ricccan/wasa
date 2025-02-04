@@ -79,5 +79,10 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 		return err
 	}
 
+	err = db.SetSeen(user, chat)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -80,5 +80,11 @@ func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) 
 		return err
 	}
 
+	err = db.SetSeen(user, chat)
+	if err != nil {
+		return err
+	}
+
 	return nil
+
 }
