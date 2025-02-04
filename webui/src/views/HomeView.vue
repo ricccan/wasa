@@ -46,8 +46,19 @@ export default {
 	},
 	methods: {
 		unselectFile() {
+			this.respondMessage = null;
+			this.imagePreview = null;
+			this.newMessage = null;
 			this.selectedFile = null;
 			const fileInput = document.getElementById('photoInput');
+			if (fileInput) {
+				fileInput.value = '';
+			}
+			fileInput = document.getElementById('photoInput2');
+			if (fileInput) {
+				fileInput.value = '';
+			}
+			fileInput = document.getElementById('photoInput3');
 			if (fileInput) {
 				fileInput.value = '';
 			}
@@ -639,13 +650,13 @@ export default {
 			</div>
 			<a>Change photo</a>
 			<div style="display: flex; align-items: center;">
-				<input type="file" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
+				<input type="file" id="photoInput2" @change="onFileChange" accept="image/*" style="margin-right: 10px;" />
 				<button @click="cambiaFoto" class="btn btn-primary">Submit</button>
 			</div>
 			<div v-if="imagePreview" class="image-preview">
 				<img :src="imagePreview" alt="Selected photo preview" />
 			</div>
-			<button v-if="imagePreview" @click="imagePreview = null" class="btn btn-danger">
+			<button v-if="imagePreview" @click="unselectFile" class="btn btn-danger">
 				<i class="fas fa-trash-alt"></i>
 			</button>
 
@@ -754,13 +765,13 @@ export default {
 						placeholder="Enter your message" required>
 				</div>
 				<div class="form-group mt-2">
-					<label for="photoInput">Attach a Photo:</label>
-					<input type="file" id="photoInput" class="form-control" @change="onFileChange" name="photo"
+					<label for="photoInput3">Attach a Photo:</label>
+					<input type="file" id="photoInput3" class="form-control" @change="onFileChange" name="photo"
 						accept="image/*">
 					<div v-if="imagePreview" class="image-preview">
 						<img :src="imagePreview" alt="Selected photo preview" />
 					</div>
-					<button v-if="imagePreview" @click="imagePreview = null" class="btn btn-danger">
+					<button v-if="imagePreview" @click="unselectFile" class="btn btn-danger">
 						<i class="fas fa-trash-alt"></i>
 					</button>
 				</div>

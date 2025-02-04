@@ -85,5 +85,32 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
+	query = "INSERT INTO visualizzato (us, mess, seen) SELECT users.id, ?, 0 FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
+
+	stmt, err = db.c.Prepare(query) // query
+	if err != nil {
+		return err // se c è errore
+	}
+	defer stmt.Close() // Chiude lo statement preparato
+	// Eseguire l'aggiornamento
+
+	lastInsertId, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	fin, err := stmt.Exec(lastInsertId, invio)
+	if err != nil {
+		return err
+	}
+
+	// Controlla il numero di righe interessate
+	rowsAffected, err = fin.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected != 1 {
+		return err
+	}
+
 	return nil
 }
