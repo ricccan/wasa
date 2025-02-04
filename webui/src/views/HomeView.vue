@@ -180,6 +180,13 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
+				let response1 = await this.$axios.post("/users/" + this.id + "/conversations/" + conv, { // chiama la query che trova le chat	
+				});
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			// this.loading = false;
+			try {
 				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + conv + "/messages", { // chiama la query che trova le chat
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("token"), // passa il token alla query tramite json

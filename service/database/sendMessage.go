@@ -53,7 +53,7 @@ func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) 
 		return err
 	}
 
-	query = "INSERT INTO visualizzato (us, mess, seen) SELECT users.id, ?, 0 FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
+	query = "INSERT INTO visualizzato (us, mess, seen, conv) SELECT users.id, ?, 0, ? FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
@@ -66,7 +66,7 @@ func (db *appdbimpl) SendMessage(user int, chat int, photo []byte, text string) 
 	if err != nil {
 		return err
 	}
-	fin, err := stmt.Exec(lastInsertId, chat)
+	fin, err := stmt.Exec(lastInsertId, chat, chat)
 	if err != nil {
 		return err
 	}

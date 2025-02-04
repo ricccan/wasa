@@ -57,16 +57,13 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/users/:id", rt.createChat) // funzione che crea una chat diretta tra user V
 
-	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.reactMessage) // TODO AGGIUNGERE ALLE API
+	rt.router.POST("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.reactMessage) // funzione per reagire ad un messaggio V
 
-	rt.router.GET("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.getReactions) // TODO AGGIUNGERE ALLE API
+	rt.router.GET("/users/:id/conversations/:conversationId/messages/:messageId/reactions", rt.getReactions) // funzione per ottenere le reazioni ad un messaggio V
+
+	rt.router.POST("/users/:id/conversations/:conversationId", rt.setSeen) // funzione per segnare come visualizzato un messaggio da un utente TODO: da aggiungere alle api
 
 	return rt.router
 }
 
-// TODO: aggiungere funzione che calcola snippet
 // TODO: aggiungere funzione che calcola checkmark
-// TODO: aggiungere funzione che calcola icona
-// TODO: aggiungere funzione che controlla il token
-// TODO: cambiare uncomment facendo in modo che cambi solo la sezione respond e non l'intero messaggio
-// TODO: sistemare sdoppiamento chat in caso di creazone con stesso utente

@@ -52,7 +52,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 		return err
 	}
 
-	query = "INSERT INTO visualizzato (us, mess, seen) SELECT users.id, ?, 0 FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
+	query = "INSERT INTO visualizzato (us, mess, seen, conv) SELECT users.id, ?, 0, ? FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
@@ -65,7 +65,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 	if err != nil {
 		return err
 	}
-	fin, err := stmt.Exec(lastInsertId, chat)
+	fin, err := stmt.Exec(lastInsertId, chat, chat)
 	if err != nil {
 		return err
 	}
