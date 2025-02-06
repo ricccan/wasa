@@ -895,7 +895,7 @@ paths:
           description: temp
           type: integer
           minimum: 0
-      - name: chatId
+      - name: conversationId
         in: path
         description: id chat
         required: true

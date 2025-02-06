@@ -18,7 +18,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creaz
 		return 0, err
 	}
 
-	var altro int // salvo l'id in una variabile
+	var altro *int // salvo l'id in una variabile
 	for result.Next() {
 		err = result.Scan(&altro)
 		if err != nil {
@@ -29,6 +29,10 @@ func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creaz
 	// Controlla il numero di righe interessate
 	err = result.Err()
 	if err != nil {
+		return 0, err
+	}
+
+	if altro == nil {
 		return 0, err
 	}
 
@@ -94,7 +98,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creaz
 		}
 
 		// chiamo la funzione che crea il collegamento tra chat e utenti
-		err = db.AddToCollegamento(utente, altro, chatid)
+		err = db.AddToCollegamento(utente, *altro, chatid)
 		if err != nil {
 			return 0, err
 		}

@@ -490,13 +490,9 @@ export default {
 
 		},
 		async createForward(){
-			var nuovoid = this.creaConversazione()
-			console.log(nuovoid)
-			console.log("aaaaaaaaaaa")
-			this.forward(nuovoid) // non funziona
-			
+			var nuovoid = await this.creaConversazione()
+			this.forward(nuovoid) // funziona ma se l'utente non esiste lo rimanda sempre allo stesso chat
 				
-			
 		}
 		
 	},
