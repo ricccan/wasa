@@ -13,6 +13,7 @@ func (db *appdbimpl) SetMyUsername(id int, username string) (string, error) { //
 
 	result, err := stmt.Exec(username, id)
 	if err != nil {
+		// Mostra un popup con il messaggio di errore
 		return "", err
 	}
 

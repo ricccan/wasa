@@ -24,6 +24,7 @@
                                         <button @click="cambiaNome" v-if="newUsername">Submit</button>
                                         <button @click="closePopup">Close</button>
                                     </div>
+                                    <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
                                 </div>
                             </div>
                         </div>
@@ -80,6 +81,7 @@ export default {
             textInput: "",
             selectedFile: null,
             imagePreview: null,
+            errormsg: null,
         };
     },
     methods: {
@@ -123,10 +125,12 @@ export default {
                     }); // crea un json che gli passa un nome
                 this.username = response.data.un_username;
                 localStorage.setItem("username", this.username);
+                this.showPopup1 = false;
             } catch (e) {
-                this.errormsg = e.toString();
+                this.errormsg = e.response.data;
             }
             this.loading = false;
+            
         },
         async getPhoto() {
             this.loading = true;

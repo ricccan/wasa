@@ -49,13 +49,13 @@ func (rt *_router) setMyUsername(w http.ResponseWriter, r *http.Request, ps http
 	// Deserializzare il JSON nel proprio tipo
 	var data setusernameRequest
 	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile
-		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
+		http.Error(w, "Username already exist", http.StatusBadRequest) // se ci sono errori output
 		return
 	}
 
 	result, err := rt.db.SetMyUsername(id, data.Nome)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Username already exist", http.StatusInternalServerError)
 		return
 	}
 

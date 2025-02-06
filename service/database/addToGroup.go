@@ -32,6 +32,7 @@ func (db *appdbimpl) AddToGroup(utente int, gruppo int) error { // creazione fun
 	}
 
 	if prova == nil {
+
 		query = "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il collegamento tra la chat e l'utente
 
 		stmt, err = db.c.Prepare(query) // prepara la query

@@ -51,7 +51,7 @@ func (db *appdbimpl) GetMessages(id int, gruppo int) (*[]Message, error) { // cr
 
 }
 
-func (db *appdbimpl) GetOneMessage(id int) (*[]Message, error) { // creazione funzione, prende i parametri che ci servono
+/* func (db *appdbimpl) GetOneMessage(id int) (*[]Message, error) { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 	query := "SELECT messages.id,timestamp,messag,checkmarks FROM messages WHERE messages.id = ?" // query
 
@@ -87,3 +87,4 @@ func (db *appdbimpl) GetOneMessage(id int) (*[]Message, error) { // creazione fu
 	return &listaMess, nil // ritorna la lista
 
 }
+*/

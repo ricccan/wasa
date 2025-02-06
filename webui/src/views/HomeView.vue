@@ -42,6 +42,10 @@ export default {
 			reazione: null,
 			showPopup7: false,
 			reactions: {}, // json a cui passo le reazioni
+			showPopup8: false,
+			forwardName: null, // nome di chi inoltro il messaggio
+			userList: {} // lista utenti
+			
 		}
 	},
 	methods: {
@@ -115,6 +119,7 @@ export default {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
+			this.getUtenti
 		},
 		createDynamicListsFromJSON(json) { // funzione che crea dinamicamente la lista delle chat
 			this.dynamicData = json; // assegnazione dati
@@ -126,6 +131,7 @@ export default {
 
 		},
 		closePopup() { // chiude tutti i popup
+			this.errormsg=null;
 			this.showPopup = false;
 			this.showPopup1 = false;
 			this.showPopup2 = false;
@@ -134,6 +140,7 @@ export default {
 			this.showPopup5 = false;
 			this.showPopup6 = false;
 			this.showPopup7 = false;
+			this.showPopup8 = false;
 		},
 
 		async creaGruppo() {
@@ -180,7 +187,7 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response1 = await this.$axios.post("/users/" + this.id + "/conversations/" + conv, { // chiama la query che trova le chat	
+				let response1 = await this.$axios.post("/users/" + this.id + "/conversations/" + conv, { // chiama la query che setta i visualizzati
 				});
 			} catch (e) {
 				this.errormsg = e.toString();
@@ -236,7 +243,8 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.addUser)
-			try {
+			if (temp){
+				try {
 				let response = await this.$axios.post("/users/" + this.id + "/groups", {
 					adg_utente_id: temp, // forse giusto?
 					adg_group_id: this.idGroup // FORSE GIUSTO?
@@ -248,9 +256,15 @@ export default {
 					}); // crea un json che gli passa un nome
 			} catch (e) {
 				this.errormsg = e.toString();
+				
+			} 
+			} else {
+				this.errormsg = "user doesnt exist"
 			}
+			
+			this.showPopup8 = true;
 			this.loading = false;
-			this.closePopup()
+			
 		},
 
 		async removeMember() {
@@ -469,6 +483,7 @@ export default {
 			console.log(this.reactions)
 
 		},
+		
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -766,6 +781,20 @@ export default {
 					</li>
 				</ul>
 
+				<!-- lista utenti non funzionante-->
+				<ul style="list-style-type: none; margin: 0; padding: 0;">
+					<li v-for="(item, index) in userList" :key="index"
+						style="display: flex; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
+						<img :src="item.Image" alt="" class="group-photo"
+							style="width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;">
+						<div style="flex-grow: 1;">
+							<span>{{ item.Username }}</span>
+						</div>
+						<button class="edit-button mb-2" @click="forward(item.IdChat)"
+							style="padding: 0.5rem 1rem; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send</button>
+					</li>
+				</ul>
+
 			</div>
 
 			<div class="popup-actions"
@@ -868,6 +897,18 @@ export default {
 
 			</form>
 		</div>
+	</div>
+	<div v-if="showPopup8" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<h1 v-if="!errormsg">User successfully added</h1>
+			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+						<div class="popup-actions">
+							<button type="button" @click="closePopup" class="close-button">Close</button>
+						</div>
+			
+		</div>
+		
+			
 	</div>
 </template>
 

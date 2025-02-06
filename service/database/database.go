@@ -54,16 +54,16 @@ type AppDatabase interface {
 	GetMyConversations(id int) (*[]Chat, error)
 	GetConversation(id int, group int) (*Chat, error)
 	GetMessages(id int, chat int) (*[]Message, error)
-	SearchUser(username string) (*int, error)
+	SearchUser(username string) (*int, error) // 1
 	GetPhoto(id int) ([]byte, error)
 	CreateGroup(nome string, utente int) error
 	CreateChat(nome string, utente int) error
-	AddToCollegamento(utente int, altro int, chat int64) error
+	AddToCollegamento(utente int, altro int, chat int64) error // 2
 	GetName(id int) (string, error)
 	GetUserId(nome string) (*int, error)
 	ReactMessage(id int, reazione string, mess int) error
 	GetReactions(chat int) (*[]Reazione, error)
-	SetSeen(id int, conv int) error
+	SetSeen(id int, conv int) error // 3
 }
 
 type appdbimpl struct {
