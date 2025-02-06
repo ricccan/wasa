@@ -46,6 +46,8 @@ export default {
 			forwardName: null, // nome di chi inoltro il messaggio
 			userList: {}, // lista utenti
 			chatCreated: null,
+			groupUsers: {}, // utenti del gruppo
+			showPopup9: false,
 			
 		}
 	},
@@ -142,6 +144,7 @@ export default {
 			this.showPopup6 = false;
 			this.showPopup7 = false;
 			this.showPopup8 = false;
+			this.showPopup9 = false;
 		},
 
 		async creaGruppo() {
@@ -182,10 +185,14 @@ export default {
 					}
 			} catch (e) {
 				this.errormsg = "user does not exist";
+				var temp = 1;
 			}
 			this.loading = false;
 			this.getChat()
-			
+			if (temp == 1){
+				this.errormsg = "user does not exist";
+				temp = 0;
+			}
 			return this.chatCreated 
 		},
 
@@ -279,6 +286,22 @@ export default {
 			var temp = await this.getId(this.removeUser)
 			try {
 				await this.$axios.delete("/users/" + temp + "/groups/" + this.idGroup, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+				}); // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.closePopup()
+			this.getChat()
+		},
+		async removeSelf() {
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				await this.$axios.delete("/users/" + this.id + "/groups/" + this.idGroup, {
 					headers: {
 						Authorization: "Bearer " + localStorage.getItem("token"),
 					}
@@ -491,10 +514,31 @@ export default {
 		},
 		async createForward(){
 			var nuovoid = await this.creaConversazione()
-			this.forward(nuovoid) // funziona ma se l'utente non esiste lo rimanda sempre allo stesso chat
+			if (nuovoid != 0){
+				this.forward(nuovoid)
+			} else {
+				this.errormsg = "user does not exist"
+			}
+			
 				
-		}
-		
+		},
+		async getPartecipants(){
+			this.loading = true;
+			this.errormsg = null;
+			try {
+				let response = await this.$axios.get("/users/" + this.id + "/conversations/" + this.idGroup, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					}
+					
+				});
+				this.groupUsers = response.data; // crea un json che gli passa un nome
+			} catch (e) {
+				this.errormsg = e.toString();
+			}
+			this.loading = false;
+			this.showPopup9 = true
+		},
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
@@ -713,7 +757,10 @@ export default {
 			<button v-if="imagePreview" @click="unselectFile" class="btn btn-danger">
 				<i class="fas fa-trash-alt"></i>
 			</button>
-
+			<div class="popup-actions">
+				<button  class="btn btn-danger" @click="getPartecipants">See partecipants</button> <!-- da implementare -->
+				<button  class="btn btn-danger" @click="removeSelf">Exit group</button>
+			</div>
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
 			</div>
@@ -806,6 +853,11 @@ export default {
 				<button @click="showPopup4 = false" type="submit" class="btn btn-primary">
 					<i class="fas fa-chevron-left"></i>
 				</button>
+				<div>
+					<div v-if="errormsg" class="alert alert-danger" role="alert">
+						User does not exist
+					</div>
+				</div>
 				<button @click="closePopup"
 					style="background-color: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
 					Close
@@ -910,9 +962,33 @@ export default {
 							<button type="button" @click="closePopup" class="close-button">Close</button>
 						</div>
 			
+		</div>		
+	</div>
+	<div v-if="showPopup9" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<h1>Users in the group</h1>
+			<form class="footer-form text-center" method="post" enctype="multipart/form-data">
+				<div class="reaction-list-container" style="display: flex; flex-direction: column; height: 300px;">
+					<!-- Scrollable List -->
+					<ul class="reaction-list"
+						style="overflow-y: auto; height: 100%; padding: 0; margin: 0; list-style: none;">
+						<li v-for="(item, index) in groupUsers" :key="index"
+							style="padding: 10px; border-bottom: 1px solid #ddd;">
+							<span class="chatmessage-text">{{ item.u_username }}</span>
+						</li>
+					</ul>
+
+					<!-- Popup Header with Buttons -->
+					<div class="popup-header"
+						style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+						<div class="popup-actions">
+							<button type="button" @click="closePopup" class="close-button">Close</button>
+						</div>
+					</div>
+				</div>
+
+			</form>
 		</div>
-		
-			
 	</div>
 </template>
 
