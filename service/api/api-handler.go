@@ -49,6 +49,8 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/users/:id/conversations", rt.getMyConversations) // funzione per ottenere le conversazioni dell'utente V
 
+	rt.router.GET("/users/:id/conversations/:conversationId", rt.getConversation)
+
 	rt.router.GET("/users/:id/conversations/:conversationId/messages", rt.getMessages) // funzione per ottenere i messaggi di una conversazione V
 
 	rt.router.GET("/users/:id/photo", rt.getPhoto) // funzione per ottenere la foto profilo avendo un id V

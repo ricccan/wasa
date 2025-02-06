@@ -77,8 +77,74 @@ func New(db *sql.DB) (AppDatabase, error) {
 		return nil, errors.New("database is required when building a AppDatabase")
 	}
 
+	tables := map[string]string{
+		"users": "CREATE TABLE users(id integer PRIMARY KEY AUTOINCREMENT, username text UNIQUE, profile_picture BLOB)",
+
+		"reactions": `CREATE TABLE reactions( 
+		 us integer,
+		 mess integer,
+		 react text,
+		 primary key (us,mess),
+		foreign key (mess) references messages(id),
+		 foreign key (us)	references users(id)    
+		 )`,
+
+		"conversations": "CREATE TABLE conversations(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, grup BOOLEAN NOT NULL, description TEXT, grup_photo BLOB, grup_name TEXT, lastchange INTEGER, snippet TEXT)",
+
+		"messages": `CREATE TABLE messages(id         INTEGER  PRIMARY KEY AUTOINCREMENT,
+		timestamp INTEGER,
+		messag     TEXT,
+		checkmarks INTEGER  CHECK (checkmarks < 3),
+		conv       INTEGER,
+		us         INTEGER,
+		risponde   INTEGER, photo BLOB, forwarded BOOLEAN,
+		FOREIGN KEY (
+			conv
+		)
+		REFERENCES conversations (id),
+		FOREIGN KEY (
+			us
+		)
+		REFERENCES users (id),
+		FOREIGN KEY (
+			risponde
+		)
+		REFERENCES messages (id),
+		check ( id <> risponde)
+		)`,
+
+		"us_con": `CREATE TABLE us_con( 
+        us integer,
+        conv integer,
+        primary key (us,conv),
+		foreign key (conv) references conversations(id),
+        foreign key (us)	references users(id)    
+		)`,
+
+		"visualizzato": `CREATE TABLE visualizzato( 
+         us integer,
+         mess integer,
+		 seen integer, "conv" INTEGER REFERENCES "conversations"("id"),
+         primary key (us,mess),
+	    foreign key (mess) references messages(id),
+         foreign key (us)	references users(id)    
+		)`,
+	}
+
+	// TODO da sistemare (roba di alex)
+	for table, queryTable := range tables {
+		var tableName string
+		err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name=?;`, table).Scan(&tableName)
+		if errors.Is(err, sql.ErrNoRows) {
+			_, err = db.Exec(queryTable)
+			if err != nil {
+				return nil, fmt.Errorf("error creating database structure: %w", err)
+			}
+		}
+	}
+
 	// Check if table exists. If not, the database is empty, and we need to create the structure
-	var tableName string
+	/* var tableName string
 	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
@@ -87,7 +153,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
 		}
 	}
-
+	*/
 	return &appdbimpl{
 		c: db,
 	}, nil
