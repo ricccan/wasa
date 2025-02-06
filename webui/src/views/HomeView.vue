@@ -318,6 +318,9 @@ export default {
 			this.errormsg = null;
 			try {
 				let formData2 = new FormData();
+				if (this.newMessage == null) {
+					this.newMessage = " ";
+				}
 				formData2.append("photo", this.selectedFile); // forse da cambiare perchè sovrascrive la foto profilo
 				formData2.append("messageText", this.newMessage);
 				if (this.selectedFile) {
@@ -616,7 +619,7 @@ export default {
 							</button>
 						</div>
 
-						<button v-if="newMessage" @click.prevent="sendMessage" type="submit"
+						<button v-if="newMessage || selectedFile" @click.prevent="sendMessage" type="submit"
 							class="btn btn-primary mt-3">Send to {{
 								currentChat }}</button>
 					</form>
