@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -58,7 +57,6 @@ func (rt *_router) reactMessage(w http.ResponseWriter, r *http.Request, ps httpr
 		http.Error(w, err.Error(), http.StatusBadRequest) // se ci sono errori output
 		return
 	}
-	fmt.Println(data.Reazione) // output
 	// chiamata funzione
 	err = rt.db.ReactMessage(id, data.Reazione, messid)
 	if err != nil {

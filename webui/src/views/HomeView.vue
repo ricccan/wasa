@@ -578,11 +578,15 @@ export default {
 										<span class="chatmessage-text">{{ item.Messaggio }}</span>
 										<div class="chattimestamp">
 											{{ conversioneUnix(item.Timestamp * 1000) }}
-											<span v-if="item.Checkmarks >= 1"
+											<span v-if="item.Checkmarks == 0 && item.User == this.id"
 												:style="{ color: item.Checkmarks === 1 ? '#53bdeb' : 'gray', fontSize: '16px' }">
 												&#xe013;
 											</span>
-											<span v-if="item.Checkmarks >= 1"
+											<span v-if="item.Checkmarks >= 1 && item.User == this.id"
+												:style="{ color: item.Checkmarks === 1 ? '#53bdeb' : 'gray', fontSize: '16px' }">
+												&#xe013;
+											</span>
+											<span v-if="item.Checkmarks >= 1 && item.User == this.id"
 												:style="{ color: item.Checkmarks === 1 ? '#53bdeb' : 'gray', fontSize: '16px' }">
 												&#xe013;
 											</span>
