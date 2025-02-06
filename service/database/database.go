@@ -57,7 +57,7 @@ type AppDatabase interface {
 	SearchUser(username string) (*int, error) // 1
 	GetPhoto(id int) ([]byte, error)
 	CreateGroup(nome string, utente int) error
-	CreateChat(nome string, utente int) error
+	CreateChat(nome string, utente int) (int, error)
 	AddToCollegamento(utente int, altro int, chat int64) error // 2
 	GetName(id int) (string, error)
 	GetUserId(nome string) (*int, error)

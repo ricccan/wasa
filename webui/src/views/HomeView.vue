@@ -44,7 +44,8 @@ export default {
 			reactions: {}, // json a cui passo le reazioni
 			showPopup8: false,
 			forwardName: null, // nome di chi inoltro il messaggio
-			userList: {} // lista utenti
+			userList: {}, // lista utenti
+			chatCreated: null,
 			
 		}
 	},
@@ -175,12 +176,17 @@ export default {
 							Authorization: "Bearer " + localStorage.getItem("token"),
 						}
 					}); // crea un json che gli passa un nome
+					this.chatCreated = response.data;
+					if (response.data == 0){
+						this.errormsg = "user does not exist";
+					}
 			} catch (e) {
-				this.errormsg = e.toString();
+				this.errormsg = "user does not exist";
 			}
 			this.loading = false;
 			this.getChat()
-			this.closePopup()
+			
+			return this.chatCreated 
 		},
 
 		async apriChat(conv) {
@@ -483,6 +489,15 @@ export default {
 			console.log(this.reactions)
 
 		},
+		async createForward(){
+			var nuovoid = this.creaConversazione()
+			console.log(nuovoid)
+			console.log("aaaaaaaaaaa")
+			this.forward(nuovoid) // non funziona
+			
+				
+			
+		}
 		
 	},
 	mounted() {
@@ -666,6 +681,7 @@ export default {
 			<input type="text" v-model="newUser" placeholder="Type here..." />
 			<div class="popup-actions">
 				<button v-if="newUser" @click="creaConversazione">Submit</button>
+				<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 				<button @click="closePopup">Close</button>
 			</div>
 		</div>
@@ -768,6 +784,10 @@ export default {
 			<h2>Forward</h2>
 			<div class="list-container"
 				style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 1rem; border-radius: 8px; background-color: #f9f9f9;">
+				<div style="display: flex; align-items: center;">
+				<input type="text" v-model="newUser" placeholder="Type here..." style="margin-right: 10px;" />
+				<button @click="createForward" class="btn btn-primary">Send</button>
+			</div>
 				<ul style="list-style-type: none; margin: 0; padding: 0;">
 					<li v-for="(item, index) in chats" :key="index"
 						style="display: flex; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
@@ -781,19 +801,7 @@ export default {
 					</li>
 				</ul>
 
-				<!-- lista utenti non funzionante-->
-				<ul style="list-style-type: none; margin: 0; padding: 0;">
-					<li v-for="(item, index) in userList" :key="index"
-						style="display: flex; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
-						<img :src="item.Image" alt="" class="group-photo"
-							style="width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;">
-						<div style="flex-grow: 1;">
-							<span>{{ item.Username }}</span>
-						</div>
-						<button class="edit-button mb-2" @click="forward(item.IdChat)"
-							style="padding: 0.5rem 1rem; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send</button>
-					</li>
-				</ul>
+				
 
 			</div>
 

@@ -2,34 +2,34 @@ package database
 
 import "time"
 
-func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione funzione, prende i parametri che ci servono
+func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 	query := "SELECT id FROM users WHERE username = ?" // dato il nome utente, ritorna il suo id
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {
-		return err // se c è errore
+		return 0, err // se c è errore
 	}
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
 	result, err := stmt.Query(nome)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	var altro int // salvo l'id in una variabile
 	for result.Next() {
 		err = result.Scan(&altro)
 		if err != nil {
-			return err
+			return 0, err
 		}
 	}
 
 	// Controlla il numero di righe interessate
 	err = result.Err()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	// controllo se esiste già una conversazione tra i due utenti
@@ -37,20 +37,20 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 
 	stmt, err = db.c.Prepare(query) // query
 	if err != nil {
-		return err // se c è errore
+		return 0, err // se c è errore
 	}
 	defer stmt.Close() // Chiude lo statement preparato
 	// Eseguire l'aggiornamento
 
 	controllo, err := stmt.Query(utente, altro)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	// Controlla il numero di righe interessate
 	err = controllo.Err()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	// salvo il valore della query
@@ -58,7 +58,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 	for controllo.Next() {
 		err = controllo.Scan(&prova)
 		if err != nil {
-			return err
+			return 0, err
 		}
 	}
 
@@ -69,39 +69,40 @@ func (db *appdbimpl) CreateChat(nome string, utente int) error { // creazione fu
 
 		stmt, err = db.c.Prepare(query) // query
 		if err != nil {
-			return err // se c è errore
+			return 0, err // se c è errore
 		}
 		defer stmt.Close() // Chiude lo statement preparato
 		// Eseguire l'aggiornamento
 
 		result2, err := stmt.Exec(time.Now().Unix())
 		if err != nil {
-			return err
+			return 0, err
 		}
 
 		// Controlla il numero di righe interessate
 		rowsAffected, err := result2.RowsAffected()
 		if err != nil {
-			return err
+			return 0, err
 		}
 		if rowsAffected != 1 {
-			return err
+			return 0, err
 		}
 
 		chatid, err := result2.LastInsertId()
 		if err != nil {
-			return err
+			return 0, err
 		}
 
 		// chiamo la funzione che crea il collegamento tra chat e utenti
 		err = db.AddToCollegamento(utente, altro, chatid)
 		if err != nil {
-			return err
+			return 0, err
 		}
 
-		return nil
+		return int(chatid), nil
+	} else {
+		return int(*prova), nil
 	}
-	return nil
 
 }
 

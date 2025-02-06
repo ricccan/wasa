@@ -43,13 +43,20 @@ func (rt *_router) createChat(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	err = rt.db.CreateChat(data.Nome, id) // chiamo la funzione AddToGroup con i dati passati
-	if err != nil {                       // gestisco gli errori
+	result, err := rt.db.CreateChat(data.Nome, id) // chiamo la funzione AddToGroup con i dati passati
+	if err != nil {                                // gestisco gli errori
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json") // Imposta il Content-Type della risposta come JSON
-	w.WriteHeader(http.StatusNoContent)
+	// Imposta il Content-Type della risposta come JSON
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
+	// Serializza i dati in formato JSON e scrivili nella risposta
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+
+	}
 }
