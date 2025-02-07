@@ -48,7 +48,8 @@ export default {
 			chatCreated: null,
 			groupUsers: {}, // utenti del gruppo
 			showPopup9: false,
-			primaChat: null
+			primaChat: null,
+			showPopup10: false,
 			
 		}
 	},
@@ -148,6 +149,7 @@ export default {
 			this.showPopup7 = false;
 			this.showPopup8 = false;
 			this.showPopup9 = false;
+			this.showPopup10 = false;
 		},
 
 		async creaGruppo() { // createGroup (crea un gruppo)
@@ -193,8 +195,10 @@ export default {
 				
 			}
 			this.loading = false;
-			if (response.data != 0){
+			console.log(this.chatCreated)
+			if (this.chatCreated != 0){
 				this.getChat()
+				this.showPopup10 = true;
 			}
 			
 			return this.chatCreated 
@@ -317,6 +321,7 @@ export default {
 			this.loading = false;
 			this.closePopup()
 			this.getChat()
+			this.entrato = false;
 		},
 
 		async cambiaNomeGruppo() { // setGroupName (cambia il nome del gruppo)
@@ -998,6 +1003,14 @@ export default {
 				</div>
 
 			</form>
+		</div>
+	</div>
+	<div v-if="showPopup10" class="popup-overlay" @click.self="closePopup">
+		<div class="bottom-section mt-4 pt-3 border-top">
+			<h1>New chat created</h1>
+			<div class="popup-actions">
+							<button type="button" @click="closePopup" class="close-button">Close</button>
+			</div>
 		</div>
 	</div>
 </template>
