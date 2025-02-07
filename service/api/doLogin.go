@@ -34,7 +34,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	if esiste == nil { // se l'utente non esiste
+	if esiste == nil { // se l'utente non esiste chiamo la funzione che crea l'utente e lo inserisce nel database
+
 		result, err := rt.db.DoLogin(data.Nome) // chiamo la funzione per fare il login creando l'utente
 		if err != nil {                         // gestisco gli errori
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -71,7 +72,8 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 
 		}
 
-	} else { // se l'utente esiste
+	} else { // se l'utente esiste genero il token
+
 		str := strconv.Itoa(*esiste) // converto l'id in stringa
 
 		response := map[string]string{ // creo un json con l'id

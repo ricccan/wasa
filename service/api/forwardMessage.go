@@ -60,7 +60,7 @@ func (rt *_router) forwardMessage(w http.ResponseWriter, r *http.Request, ps htt
 	}
 	defer r.Body.Close() // Chiudere il body dopo averlo letto
 
-	var data forwardMessageRequest                      // creo una variabile per contenere i dati
+	var data forwardMessageRequest                      // creo una variabile per contenere i dati letti dal body
 	if err := json.Unmarshal(body, &data); err != nil { // mette il body in una variabile e gestisce errori
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

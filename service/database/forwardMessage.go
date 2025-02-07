@@ -10,7 +10,7 @@ type Messaggio struct {
 }
 
 func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// seleziono i dati del messaggio che voglio inoltrare
 	query := "SELECT messag, photo FROM messages WHERE conv = ? and id = ?" // prende il messaggio da inviare
 
 	stmt, err := db.c.Prepare(query) // query
@@ -39,6 +39,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
+	// creo un messaggio con i dati che ho precedentemente preso
 	query = "INSERT INTO messages (conv, messag, photo, us, timestamp, forwarded) VALUES ( ?, ?, ?, ?, ?, true)" // copia il messaggio in un altra conversazione
 
 	stmt, err = db.c.Prepare(query) // query
@@ -62,6 +63,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
+	// aggiorno snippet e orario dell'ultimo messaggio
 	query = "UPDATE conversations SET lastchange = ?, snippet = ? WHERE id = ?" // query di aggiornamento
 
 	stmt, err = db.c.Prepare(query) // query
@@ -85,6 +87,7 @@ func (db *appdbimpl) ForwardMessage(id int, chat int, message int, invio int) er
 		return err
 	}
 
+	// aggiorna il messaggio segnando la visualizzazione dell'utente che lo ha mandato
 	query = "INSERT INTO visualizzato (us, mess, seen, conv) SELECT users.id, ?, 0, ? FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
 
 	stmt, err = db.c.Prepare(query) // query

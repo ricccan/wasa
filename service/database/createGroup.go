@@ -3,7 +3,7 @@ package database
 import "time"
 
 func (db *appdbimpl) CreateGroup(nome string, utente int) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// inserisce un nuovo gruppo nel database
 	query := "INSERT INTO conversations (grup, grup_name,lastchange) VALUES ('true',?, ?)" // creo un gruppo
 
 	stmt, err := db.c.Prepare(query) // query

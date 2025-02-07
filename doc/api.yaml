@@ -1,4 +1,4 @@
-openapi: 3.0.0 # appara col go
+openapi: 3.0.0 
 info: 
   description: WASAText exam project Rest API
   title: WASAText
@@ -534,7 +534,7 @@ paths:
         '406': 
           description: invalid user
   /users/{id}/groups/{groupId}:
-    delete: #cambiata vedere poi il prof
+    delete: 
       tags: ["chat management"]
       summary: the user leaves the group
       description: the user leaves the group
@@ -837,7 +837,6 @@ paths:
           description: not logged in
         '404': 
           description: The requested resource could not be found but may be available in the future
-# aggiunti post 30
   /users/{id}:
     post:
       tags: ["chat management"]

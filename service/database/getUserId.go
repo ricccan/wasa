@@ -1,7 +1,7 @@
 package database
 
 func (db *appdbimpl) GetUserId(nome string) (*int, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// seleziona l'id dato un nome utente
 	query := "SELECT id FROM users WHERE username = ?" // query
 
 	stmt, err := db.c.Prepare(query) // query

@@ -1,8 +1,8 @@
 package database
 
 func (db *appdbimpl) ReactMessage(id int, reazione string, mess int) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
 
+	// seleziona l'id di uno user avendo un suo messaggio e controlla se ha già fatto una reazione precedentemente a questa
 	query := "SELECT us FROM reactions WHERE us = ? AND mess= ?" // query
 
 	stmt, err := db.c.Prepare(query) // query
@@ -31,8 +31,9 @@ func (db *appdbimpl) ReactMessage(id int, reazione string, mess int) error { // 
 		return err
 	}
 
+	// nel caso in cui non abbia messo reazioni precedenti
 	if nome == nil {
-
+		// creo una reazione
 		query = "INSERT INTO reactions (us, mess, react) VALUES (?, ?, ?)" // query di inserimento
 
 		stmt, err := db.c.Prepare(query) // query
@@ -56,6 +57,7 @@ func (db *appdbimpl) ReactMessage(id int, reazione string, mess int) error { // 
 			return err
 		}
 
+		// nel caso in cui abbia già messo una reazione precedentemente la modifico e la aggiorno a quella nuova
 	} else {
 		query = "UPDATE reactions SET react = ? WHERE us = ? AND mess= ?" // query di aggiornamento
 

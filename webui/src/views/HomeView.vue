@@ -48,6 +48,7 @@ export default {
 			chatCreated: null,
 			groupUsers: {}, // utenti del gruppo
 			showPopup9: false,
+			primaChat: null
 			
 		}
 	},
@@ -104,7 +105,7 @@ export default {
 			}
 			this.loading = false;
 		},
-		async getChat() { // funzione che prende tutte le chat dal databse
+		async getChat() { // getMyConversations (prende tutte le conversazioni dell'utente)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -122,7 +123,9 @@ export default {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
-			this.getUtenti
+			this.getUtenti;
+			this.primaChat = this.chats[0].IdChat; // aggiunto ora
+			// console.log(this.primaChat)
 		},
 		createDynamicListsFromJSON(json) { // funzione che crea dinamicamente la lista delle chat
 			this.dynamicData = json; // assegnazione dati
@@ -147,7 +150,7 @@ export default {
 			this.showPopup9 = false;
 		},
 
-		async creaGruppo() {
+		async creaGruppo() { // createGroup (crea un gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -167,7 +170,7 @@ export default {
 			this.closePopup()
 		},
 
-		async creaConversazione() {
+		async creaConversazione() { // createChat (crea una chat)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -182,21 +185,22 @@ export default {
 					this.chatCreated = response.data;
 					if (response.data == 0){
 						this.errormsg = "user does not exist";
+						return
 					}
 			} catch (e) {
 				this.errormsg = "user does not exist";
 				var temp = 1;
+				
 			}
 			this.loading = false;
-			this.getChat()
-			if (temp == 1){
-				this.errormsg = "user does not exist";
-				temp = 0;
+			if (response.data != 0){
+				this.getChat()
 			}
+			
 			return this.chatCreated 
 		},
 
-		async apriChat(conv) {
+		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -218,6 +222,7 @@ export default {
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
+			// this.interval = setInterval(this.apriChat(conv), 1000);
 			this.loading = false;
 		},
 		createDynamicListsFromJSON_2(json) { // funzione che crea dinamicamente la lista dei messaggi
@@ -235,7 +240,7 @@ export default {
 		},
 
 
-		async getId(nome) {
+		async getId(nome) { // getUserId (ritorna l'id di uno user dato il nome utente)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -252,7 +257,7 @@ export default {
 			return this.newId
 		},
 
-		async addMember() {
+		async addMember() { // addToGroup (aggiunge membri al gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.addUser)
@@ -280,7 +285,7 @@ export default {
 			
 		},
 
-		async removeMember() {
+		async removeMember() { // removeFromGroup (elimina un membro del gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.removeUser)
@@ -297,7 +302,7 @@ export default {
 			this.closePopup()
 			this.getChat()
 		},
-		async removeSelf() {
+		async removeSelf() { // removeFromGroup (elimina se stesso dal gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -314,7 +319,7 @@ export default {
 			this.getChat()
 		},
 
-		async cambiaNomeGruppo() {
+		async cambiaNomeGruppo() { // setGroupName (cambia il nome del gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -334,7 +339,7 @@ export default {
 			this.closePopup()
 		},
 
-		async cambiaFoto() {
+		async cambiaFoto() { // setGroupPhoto (cambia foto profilo del gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -356,7 +361,7 @@ export default {
 			this.closePopup()
 		},
 
-		async sendMessage() {
+		async sendMessage() { // sendMessage (manda i messaggi)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -386,7 +391,7 @@ export default {
 			this.unselectFile() // da usare anche dalle altre parti
 			this.getChat()
 		},
-		async deleteMessage() {
+		async deleteMessage() { // deleteMessage (cancella un messaggio)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -403,7 +408,7 @@ export default {
 			this.apriChat(this.idGroup)
 			this.getChat()
 		},
-		async forward(messi) {
+		async forward(messi) { // forwardMessage (inoltra il messaggio)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -424,7 +429,7 @@ export default {
 			this.apriChat(messi)
 			this.getChat()
 		},
-		async respond(risponde) {
+		async respond(risponde) { // commentMessage (risponde ad un messaggio)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -455,7 +460,7 @@ export default {
 			this.apriChat(this.idGroup)
 			this.closePopup()
 		},
-		async react(emoji) {
+		async react(emoji) { // reactMessage (aggiunge una reazione)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -475,7 +480,7 @@ export default {
 			this.closePopup();
 
 		},
-		async deleteReaction() {
+		async deleteReaction() { // uncommentMessage (cancella la reazione)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -491,7 +496,7 @@ export default {
 			this.closePopup()
 			this.apriChat(this.idGroup)
 		},
-		async getReaction(conv, messId) {
+		async getReaction(conv, messId) { // getReactions (prende le reazioni)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -514,7 +519,8 @@ export default {
 		},
 		async createForward(){
 			var nuovoid = await this.creaConversazione()
-			if (nuovoid != 0){
+			if (nuovoid != null){
+				console.log("entraaaaaaaaaaa")
 				this.forward(nuovoid)
 			} else {
 				this.errormsg = "user does not exist"
@@ -522,7 +528,7 @@ export default {
 			
 				
 		},
-		async getPartecipants(){
+		async getPartecipants(){ // getConversation (prende la lista dei partecipanti di un gruppo)
 			this.loading = true;
 			this.errormsg = null;
 			try {
@@ -542,6 +548,8 @@ export default {
 	},
 	mounted() {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
+		//console.log(this.primaChat)
+		// this.interval = setInterval(this.apriChat(this.IdGroup), 1000);
 
 	}
 }
@@ -703,7 +711,7 @@ export default {
 		</div>
 
 		<!-- Error Message -->
-		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+		
 	</div>
 	<div v-if="showPopup" class="popup-overlay" @click.self="closePopup">
 		<div class="popup-content">
@@ -825,10 +833,11 @@ export default {
 		<!-- TODO: cambiare i pulsanti -->
 		<div class="popup-content">
 			<h2>Forward</h2>
+			
 			<div class="list-container"
 				style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 1rem; border-radius: 8px; background-color: #f9f9f9;">
 				<div style="display: flex; align-items: center;">
-				<input type="text" v-model="newUser" placeholder="Type here..." style="margin-right: 10px;" />
+				<input type="text" v-model="newUser" placeholder="username..." style="margin-right: 10px;" />
 				<button @click="createForward" class="btn btn-primary">Send</button>
 			</div>
 				<ul style="list-style-type: none; margin: 0; padding: 0;">
@@ -839,6 +848,7 @@ export default {
 						<div style="flex-grow: 1;">
 							<span>{{ item.GroupName }}</span>
 						</div>
+						
 						<button class="edit-button mb-2" @click="forward(item.IdChat)"
 							style="padding: 0.5rem 1rem; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Send</button>
 					</li>

@@ -3,6 +3,11 @@ package database
 func (db *appdbimpl) AddToGroup(utente int, gruppo int) error { // creazione funzione, prende i parametri che ci servono
 	// Query di aggiornamento
 
+	/*
+		la query seleziona l'id utente nel caso in cui fosse già
+		all'interno del gruppo
+	*/
+
 	query := "SELECT us FROM us_con WHERE us = ? AND conv = ?" // query per vedere se l'utente è già nel gruppo
 
 	stmt, err := db.c.Prepare(query) // prepara la query
@@ -31,9 +36,11 @@ func (db *appdbimpl) AddToGroup(utente int, gruppo int) error { // creazione fun
 		}
 	}
 
+	// nel caso in cui l'utente non fosse già all'interno del gruppo
 	if prova == nil {
 
-		query = "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il collegamento tra la chat e l'utente
+		// collego l'utente con la conversazione. così facendo lo inserisco nel gruppo
+		query = "INSERT INTO us_con (us, conv) VALUES (?,?)"
 
 		stmt, err = db.c.Prepare(query) // prepara la query
 		if err != nil {

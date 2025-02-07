@@ -13,7 +13,7 @@ type Chat struct {
 }
 
 func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// seleziona tutte i gruppi di cui fa parte l'utente
 	query := "SELECT id,grup_name,description,grup_photo,grup,lastchange,snippet  FROM conversations, us_con WHERE us_con.us = ? AND us_con.conv = conversations.id AND grup = 'true' order by lastchange desc" // prende solo i gruppi
 
 	stmt, err := db.c.Prepare(query) // query
@@ -43,6 +43,7 @@ func (db *appdbimpl) GetMyConversations(id int) (*[]Chat, error) { // creazione 
 		return nil, err
 	}
 
+	// seleziona tutte le chat singole di cui fa parte l'utente e le aggiunge alla lista dei gruppi precedentemente fatta, mettendo come foto profilo e nome di questa chat la foto profilo e nome dell'utente
 	query = "SELECT conversations.id,username,description,profile_picture,grup,lastchange,snippet  FROM conversations, us_con as us1 , us_con as us2, users WHERE us1.us = ? AND us1.conv = conversations.id AND us2.conv = conversations.id AND us2.us = users.id and us2.us <> us1.us and conversations.grup='false' order by lastchange desc" // prende solo i gruppi
 
 	stmt, err = db.c.Prepare(query) // query

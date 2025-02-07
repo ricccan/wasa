@@ -1,6 +1,7 @@
 package database
 
 func (db *appdbimpl) SearchUser(username string) (*int, error) {
+	// seleziono l'id dato l'username
 	query := "SELECT id FROM users WHERE username = ?"
 
 	stmt, err := db.c.Prepare(query)
@@ -34,7 +35,7 @@ func (db *appdbimpl) SearchUser(username string) (*int, error) {
 
 func (db *appdbimpl) DoLogin(username string) (*int, error) { // creazione funzione, prende i parametri che ci servono
 
-	// Preparare la query
+	// creo un utente con l'username dato da input
 	stmt, err := db.c.Prepare("INSERT INTO users (username) VALUES (?)") // query
 	if err != nil {
 		return nil, err // se c è errore

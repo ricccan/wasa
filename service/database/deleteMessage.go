@@ -1,7 +1,7 @@
 package database
 
 func (db *appdbimpl) DeleteMessage(utente int, gruppo int, messaggio int) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// cancella il messaggio con l'id passato dai parametri della funzione
 	query := "DELETE FROM `messages` WHERE (`us` = ? AND `conv` = ? AND `id` = ?)" // cancella un messaggio
 
 	stmt, err := db.c.Prepare(query) // query

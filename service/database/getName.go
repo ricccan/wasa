@@ -1,7 +1,7 @@
 package database
 
 func (db *appdbimpl) GetName(id int) (string, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// dato un id ritorna il nome utente
 	query := "SELECT username FROM users WHERE id = ?" // query
 
 	stmt, err := db.c.Prepare(query) // query

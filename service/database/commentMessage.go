@@ -5,7 +5,8 @@ import (
 )
 
 func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, text string) error { // creazione funzione, prende i parametri che ci servono
-	// crea un messaggio nel database
+
+	// inserisco nel database il messaggio che è stato appena mandato
 	query := "INSERT INTO messages (us, conv, risponde, photo, messag, timestamp) VALUES (?, ?, ?, ?, ?, ?)"
 
 	stmt, err := db.c.Prepare(query) // query
@@ -29,6 +30,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 		return err
 	}
 
+	// avendo inserito il messaggio aggiorno lo snippet e la data della chat
 	query = "UPDATE conversations SET lastchange = ?, snippet = ? WHERE id = ?" // query di aggiornamento
 
 	stmt, err = db.c.Prepare(query) // query
@@ -52,6 +54,7 @@ func (db *appdbimpl) CommentMessage(user int, chat int, mess int, photo []byte, 
 		return err
 	}
 
+	// segna nel database che il messaggio appena mandato è stato visualizzato dall' utente che lo ha mandato
 	query = "INSERT INTO visualizzato (us, mess, seen, conv) SELECT users.id, ?, 0, ? FROM users, us_con WHERE users.id = us_con.us AND us_con.conv = ?;"
 
 	stmt, err = db.c.Prepare(query) // query

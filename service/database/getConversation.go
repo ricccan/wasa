@@ -1,8 +1,8 @@
 package database
 
 func (db *appdbimpl) GetConversation(id int, group int) (*[]User, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
-	query := "SELECT users.id,username,profile_picture FROM users,us_con WHERE users.id = us_con.us AND us_con.conv = ?" // dato il nome utente, ritorna il suo id
+	// seleziono gli utenti facenti parte della conversazione
+	query := "SELECT users.id,username,profile_picture FROM users,us_con WHERE users.id = us_con.us AND us_con.conv = ?"
 
 	stmt, err := db.c.Prepare(query) // query
 	if err != nil {

@@ -3,7 +3,7 @@ package database
 import "time"
 
 func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// ritorna l'id dell'utente con un dato username
 	query := "SELECT id FROM users WHERE username = ?" // dato il nome utente, ritorna il suo id
 
 	stmt, err := db.c.Prepare(query) // query
@@ -111,7 +111,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creaz
 }
 
 func (db *appdbimpl) AddToCollegamento(utente int, altro int, chat int64) error { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// creo un collegamento tra la chat e il primo utente
 	query := "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il collegamento
 
 	stmt, err := db.c.Prepare(query) // query
@@ -135,6 +135,7 @@ func (db *appdbimpl) AddToCollegamento(utente int, altro int, chat int64) error 
 		return err
 	}
 
+	// creo il collegamento tra la chat e il secondo utente
 	query = "INSERT INTO us_con (us, conv) VALUES (?,?)" // crea il secondo collegamento
 
 	stmt, err = db.c.Prepare(query) // query

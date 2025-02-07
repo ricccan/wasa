@@ -6,7 +6,7 @@ type Reazione struct {
 }
 
 func (db *appdbimpl) GetReactions(chat int) (*[]Reazione, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// seleziona tutte le reazioni di un dato messaggio
 	query := "SELECT react, users.username FROM reactions,users WHERE mess = ? and us = users.id" // query
 
 	stmt, err := db.c.Prepare(query) // query

@@ -89,7 +89,7 @@ export default {
             this.selectedFile = null;
             this.imagePreview = null;
         },
-        async cambiaFoto() {
+        async cambiaFoto() { // setMyPhoto (cambia foto profilo)
             this.loading = true;
             this.errormsg = null;
             try {
@@ -108,7 +108,7 @@ export default {
             }
             this.loading = false;
         },
-        async cambiaNome() {
+        async cambiaNome() { // setMyUsername (cambia il nome dell'utente)
             this.loading = true;
             this.errormsg = null;
             try {
@@ -132,7 +132,7 @@ export default {
             this.loading = false;
             
         },
-        async getPhoto() {
+        async getPhoto() { // getPhoto (prende la foto profilo corrente dal db)
             this.loading = true;
             this.errormsg = null;
             try {

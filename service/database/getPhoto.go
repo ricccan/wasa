@@ -1,7 +1,7 @@
 package database
 
 func (db *appdbimpl) GetPhoto(id int) ([]byte, error) { // creazione funzione, prende i parametri che ci servono
-	// Query di aggiornamento
+	// seleziona la foto profilo di un utente dato il suo id
 	query := "SELECT profile_picture FROM users WHERE id = ?" // query
 
 	stmt, err := db.c.Prepare(query) // query

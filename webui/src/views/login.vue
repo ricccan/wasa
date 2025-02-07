@@ -38,7 +38,7 @@ export default {
         };
     },
     methods: {
-        async doLogin() {
+        async doLogin() { // doLogin (fa loggare l'utente)
             this.loading = true;
 			this.errormsg = null;
 			try {
