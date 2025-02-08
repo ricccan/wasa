@@ -129,7 +129,7 @@ export default {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
-			// console.log(this.primaChat)
+			
 		},
 		createDynamicListsFromJSON(json) { // funzione che crea dinamicamente la lista delle chat
 			this.dynamicData = json; // assegnazione dati
@@ -198,7 +198,7 @@ export default {
 				
 			}
 			this.loading = false;
-			console.log(this.chatCreated)
+			
 			if (this.chatCreated != 0){
 				this.getChat()
 				this.showPopup10 = true;
@@ -210,7 +210,11 @@ export default {
 		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
 			this.errormsg = null;
-			var temp = conv;
+
+			if (this.chatInterval) {
+        	clearInterval(this.chatInterval);
+    		}
+
 			// Clear any previous interval to prevent multiple instances
 			if (this.chatInterval) {
             clearInterval(this.chatInterval);
@@ -238,6 +242,11 @@ export default {
 			}
 			
 			this.loading = false;
+			this.getChat();
+			this.chatInterval = setInterval(() => {
+        	this.apriChat(conv);
+    		}, 7000);
+			
 			// Set an interval to refresh messages every 5 seconds
 		},
 		createDynamicListsFromJSON_2(json) { // funzione che crea dinamicamente la lista dei messaggi
@@ -530,13 +539,13 @@ export default {
 
 			}
 			this.loading = false;
-			console.log(this.reactions)
+			
 
 		},
 		async createForward(){
 			var nuovoid = await this.creaConversazione()
 			if (nuovoid != null){
-				console.log("entraaaaaaaaaaa")
+				
 				this.forward(nuovoid)
 			} else {
 				this.errormsg = "user does not exist"
@@ -561,13 +570,10 @@ export default {
 			this.loading = false;
 			this.showPopup9 = true
 		},
-		refreshComponent() {
-      	this.componentKey += 1; // Change key to re-render component
-		console.log("refreshed")
-    	}
+		
 	},
 	mounted() {
-		console.log(this.id)
+		
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
 		this.chatInterval = setInterval(() => {
       this.getChat();
