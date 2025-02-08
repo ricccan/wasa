@@ -113,7 +113,7 @@ export default {
 		},
 		async getChat() { // getMyConversations (prende tutte le conversazioni dell'utente)
 			this.loading = true;
-			this.errormsg = null;
+			
 			try {
 				let response = await this.$axios.get("/users/" + this.id + "/conversations", { // chiama la query che trova le chat
 					headers: {
@@ -209,7 +209,7 @@ export default {
 
 		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
-			this.errormsg = null;
+			
 
 			if (this.chatInterval) {
         	clearInterval(this.chatInterval);
@@ -245,7 +245,7 @@ export default {
 			this.getChat();
 			this.chatInterval = setInterval(() => {
         	this.apriChat(conv);
-    		}, 7000);
+    		}, 3000);
 			
 			// Set an interval to refresh messages every 5 seconds
 		},
@@ -313,6 +313,11 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			var temp = await this.getId(this.removeUser)
+			if (temp == this.id){
+				this.errormsg = "you can't remove yourself"
+				this.loading = false;
+				return
+			}
 			try {
 				await this.$axios.delete("/users/" + temp + "/groups/" + this.idGroup, {
 					headers: {
@@ -577,7 +582,7 @@ export default {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
 		this.chatInterval = setInterval(() => {
       this.getChat();
-    }, 8000); 
+    }, 3000); 
 		
 	},
 	beforeUnmount() {
@@ -804,6 +809,9 @@ export default {
 			</div>
 			<div class="popup-actions">
 				<button @click="closePopup">Close</button>
+			</div>
+			<div class="alert alert-danger" role="alert" v-if="errormsg">
+				{{errormsg}}
 			</div>
 		</div>
 	</div>
