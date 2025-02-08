@@ -245,7 +245,7 @@ export default {
 			this.getChat();
 			this.chatInterval = setInterval(() => {
         	this.apriChat(conv);
-    		}, 3000);
+    		}, 1000);
 			
 			// Set an interval to refresh messages every 5 seconds
 		},
@@ -582,7 +582,7 @@ export default {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
 		this.chatInterval = setInterval(() => {
       this.getChat();
-    }, 3000); 
+    }, 1000); 
 		
 	},
 	beforeUnmount() {
