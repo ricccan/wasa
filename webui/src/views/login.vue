@@ -35,6 +35,7 @@ export default {
         return {
             nome: "", // valore ottenuto dall'input
             errorMessage: "",
+            id: null,
         };
     },
     methods: {
@@ -46,10 +47,16 @@ export default {
                     l_name: this.nome,
                 }); // crea un json che gli passa un nome
 				this.some_data = response.data;
+                this.id = response.data.Id;
+                this.$router.push({ 
+                    path: "/link1/" + this.id,
+                    query: { username: this.nome,id: this.id },
+                });
+
                 localStorage.setItem("token", response.data.Token);
                 localStorage.setItem("username", this.nome);
                 localStorage.setItem("id", response.data.Id);
-                this.$router.push({ path: "/link1" });
+                
 			} catch (e) {
 				this.errormsg = e.toString();
 			}

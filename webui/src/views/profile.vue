@@ -72,9 +72,9 @@
 export default {
     data() {
         return {
-            username: localStorage.getItem("username"), // prendo la variabile username
+            username: this.$route.query.username, // prendo la variabile username
             photo: null, // variabile foto
-            id: localStorage.getItem("id"), // prendo l'id dell'utente che ha fatto il login
+            id: this.$route.query.id, // prendo l'id dell'utente che ha fatto il login
             newUsername: "",
             showPopup1: false, // variabili per far aprire i popup
             showPopup: false,

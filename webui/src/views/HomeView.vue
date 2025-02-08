@@ -2,13 +2,14 @@
 export default {
 	data: function () {
 		return {
+			componentKey: 0, // Key to force re-render
 			errormsg: null,
 			loading: false,
 			some_data: null,
 			token: localStorage.getItem("token"), // prende il valore del token dato dal login
-			username: localStorage.getItem("username"), // prende il valore dell'username dato nel login
+			username: this.$route.query.username, // prende il valore dell'username dato nel login
 			chats: {}, // json che conterrà la lista delle chat
-			id: localStorage.getItem("id"), // id utente collegato allo username
+			id:  this.$route.query.id, // id utente collegato allo username
 			dynamicData: {}, // json che utilizzo insieme a chats per gestire le conversazioni
 			showPopup: false, // popup che apre la sezione "crea gruppo"
 			showPopup1: false, // popup che apre la sezione "nuova chat"
@@ -50,6 +51,7 @@ export default {
 			showPopup9: false,
 			primaChat: null,
 			showPopup10: false,
+			chatInterval: null, // Store interval reference
 			
 		}
 	},
@@ -90,7 +92,10 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				this.$router.push({ path: "/profile" }); // reindirizza alla pagina del profilo
+				this.$router.push({ 
+					path: "/profile",
+					query: { username: this.username, id: this.id },
+				 }); // reindirizza alla pagina del profilo
 			} catch (e) {
 				this.errormsg = e.toString(); // gestisco errori
 			}
@@ -124,8 +129,6 @@ export default {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
-			this.getUtenti;
-			this.primaChat = this.chats[0].IdChat; // aggiunto ora
 			// console.log(this.primaChat)
 		},
 		createDynamicListsFromJSON(json) { // funzione che crea dinamicamente la lista delle chat
@@ -207,6 +210,13 @@ export default {
 		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
 			this.errormsg = null;
+			var temp = conv;
+			// Clear any previous interval to prevent multiple instances
+			if (this.chatInterval) {
+            clearInterval(this.chatInterval);
+        	}
+
+
 			try {
 				let response1 = await this.$axios.post("/users/" + this.id + "/conversations/" + conv, { // chiama la query che setta i visualizzati
 				});
@@ -226,8 +236,9 @@ export default {
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
-			// this.interval = setInterval(this.apriChat(conv), 1000);
+			
 			this.loading = false;
+			// Set an interval to refresh messages every 5 seconds
 		},
 		createDynamicListsFromJSON_2(json) { // funzione che crea dinamicamente la lista dei messaggi
 			this.dynamicData2 = json; // assegnazione dati
@@ -550,17 +561,28 @@ export default {
 			this.loading = false;
 			this.showPopup9 = true
 		},
+		refreshComponent() {
+      	this.componentKey += 1; // Change key to re-render component
+		console.log("refreshed")
+    	}
 	},
 	mounted() {
+		console.log(this.id)
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
-		//console.log(this.primaChat)
-		// this.interval = setInterval(this.apriChat(this.IdGroup), 1000);
-
-	}
+		this.chatInterval = setInterval(() => {
+      this.getChat();
+    }, 8000); 
+		
+	},
+	beforeUnmount() {
+    clearInterval(this.chatInterval); // Cleanup when component is destroyed
+  },
+	
 }
 </script>
 
 <template>
+	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<div class="container-fluid">
 		<div class="row">
@@ -1013,6 +1035,7 @@ export default {
 			</div>
 		</div>
 	</div>
+
 </template>
 
 <style>
