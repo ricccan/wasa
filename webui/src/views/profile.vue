@@ -166,7 +166,10 @@ export default {
             }
         },
         home() {
-            this.$router.push({ path: "/link1" });
+            this.$router.push({ 
+            path: "/link1/" + this.id,
+            query: { username: this.username, id: this.id },
+            });
         }
     },
 
