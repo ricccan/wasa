@@ -52,6 +52,7 @@ export default {
 			primaChat: null,
 			showPopup10: false,
 			chatInterval: null, // Store interval reference
+			chatOra: null,
 			
 		}
 	},
@@ -210,6 +211,8 @@ export default {
 		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
 			console.log(conv);
+			this.chatOra = conv;
+			this.idGroup = conv;
 			
 
 			if (this.chatInterval) {
@@ -245,7 +248,7 @@ export default {
 			this.loading = false;
 			this.getChat();
 			this.chatInterval = setInterval(() => {
-        	this.apriChat(conv);
+        	this.apriChat(this.chatOra);
     		}, 5000);
 			
 			// Set an interval to refresh messages every 5 seconds
@@ -742,8 +745,7 @@ export default {
 						</div>
 
 						<button v-if="newMessage || selectedFile" @click.prevent="sendMessage" type="submit"
-							class="btn btn-primary mt-3">Send to {{
-								currentChat }}</button>
+							class="btn btn-primary mt-3">Send </button> <!-- to {{ currentChat }} -->
 					</form>
 				</div>
 			</main>
