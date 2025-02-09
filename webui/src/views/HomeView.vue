@@ -209,6 +209,7 @@ export default {
 
 		async apriChat(conv) { // getMessages + setSeen (entra in chat, fa uscire i messaggi e li segna come letti)
 			this.loading = true;
+			console.log(conv);
 			
 
 			if (this.chatInterval) {
@@ -245,7 +246,7 @@ export default {
 			this.getChat();
 			this.chatInterval = setInterval(() => {
         	this.apriChat(conv);
-    		}, 1000);
+    		}, 5000);
 			
 			// Set an interval to refresh messages every 5 seconds
 		},
@@ -582,7 +583,7 @@ export default {
 		this.getChat(); // per chiamare le funzioni istantaneamente al caricamento dalla pagnia
 		this.chatInterval = setInterval(() => {
       this.getChat();
-    }, 1000); 
+    }, 5000); 
 		
 	},
 	beforeUnmount() {
