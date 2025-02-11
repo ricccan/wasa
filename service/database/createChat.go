@@ -105,7 +105,7 @@ func (db *appdbimpl) CreateChat(nome string, utente int) (int, error) { // creaz
 
 		return int(chatid), nil
 	} else {
-		return int(*prova), nil
+		return *prova, nil
 	}
 
 }
